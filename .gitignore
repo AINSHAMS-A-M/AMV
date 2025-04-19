@@ -1,0 +1,4 @@
+*.o
+bank
+bank.db
+bank.exe
