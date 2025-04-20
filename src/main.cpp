@@ -13,5 +13,10 @@ int main()
     {
         std::cout << a[i] << ' ';
     }
+    for (int x : a)
+    {
+        std::cout << x << " ";
+    }
+
     return 0;
 }

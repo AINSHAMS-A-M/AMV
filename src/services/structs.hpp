@@ -23,7 +23,6 @@ struct CreateUserPoll
 };
 
 // Service: Retrieve Poll - ADMIN, Service: Retrieve Poll - User, functions structs and returns:
-
 struct RetrievePollResultAdmin
 {
     struct Result
@@ -40,4 +39,12 @@ struct RetrievePollResultAdmin
     AMArray<Result> results;
     bool success;
     std::string error_msg;
+};
+
+struct PublicPoll
+{
+    std::string id;
+    std::string name;
+    std::string creation_date;
+    AMArray<PollOption> options; // Holds options for the public poll
 };
