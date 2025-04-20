@@ -11,16 +11,16 @@ private:
 
 public:
     // called when creating an object
-    AMArray(int initial_capacity = 2)
+    AMArray(int intial_size = 0)
     {
-        if (initial_capacity < 0)
+        if (intial_size < 0)
         {
-            throw std::out_of_range("Capacity is smaller than zero");
+            throw std::out_of_range("Size is smaller than zero");
         }
 
-        _data = new T[initial_capacity];
-        _size = 0;
-        _capacity = initial_capacity;
+        _data = new T[intial_size];
+        _size = intial_size;
+        _capacity = std::min(intial_size, 1) * 2;
     }
 
     ~AMArray()
@@ -100,6 +100,12 @@ public:
 
         T &operator*() const { return *_ptr; }
         T *operator->() const { return _ptr; }
+
+        Iterator &operator++()
+        {
+            ++_ptr;
+            return *this;
+        }
 
         bool operator==(const Iterator &other) const { return _ptr == other._ptr; }
         bool operator!=(const Iterator &other) const { return _ptr != other._ptr; }
