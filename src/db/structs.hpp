@@ -1,6 +1,8 @@
 #pragma once
 
 #include <string>
+#include "data_structures.hpp"
+#include <chrono>
 
 struct User
 {
@@ -19,7 +21,7 @@ struct UserPoll
     std::string id;
     std::string user_id;
     std::string poll_id;
-    std::string poll_option;
+    std::string poll_option_id;
 };
 
 struct Poll

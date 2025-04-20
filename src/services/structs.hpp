@@ -21,3 +21,23 @@ struct CreatePoll
 struct CreateUserPoll
 {
 };
+
+// Service: Retrieve Poll - ADMIN, Service: Retrieve Poll - User, functions structs and returns:
+
+struct RetrievePollResultAdmin
+{
+    struct Result
+    {
+        // holds a counter for a specific option in a vote:
+        std::string poll_id;
+        std::string option_id;
+        std::string option_name;
+        int option_votes_count;
+    };
+
+    Poll pollInfo;
+
+    AMArray<Result> results;
+    bool success;
+    std::string error_msg;
+};
