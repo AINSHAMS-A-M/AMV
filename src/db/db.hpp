@@ -1,12 +1,11 @@
 #pragma once
 #include "structs.hpp"
+#include "data_structures.hpp"
 
-const int N = 1e5;
-
-User users[N];
-Poll polls[N];
-PollOption pollOptions[N];
-UserPoll userPolls[N];
+AMArray<User> users;
+AMArray<Poll> polls;
+AMArray<PollOption> pollOptions;
+AMArray<UserPoll> userPolls;
 
 void load_data();
 void save_data();
