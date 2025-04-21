@@ -1,11 +1,8 @@
 # Compiler
-CXX = g++-14
+CXX = g++
 
 # Compiler flags
 CXXFLAGS = -Wall -Wextra -std=c++23
-
-# Linker flags
-LDFLAGS = ''
 
 # Source directory
 SRC_DIR = src
