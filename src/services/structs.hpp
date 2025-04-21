@@ -8,6 +8,12 @@ struct CreateUser
 };
 struct EditUser
 {
+    std::string id;
+    // the actual name
+    std::string name;
+
+    std::string hashed_password;
+    std::string now_password;
 };
 struct EditUserPassword
 {
