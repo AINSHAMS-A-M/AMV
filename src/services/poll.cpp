@@ -92,7 +92,7 @@ RetrievePollResultAdmin retrieve_poll_as_owner(const std::string &user_id, const
     }
 
     // 3) prepare a zeroed Result entry for every option
-    AMArray<RetrievePollResultAdmin::Result> tally;
+    MeshVector<RetrievePollResultAdmin::Result> tally;
     for (const auto &opt : pollOptions)
     {
         if (opt.poll_id == poll_id)
@@ -132,9 +132,9 @@ RetrievePollResultAdmin retrieve_poll_as_owner(const std::string &user_id, const
     return result;
 }
 
-AMArray<UserPoll> retrieve_poll_for_user(std::string user_id)
+MeshVector<UserPoll> retrieve_poll_for_user(std::string user_id)
 {
-    AMArray<UserPoll> votes_with_the_user_id;
+    MeshVector<UserPoll> votes_with_the_user_id;
     for (auto &v : userPolls)
     {
         if (user_id == v.user_id)

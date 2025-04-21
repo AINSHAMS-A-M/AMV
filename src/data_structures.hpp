@@ -2,7 +2,7 @@
 #include <iostream>
 
 template <typename T>
-struct AMArray
+struct MeshVector
 {
 private:
     T *_data;
@@ -11,7 +11,7 @@ private:
 
 public:
     // called when creating an object
-    AMArray(int intial_size = 0)
+    MeshVector(int intial_size = 0)
     {
         if (intial_size < 0)
         {
@@ -23,7 +23,7 @@ public:
         _capacity = std::min(intial_size, 1) * 2;
     }
 
-    ~AMArray()
+    ~MeshVector()
     {
         delete[] _data;
     }
@@ -78,7 +78,7 @@ public:
         push_back(val);
     }
 
-    void operator=(AMArray val)
+    void operator=(MeshVector val)
     {
         auto s = val.size();
 

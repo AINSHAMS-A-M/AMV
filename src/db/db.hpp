@@ -2,10 +2,10 @@
 #include "structs.hpp"
 #include "data_structures.hpp"
 
-AMArray<User> users;
-AMArray<Poll> polls;
-AMArray<PollOption> pollOptions;
-AMArray<UserPoll> userPolls;
+MeshVector<User> users;
+MeshVector<Poll> polls;
+MeshVector<PollOption> pollOptions;
+MeshVector<UserPoll> userPolls;
 
 void load_data();
 void save_data();

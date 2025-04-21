@@ -36,7 +36,7 @@ struct RetrievePollResultAdmin
 
     Poll pollInfo;
 
-    AMArray<Result> results;
+    MeshVector<Result> results;
     bool success;
     std::string error_msg;
 };
@@ -46,5 +46,5 @@ struct PublicPoll
     std::string id;
     std::string name;
     std::string creation_date;
-    AMArray<PollOption> options; // Holds options for the public poll
+    MeshVector<PollOption> options; // Holds options for the public poll
 };

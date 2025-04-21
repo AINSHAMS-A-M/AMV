@@ -5,7 +5,7 @@
 int main()
 {
     std::cout << "WELCOME TO AMV\n";
-    AMArray<int> a;
+    MeshVector<int> a;
     a.push_back(2);
     a.push_back(4);
     a.push_back(5);
