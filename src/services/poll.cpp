@@ -1,7 +1,6 @@
-#include "services.hpp"
 #include "data_structures.hpp"
-#include "structs.hpp"
 #include "db.hpp"
+#include "services.hpp"
 
 /// @brief Creates a new poll.
 /// This function initializes and stores a new poll with its associated options and metadata.

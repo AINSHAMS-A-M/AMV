@@ -1,11 +1,11 @@
 #pragma once
-#include "structs.hpp"
-#include "data_structures.hpp"
 
-MeshVector<User> users;
-MeshVector<Poll> polls;
-MeshVector<PollOption> pollOptions;
-MeshVector<UserPoll> userPolls;
+#include "_db_structs.hpp"
+
+extern MeshVector<User> users;
+extern MeshVector<Poll> polls;
+extern MeshVector<PollOption> pollOptions;
+extern MeshVector<UserPoll> userPolls;
 
 void load_data();
 void save_data();

@@ -1,4 +1,5 @@
 #pragma once
+
 #include <iostream>
 
 template <typename T>
@@ -34,7 +35,7 @@ public:
         {
             _capacity *= 2;
 
-            int *new_data = new T[_capacity];
+            T *new_data = new T[_capacity];
 
             for (size_t i = 0; i < _size; i++)
             {
@@ -80,15 +81,13 @@ public:
 
     void operator=(MeshVector val)
     {
-        auto s = val.size();
-
         delete[] _data;
         _size = 0;
         _capacity = val.capacity();
 
-        for (int i = 0; i < s; ++i)
+        for (auto i : val)
         {
-            push_back(val[i]);
+            push_back(i);
         }
     }
 

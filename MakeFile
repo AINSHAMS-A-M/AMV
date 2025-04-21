@@ -4,9 +4,6 @@ CXX = g++
 # Compiler flags
 CXXFLAGS = -Wall -Wextra -std=c++23
 
-# Linker flags
-LDFLAGS = ''
-
 # Source directory
 SRC_DIR = src
 
@@ -45,9 +42,16 @@ $(TARGET): $(OBJ_FILES)
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-# Clean build files (Windows command)
 clean:
-	del /Q $(OBJ_FILES) $(TARGET)
+ifeq ($(OS),Windows_NT)
+	# Recursively delete .o files in all subdirectories
+	for /r %%f in ($(SRC_DIR)\*.o) do del "%%f"
+	del /Q $(TARGET)
+else
+	# Unix-like systems: recursively delete .o files
+	find $(SRC_DIR) -name "*.o" -delete
+	rm -f $(TARGET)
+endif
 
 # Run the program after compiling
 run: $(TARGET)
