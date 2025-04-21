@@ -9,7 +9,9 @@ struct CreateUser
 
 struct EditUser
 {
-    std::string new_name;
+    int user_id;
+    std::string new_username;
+    std::string new_real_name;
 };
 
 struct EditUserPassword

@@ -12,7 +12,24 @@ void create_user(CreateUser createUser)
 /// @brief Edits the details of an existing user in the system.
 void edit_user(EditUser editUser)
 {
-    
+    for (int user = 0; user < users.size(); user++)
+    {
+        if (editUser.new_username == users[user].username && editUser.user_id != users[user].id)
+        {
+            throw std::invalid_argument("A user with the same username already exists!");
+            return;
+        }
+    }
+    for (int user = 0; user < users.size(); user++)
+    {
+        if (editUser.user_id == users[user].id)
+        {
+            users[user].username = editUser.new_username;
+            users[user].name = editUser.new_real_name;
+            return;
+        }
+    }
+    throw std::invalid_argument("Can't find user!");
 }
 
 /// @brief Edits the password for an existing user in the system.
