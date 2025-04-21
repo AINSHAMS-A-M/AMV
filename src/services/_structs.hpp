@@ -9,16 +9,17 @@ struct CreateUser
 
 struct EditUser
 {
+    
+};
+
+struct EditUserPassword
+{
     std::string id;
     // the actual name
     std::string name;
 
     std::string hashed_password;
     std::string now_password;
-};
-
-struct EditUserPassword
-{
 };
 
 struct CreatePoll
