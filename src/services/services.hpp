@@ -1,6 +1,7 @@
 #pragma once
 
-#include "structs.hpp"
+#include "_hash.hpp"
+#include "_structs.hpp"
 
 void create_poll(CreatePoll createPoll);
 

@@ -1,3 +1,11 @@
+#include "data_structures.hpp"
+#include "services.hpp"
+
+MeshVector<User> users;
+MeshVector<Poll> polls;
+MeshVector<PollOption> pollOptions;
+MeshVector<UserPoll> userPolls;
+
 /// @brief Loads data from a CSV file and populates in-memory data structures.
 void load_data() {}
 

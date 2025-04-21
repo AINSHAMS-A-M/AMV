@@ -1,11 +1,12 @@
 #pragma once
-#include <string>
 
-/// most of these are incomplete, please add fields as needed
+#include <string>
+#include "db.hpp"
 
 struct CreateUser
 {
 };
+
 struct EditUser
 {
     std::string id;
@@ -15,9 +16,11 @@ struct EditUser
     std::string hashed_password;
     std::string now_password;
 };
+
 struct EditUserPassword
 {
 };
+
 struct CreatePoll
 {
     std::string voter_id;
@@ -54,6 +57,7 @@ struct RetrievePollDTO
     std::string creation_date;
     MeshVector<PollOption> options; // Holds options for the public poll
 };
+
 struct PollRead
 {
     Poll poll;
