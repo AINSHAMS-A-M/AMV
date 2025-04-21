@@ -16,7 +16,7 @@ struct User
     std::string hashed_password;
 };
 
-struct UserPoll
+struct UserVote
 {
     std::string id;
     std::string user_id;

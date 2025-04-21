@@ -16,9 +16,9 @@ std::pair<bool, size_t> check_user_vote(std::string user_id, std::string poll_id
     // Search for the user vote in UserPolls
     std::pair<bool, size_t> checkData = {0, -1};
 
-    for (size_t i = 0; i < userPolls.size(); i++)
+    for (size_t i = 0; i < userVotes.size(); i++)
     {
-        if (userPolls[i].poll_id == poll_id && userPolls[i].user_id == user_id)
+        if (userVotes[i].poll_id == poll_id && userVotes[i].user_id == user_id)
         {
             checkData.first = true;
             checkData.second = i;
@@ -28,23 +28,22 @@ std::pair<bool, size_t> check_user_vote(std::string user_id, std::string poll_id
     return checkData;
 }
 
-// TODO: Hassan, Change the "create_user_poll" to "create_user_vote".
 /// Make sure the user hadn't voted before.
-void create_user_poll(std::string user_id, std::string poll_id, std::string poll_option_id)
+void create_user_vote(std::string user_id, std::string poll_id, std::string poll_option_id)
 {
     // Check if the poll option is voted already
     auto checkData = check_user_vote(user_id, poll_id);
 
     if (!checkData.first)
     {
-        // Create a new UserPoll & fill it with formal parameters.
-        UserPoll UserChoiceData;
+        // Create a new UserVote & fill it with formal parameters.
+        UserVote UserChoiceData;
         size_t newid;
 
         // Check if the userpolls not empty
-        if (!userPolls.size())
+        if (!userVotes.size())
         {
-            newid = std::stoi(userPolls[userPolls.size() - 1].id) + 1;
+            newid = std::stoi(userVotes[userVotes.size() - 1].id) + 1;
         }
         else
         {
@@ -58,7 +57,7 @@ void create_user_poll(std::string user_id, std::string poll_id, std::string poll
         UserChoiceData.user_id = user_id;
 
         // Push the uservote to the UserPolls.
-        userPolls.push_back(UserChoiceData);
+        userVotes.push_back(UserChoiceData);
     }
     else
         throw "You Have already voted";
@@ -71,7 +70,7 @@ void delete_user_vote(std::string user_id, std::string poll_id)
     if (checkData.first)
     {
         // Erase the user vote by userpoll id
-        userPolls.erase(userPolls.begin() + checkData.second);
+        userVotes.erase(userVotes.begin() + checkData.second);
     }
     else
         // If !found throws an error (100% invalid function call).
@@ -169,8 +168,8 @@ RetrievePollResultAdmin retrieve_poll_as_owner(const std::string &user_id, const
         }
     }
 
-    // 4) scan userPolls to count votes
-    for (const auto &up : userPolls)
+    // 4) scan userVotes to count votes
+    for (const auto &up : userVotes)
     {
         if (up.poll_id == poll_id)
         {
@@ -195,10 +194,10 @@ RetrievePollResultAdmin retrieve_poll_as_owner(const std::string &user_id, const
     return result;
 }
 
-MeshVector<UserPoll> retrieve_poll_for_user(std::string user_id)
+MeshVector<UserVote> retrieve_poll_for_user(std::string user_id)
 {
-    MeshVector<UserPoll> votes_with_the_user_id;
-    for (auto &v : userPolls)
+    MeshVector<UserVote> votes_with_the_user_id;
+    for (auto &v : userVotes)
     {
         if (user_id == v.user_id)
         {
@@ -222,9 +221,9 @@ MeshVector<PollRead> retrieve_last_10_polls(std::string user_id)
 {
     MeshVector<std::string> poll_id, option_id;
 
-    for (long long last = userPolls.size() - 1; last >= 0; last--)
+    for (long long last = userVotes.size() - 1; last >= 0; last--)
     {
-        auto current = userPolls[last];
+        auto current = userVotes[last];
         if (current.user_id == user_id)
         {
             poll_id.push_back(current.poll_id);
