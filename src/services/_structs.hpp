@@ -47,8 +47,8 @@ struct RetrievePollResultAdmin
     struct Result
     {
         // holds a counter for a specific option in a vote:
-        std::string poll_id;
-        std::string option_id;
+        int poll_id;
+        int option_id;
         std::string option_name;
         int option_votes_count;
     };

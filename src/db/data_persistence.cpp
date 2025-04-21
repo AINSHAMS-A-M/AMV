@@ -4,7 +4,8 @@
 MeshVector<User> users;
 MeshVector<Poll> polls;
 MeshVector<PollOption> pollOptions;
-MeshVector<UserPoll> userPolls;
+// MeshVector<UserPoll> userPolls;
+MeshVector<UserVote> userVotes;
 
 /// @brief Loads data from a CSV file and populates in-memory data structures.
 void load_data() {}

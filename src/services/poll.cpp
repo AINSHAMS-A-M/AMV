@@ -11,7 +11,7 @@ void create_poll(CreatePoll createPoll)
 /// @brief Creates a new user poll, i.e. makes a user vote in the poll.
 
 // Check if the user has voted or not
-std::pair<bool, size_t> check_user_vote(std::string user_id, std::string poll_id)
+std::pair<bool, size_t> check_user_vote(int user_id, int poll_id)
 {
     // Search for the user vote in UserPolls
     std::pair<bool, size_t> checkData = {0, -1};
@@ -29,7 +29,7 @@ std::pair<bool, size_t> check_user_vote(std::string user_id, std::string poll_id
 }
 
 /// Make sure the user hadn't voted before.
-void create_user_vote(std::string user_id, std::string poll_id, std::string poll_option_id)
+void create_user_vote(int user_id, int poll_id, int poll_option_id)
 {
     // Check if the poll option is voted already
     auto checkData = check_user_vote(user_id, poll_id);
@@ -63,14 +63,14 @@ void create_user_vote(std::string user_id, std::string poll_id, std::string poll
         throw "You Have already voted";
 }
 
-void delete_user_vote(std::string user_id, std::string poll_id)
+void delete_user_vote(int user_id, int poll_id)
 {
     // get the userpoll id
     auto checkData = check_user_vote(user_id, poll_id);
     if (checkData.first)
     {
         // Erase the user vote by userpoll id
-        userVotes.erase(userVotes.begin() + checkData.second);
+        // userVotes.erase(userVotes.begin() + checkData.second);
     }
     else
         // If !found throws an error (100% invalid function call).
@@ -86,7 +86,7 @@ RetrievePollDTO retrieve_public_poll(int poll_id)
     bool pollFound = false;
     for (const auto &p : polls)
     {
-        if (p.id == std::to_string(poll_id)) // Ensure matching type (poll_id is string)
+        if (p.id == poll_id) // Ensure matching type (poll_id is string)
         {
             foundPoll = p;
             pollFound = true;
@@ -122,7 +122,7 @@ RetrievePollDTO retrieve_public_poll(int poll_id)
 /// @param user_id The ID of the poll owner.
 /// @param poll_id The ID of the poll to retrieve.
 /// @return Full poll details including all options, metadata, and configuration settings.
-RetrievePollResultAdmin retrieve_poll_as_owner(const std::string &user_id, const std::string &poll_id)
+RetrievePollResultAdmin retrieve_poll_as_owner(const int user_id, const int poll_id)
 {
     RetrievePollResultAdmin result;
     result.success = false;
@@ -194,7 +194,7 @@ RetrievePollResultAdmin retrieve_poll_as_owner(const std::string &user_id, const
     return result;
 }
 
-MeshVector<UserVote> retrieve_poll_for_user(std::string user_id)
+MeshVector<UserVote> retrieve_poll_for_user(int user_id)
 {
     MeshVector<UserVote> votes_with_the_user_id;
     for (auto &v : userVotes)
@@ -207,19 +207,13 @@ MeshVector<UserVote> retrieve_poll_for_user(std::string user_id)
     return votes_with_the_user_id;
 }
 
-/// @brief Retrieves all polls created by a specific user (admin/owner).
-/// @param user_id The ID of the user whose polls should be fetched.
-/// @return A list of all polls created by the user.
-void retrive_polls_as_owner(int user_id)
-{
-}
 
 /// @brief Retrieves the last 10 polls the user has participated in.
 /// @param user_id The ID of the user.
 /// @return A list of up to 10 polls the user has voted in, including the selected option for each.
-MeshVector<PollRead> retrieve_last_10_polls(std::string user_id)
+MeshVector<PollRead> retrieve_last_10_polls(int user_id)
 {
-    MeshVector<std::string> poll_id, option_id;
+    MeshVector<int> poll_id, option_id;
 
     for (long long last = userVotes.size() - 1; last >= 0; last--)
     {
