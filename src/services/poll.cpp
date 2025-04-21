@@ -43,7 +43,7 @@ void create_user_vote(std::string user_id, std::string poll_id, std::string poll
         // Check if the userpolls not empty
         if (!userVotes.size())
         {
-            newid = std::stoi(userVotes[userVotes.size() - 1].id) + 1;
+            newid = userVotes[userVotes.size() - 1].id + 1;
         }
         else
         {
@@ -51,7 +51,7 @@ void create_user_vote(std::string user_id, std::string poll_id, std::string poll
         }
 
         // Fill the UserChoiceData
-        UserChoiceData.id = std::to_string(newid);
+        UserChoiceData.id = newid;
         UserChoiceData.poll_id = poll_id;
         UserChoiceData.poll_option_id = poll_option_id;
         UserChoiceData.user_id = user_id;

@@ -22,3 +22,5 @@ RetrievePollResultAdmin retrieve_poll_as_owner(int user_id, int poll_id);
 MeshVector<UserVote> retrieve_poll_as_user(std::string user_id);
 
 RetrievePollDTO retrieve_public_poll(int poll_id);
+
+int get_new_id(MeshVector<UserVote>);
