@@ -181,14 +181,14 @@ MeshVector<PollRead> retrieve_last_10_polls(std::string user_id)
         throw std::invalid_argument("There is no votes for this user :( ");
     }
 
-    MeshVector<PollRead> last_pools(number_of_polls);
+    MeshVector<PollRead> last_polls(number_of_polls);
     for (int i = 0; i < number_of_polls; i++)
     {
         for (auto current : polls)
         {
             if (current.id == poll_id[i])
             {
-                last_pools[i].poll = current;
+                last_polls[i].poll = current;
                 break;
             }
         }
@@ -196,11 +196,11 @@ MeshVector<PollRead> retrieve_last_10_polls(std::string user_id)
         {
             if (current.id == option_id[i])
             {
-                last_pools[i].option = current;
+                last_polls[i].option = current;
                 break;
             }
         }
     }
 
-    return last_pools;
+    return last_polls;
 }
