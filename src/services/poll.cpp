@@ -10,9 +10,73 @@ void create_poll(CreatePoll createPoll)
 }
 
 /// @brief Creates a new user poll, i.e. makes a user vote in the poll.
-/// Make sure the user hadn't voted before.
-void create_user_poll(CreateUserPoll createUserPoll)
+
+// Check if the user has voted or not
+std::pair<bool, size_t> check_user_vote(std::string user_id, std::string poll_id)
 {
+    // Search for the user vote in UserPolls
+    std::pair<bool, size_t> checkData = {0, -1};
+
+    for (size_t i = 0; i < userPolls.size(); i++)
+    {
+        if (userPolls[i].poll_id == poll_id && userPolls[i].user_id == user_id)
+        {
+            checkData.first = true;
+            checkData.second = i;
+            break;
+        }
+    }
+    return checkData;
+}
+
+// TODO: Hassan, Change the "create_user_poll" to "create_user_vote".
+/// Make sure the user hadn't voted before.
+void create_user_poll(std::string user_id, std::string poll_id, std::string poll_option_id)
+{
+    // Check if the poll option is voted already
+    auto checkData = check_user_vote(user_id, poll_id);
+
+    if (!checkData.first)
+    {
+        // Create a new UserPoll & fill it with formal parameters.
+        UserPoll UserChoiceData;
+        size_t newid;
+
+        // Check if the userpolls not empty
+        if (!userPolls.size())
+        {
+            newid = std::stoi(userPolls[userPolls.size() - 1].id) + 1;
+        }
+        else
+        {
+            newid = 0;
+        }
+
+        // Fill the UserChoiceData
+        UserChoiceData.id = std::to_string(newid);
+        UserChoiceData.poll_id = poll_id;
+        UserChoiceData.poll_option_id = poll_option_id;
+        UserChoiceData.user_id = user_id;
+
+        // Push the uservote to the UserPolls.
+        userPolls.push_back(UserChoiceData);
+    }
+    else
+        throw "You Have already voted";
+}
+
+void delete_user_vote(std::string user_id, std::string poll_id)
+{
+    // get the userpoll id
+    auto checkData = check_user_vote(user_id, poll_id);
+    if (checkData.first)
+    {
+        // Erase the user vote by userpoll id
+        userPolls.erase(userPolls.begin() + checkData.second);
+    }
+    else
+        // If !found throws an error (100% invalid function call).
+        throw std::invalid_argument("User Vote is not Found");
 }
 
 /// @brief Retrieves a public poll for general viewing.

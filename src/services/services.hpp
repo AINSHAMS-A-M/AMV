@@ -4,7 +4,11 @@
 
 void create_poll(CreatePoll createPoll);
 
-void create_user_poll(CreateUserPoll createUserPoll);
+void create_user_poll(std::string, std::string, std::string);
+
+void delete_user_vote(std::string, std::string, std::string);
+
+std::pair<bool, size_t> check_user_vote(std::string, std::string);
 
 void retrieve_poll(int voter_id);
 
