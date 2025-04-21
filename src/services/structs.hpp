@@ -54,3 +54,8 @@ struct PublicPoll
     std::string creation_date;
     MeshVector<PollOption> options; // Holds options for the public poll
 };
+struct PollRead
+{
+    Poll poll;
+    PollOption option;
+};

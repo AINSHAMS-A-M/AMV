@@ -2,8 +2,8 @@
 #include "services.hpp"
 #include "structs.hpp"
 #include "hash.cpp"
-#include "..\data_structures.hpp"
-#include "..\db\structs.hpp"
+#include "data_structures.hpp"
+#include "db.hpp"
 
 /// @brief Creates a new user with the provided details and stores them in the system.
 void create_user(CreateUser createUser)
@@ -11,7 +11,7 @@ void create_user(CreateUser createUser)
 }
 
 /// @brief Edits the details of an existing user in the system.
-void edit_user(EditUser editUser , MeshVector<User> &users)
+void edit_user(EditUser editUser)
 {
     bool found = 0;
     for(int client = 0 ; client < users.size() ; client++)
