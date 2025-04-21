@@ -2,8 +2,8 @@
 #include "services.hpp"
 #include "structs.hpp"
 #include "hash.cpp"
-#include "P:\AMV\src\data_structures.hpp"
-#include "P:\AMV\src\db\structs.hpp"
+#include "..\data_structures.hpp"
+#include "..\db\structs.hpp"
 
 /// @brief Creates a new user with the provided details and stores them in the system.
 void create_user(CreateUser createUser)
