@@ -21,7 +21,7 @@ void edit_user_password(EditUserPassword editUserPassword)
     bool found = 0;
     for (int client = 0; client < users.size(); client++)
     {
-        if (editUserPassword.id == users[client].id && editUserPassword.name == users[client].name)
+        if (editUserPassword.id == users[client].id)
         {
             if (editUserPassword.hashed_password == users[client].hashed_password)
             {

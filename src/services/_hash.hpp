@@ -1,3 +1,3 @@
 #pragma once
 
-std::string hash_password(std::string password, std::string user_id);
+std::string hash_password(std::string password, int user_id);

@@ -14,7 +14,7 @@ struct EditUser
 
 struct EditUserPassword
 {
-    std::string id;
+    int id;
     std::string hashed_password;
     std::string now_password;
 };

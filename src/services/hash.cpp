@@ -3,20 +3,20 @@
 #include <cstdint>
 #include <string>
 
-std::string hash_password(std::string password, std::string user_id)
+std::string hash_password(std::string password, int user_id)
 {
     if (password.empty())
     {
         throw std::invalid_argument("Password cannot be empty");
     }
-    if (user_id.empty())
-    {
-        throw std::invalid_argument("User ID cannot be empty");
-    }
+    // if (user_id.empty())
+    // {
+    //     throw std::invalid_argument("User ID cannot be empty");
+    // }
 
     unsigned long long FIRST_XOR = (unsigned long long)557834610982;
     unsigned long long MOD = ULLONG_MAX; // 2^64 -1
-    unsigned long long salt = stoll(user_id);
+    unsigned long long salt = user_id;
     unsigned long long result = 0;
 
     for (unsigned long long i = 0; i < password.size(); i++)
