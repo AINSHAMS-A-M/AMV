@@ -4,7 +4,7 @@
 #include "db.hpp"
 #include "services.hpp"
 
-
+/// @brief logs the user into the system
 bool log_in(std::string username, std::string password)
 {
     for (int user = 0; user < users.size(); user++)
@@ -27,6 +27,7 @@ bool log_in(std::string username, std::string password)
     std::cerr << "User not found!";
     return false;
 }
+
 /// @brief Creates a new user with the provided details and stores them in the system.
 void create_user(CreateUser createUser)
 {

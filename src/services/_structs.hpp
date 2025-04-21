@@ -33,7 +33,7 @@ struct CreatePoll
 
     std::string poll_name;
 
-    std::string owner_id;
+    int owner_id;
 
     MeshVector<CreatePollOption> options;
 };

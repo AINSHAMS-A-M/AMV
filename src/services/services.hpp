@@ -3,7 +3,7 @@
 #include "_hash.hpp"
 #include "_structs.hpp"
 
-void create_poll(CreatePoll createPoll);
+Poll create_poll(CreatePoll createPoll);
 
 void fixIds(int);
 

@@ -4,11 +4,35 @@
 
 /// @brief Creates a new poll.
 /// This function initializes and stores a new poll with its associated options and metadata.
-void create_poll(CreatePoll createPoll)
+Poll create_poll(CreatePoll createPoll)
 {
-}
+    int poll_id = polls.size();
+    Poll new_poll = 
+    {
+        poll_id,
+        createPoll.poll_name,
+        createPoll.voter_id,
+        createPoll.owner_id,
+        time(0)
+    };
+    polls.push_back(new_poll);
 
-/// @brief Creates a new user poll, i.e. makes a user vote in the poll.
+    int poll_option_id = pollOptions.size();
+    for (auto option : createPoll.options)
+    {
+        PollOption new_option = 
+        {
+            poll_option_id,
+            poll_id,
+            option.name,
+            option.description
+        };
+        pollOptions.push_back(new_option);
+        poll_option_id++;
+    }
+
+    return new_poll;
+}
 
 // Fix the id in UserVotes after erase
 void fixIds(int id)
@@ -37,6 +61,7 @@ std::pair<bool, size_t> check_user_vote(int user_id, int poll_id)
     return checkData;
 }
 
+/// @brief Makes a user vote in the poll.
 /// Make sure the user hadn't voted before.
 void create_user_vote(int user_id, int poll_id, int poll_option_id)
 {
