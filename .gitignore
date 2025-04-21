@@ -1,4 +1,3 @@
 *.o
-bank
-bank.db
-bank.exe
+vote.exe
+vote
