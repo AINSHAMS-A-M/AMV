@@ -6,7 +6,7 @@
 
 struct User
 {
-    std::string id;
+    size_t id;
 
     // the actual name
     std::string name;
@@ -18,7 +18,8 @@ struct User
 
 struct UserVote
 {
-    std::string id;
+    size_t id;
+
     std::string user_id;
     std::string poll_id;
     std::string poll_option_id;
@@ -26,18 +27,19 @@ struct UserVote
 
 struct Poll
 {
-    std::string id;
+    size_t id;
 
     // id GIVEN to users/voters to allow them to vote in the poll
+    std::string name;
     std::string voter_id;
     std::string owner_id;
-    std::time_t name;
-    int created_at;
+    std::time_t created_at;
 };
 
 struct PollOption
 {
-    std::string id;
+    size_t id;
+
     std::string poll_id;
     std::string name;
     // used in GUI, a brief description of the option, can be an empty string.
