@@ -17,7 +17,7 @@ void create_user_poll(CreateUserPoll createUserPoll)
 
 /// @brief Retrieves a public poll for general viewing.
 /// This function returns basic poll information without revealing user-specific or private data.
-PublicPoll retrieve_public_poll(int poll_id)
+RetrievePollDTO retrieve_public_poll(int poll_id)
 {
     // Find the poll with the given poll_id
     Poll foundPoll;
@@ -32,14 +32,14 @@ PublicPoll retrieve_public_poll(int poll_id)
         }
     }
 
-    // If the poll is not found, return an empty PublicPoll or handle it as needed
+    // If the poll is not found, return an empty RetrievePollDTO or handle it as needed
     if (!pollFound)
     {
-        return PublicPoll(); // Return an empty PublicPoll object
+        return RetrievePollDTO(); // Return an empty RetrievePollDTO object
     }
 
-    // Create a PublicPoll object to return
-    PublicPoll publicPoll;
+    // Create a RetrievePollDTO object to return
+    RetrievePollDTO publicPoll;
     publicPoll.id = foundPoll.id;
     publicPoll.name = foundPoll.name;
     publicPoll.creation_date = foundPoll.created_at;

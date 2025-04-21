@@ -47,7 +47,7 @@ struct RetrievePollResultAdmin
     std::string error_msg;
 };
 
-struct PublicPoll
+struct RetrievePollDTO
 {
     std::string id;
     std::string name;
