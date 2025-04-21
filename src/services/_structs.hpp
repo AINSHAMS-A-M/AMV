@@ -9,22 +9,31 @@ struct CreateUser
 
 struct EditUser
 {
-    
+    std::string new_name;
 };
 
 struct EditUserPassword
 {
     std::string id;
-    // the actual name
-    std::string name;
-
     std::string hashed_password;
     std::string now_password;
 };
 
 struct CreatePoll
 {
+    struct CreatePollOption
+    {
+        std::string name;
+        std::string description;
+    };
+
     std::string voter_id;
+
+    std::string poll_name;
+
+    std::string owner_id;
+
+    MeshVector<CreatePollOption> options;
 };
 
 // i.e. vote in a poll
