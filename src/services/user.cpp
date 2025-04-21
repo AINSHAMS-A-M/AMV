@@ -4,6 +4,29 @@
 #include "db.hpp"
 #include "services.hpp"
 
+
+bool log_in(std::string username, std::string password)
+{
+    for (int user = 0; user < users.size(); user++)
+    {
+        if (users[user].username == username)
+        {
+            std::string hashed = hash_password(password,users[user].id);
+            if (hashed == users[user].hashed_password)
+            {
+                return true;
+            }
+            else
+            {
+                std::cerr << "Wrong password!";
+                return false;
+            }
+        }
+
+    }
+    std::cerr << "User not found!";
+    return false;
+}
 /// @brief Creates a new user with the provided details and stores them in the system.
 void create_user(CreateUser createUser)
 {

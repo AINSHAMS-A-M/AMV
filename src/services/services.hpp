@@ -26,3 +26,5 @@ MeshVector<UserVote> retrieve_poll_for_user(int user_id);
 RetrievePollDTO retrieve_public_poll(int poll_id);
 
 int get_new_id(MeshVector<UserVote>);
+
+bool log_in(std::string username, std::string password);
