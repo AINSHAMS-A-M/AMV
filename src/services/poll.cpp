@@ -155,19 +155,19 @@ void retrive_polls_as_owner(int user_id)
 /// @brief Retrieves the last 10 polls the user has participated in.
 /// @param user_id The ID of the user.
 /// @return A list of up to 10 polls the user has voted in, including the selected option for each.
-MeshVector<PollRead> retrieve_last_10_polls(std:: string user_id)
+MeshVector<PollRead> retrieve_last_10_polls(std::string user_id)
 {
-    MeshVector<std:: string> poll_id , option_id;
-    
-    for(long long last = userPolls.size()-1 ; last >= 0 ; last--)
+    MeshVector<std::string> poll_id, option_id;
+
+    for (long long last = userPolls.size() - 1; last >= 0; last--)
     {
         auto current = userPolls[last];
-        if(current.user_id == user_id)
+        if (current.user_id == user_id)
         {
             poll_id.push_back(current.poll_id);
             option_id.push_back(current.poll_option_id);
 
-            if(poll_id.size() == 10) 
+            if (poll_id.size() == 10)
             {
                 break;
             }
@@ -176,31 +176,31 @@ MeshVector<PollRead> retrieve_last_10_polls(std:: string user_id)
 
     int number_of_polls = poll_id.size();
 
-    if(number_of_polls == 0)
+    if (number_of_polls == 0)
     {
-        throw std:: invalid_argument("There is no votes for this user :( ");
+        throw std::invalid_argument("There is no votes for this user :( ");
     }
 
     MeshVector<PollRead> last_pools(number_of_polls);
-    for(int i = 0 ; i < number_of_polls ;i++)
+    for (int i = 0; i < number_of_polls; i++)
     {
-        for(auto current : polls)
+        for (auto current : polls)
         {
-            if(current.id == poll_id[i])
+            if (current.id == poll_id[i])
             {
                 last_pools[i].poll = current;
                 break;
             }
         }
-        for(auto current : pollOptions)
+        for (auto current : pollOptions)
         {
-            if(current.id == option_id[i])
+            if (current.id == option_id[i])
             {
                 last_pools[i].option = current;
                 break;
             }
         }
     }
-    
+
     return last_pools;
 }
