@@ -10,6 +10,15 @@ void create_poll(CreatePoll createPoll)
 
 /// @brief Creates a new user poll, i.e. makes a user vote in the poll.
 
+// Fix the id in UserVotes after erase
+void fixIds(int id)
+{
+    for (size_t i = id; i < userVotes.size(); i++)
+    {
+        userVotes[i].id--;
+    }
+}
+
 // Check if the user has voted or not
 std::pair<bool, size_t> check_user_vote(std::string user_id, std::string poll_id)
 {
@@ -71,6 +80,7 @@ void delete_user_vote(std::string user_id, std::string poll_id)
     {
         // Erase the user vote by userpoll id
         userVotes.erase(userVotes.begin() + checkData.second);
+        fixIds(checkData.second);
     }
     else
         // If !found throws an error (100% invalid function call).
