@@ -29,7 +29,7 @@ CXXFLAGS += $(INCLUDE_FLAGS)
 OBJ_FILES = $(SRC_FILES:.cpp=.o)
 
 # Executable name
-TARGET = bank.exe
+TARGET = vote.exe
 
 # Default target
 all: $(TARGET)
