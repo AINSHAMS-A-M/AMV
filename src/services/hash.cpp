@@ -27,8 +27,8 @@ std::string hash_password(std::string password, std::string user_id)
         throw std::invalid_argument("User ID cannot be empty");
     }
 
-    uint64_t FIRST_XOR = (uint64_t)55783461098202684762;
-    uint64_t MOD = (uint64_t(170141182460469231731687303715884105727)); // 2^127 -1
+    uint64_t FIRST_XOR = (uint64_t)557834610982;
+    uint64_t MOD = (uint64_t(LLONG_MAX)); // 2^127 -1
     uint64_t salt = stoll(user_id);
     uint64_t result = 0;
 
