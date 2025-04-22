@@ -1,6 +1,7 @@
 #include <iostream>
 #include <algorithm>
 #include <cstdint>
+#include <climits>
 #include <string>
 
 std::string hash_password(std::string password, int user_id)
