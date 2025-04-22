@@ -4,6 +4,9 @@ CXX = g++
 # Compiler flags
 CXXFLAGS = -Wall -Wextra -std=c++23
 
+# Linker flags (empty but no quotes!)
+LDFLAGS =
+
 # Source directory
 SRC_DIR = src
 
@@ -28,8 +31,8 @@ CXXFLAGS += $(INCLUDE_FLAGS)
 # Object files (replace .cpp with .o)
 OBJ_FILES = $(SRC_FILES:.cpp=.o)
 
-# Executable name
-TARGET = bank.exe
+# Executable name (no .exe for Linux)
+TARGET = vote
 
 # Default target
 all: $(TARGET)
@@ -42,20 +45,13 @@ $(TARGET): $(OBJ_FILES)
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
+# Clean build files
 clean:
-ifeq ($(OS),Windows_NT)
-	# Recursively delete .o files in all subdirectories
-	for /r %%f in ($(SRC_DIR)\*.o) do del "%%f"
-	del /Q $(TARGET)
-else
-	# Unix-like systems: recursively delete .o files
-	find $(SRC_DIR) -name "*.o" -delete
-	rm -f $(TARGET)
-endif
+	rm -f $(OBJ_FILES) $(TARGET)
 
 # Run the program after compiling
 run: $(TARGET)
-	$(TARGET)
+	./$(TARGET)
 
 # Phony targets
 .PHONY: all clean run

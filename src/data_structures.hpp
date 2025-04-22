@@ -1,6 +1,9 @@
 #pragma once
 
 #include <iostream>
+#include <stdexcept>
+#include <algorithm>
+
 template <typename T>
 struct MeshVector
 {
@@ -10,32 +13,96 @@ private:
     size_t _capacity;
 
 public:
-    // called when creating an object
-    MeshVector(int intial_size = 0)
+    // Constructor
+    MeshVector(size_t initial_size = 0)
     {
-        if (intial_size < 0)
+        if (initial_size < 0)
         {
             throw std::out_of_range("Size is smaller than zero");
         }
 
-        _data = new T[intial_size];
-        _size = intial_size;
-        _capacity = std::min(intial_size, 1) * 2;
+        _capacity = std::max(initial_size, size_t(1)) * 2;
+        _data = new T[_capacity];
+        _size = initial_size;
     }
 
+    // Destructor
     ~MeshVector()
     {
         delete[] _data;
     }
 
+    // Copy constructor
+    MeshVector(const MeshVector &other)
+    {
+        _capacity = other._capacity;
+        _size = other._size;
+        _data = new T[_capacity];
+
+        for (size_t i = 0; i < _size; ++i)
+        {
+            _data[i] = other._data[i];
+        }
+    }
+
+    // Copy assignment operator
+    MeshVector &operator=(const MeshVector &other)
+    {
+        if (this == &other)
+            return *this;
+
+        delete[] _data;
+
+        _capacity = other._capacity;
+        _size = other._size;
+        _data = new T[_capacity];
+
+        for (size_t i = 0; i < _size; ++i)
+        {
+            _data[i] = other._data[i];
+        }
+
+        return *this;
+    }
+
+    // Move constructor
+    MeshVector(MeshVector &&other) noexcept
+    {
+        _data = other._data;
+        _size = other._size;
+        _capacity = other._capacity;
+
+        other._data = nullptr;
+        other._size = 0;
+        other._capacity = 0;
+    }
+
+    // Move assignment
+    MeshVector &operator=(MeshVector &&other) noexcept
+    {
+        if (this == &other)
+            return *this;
+
+        delete[] _data;
+
+        _data = other._data;
+        _size = other._size;
+        _capacity = other._capacity;
+
+        other._data = nullptr;
+        other._size = 0;
+        other._capacity = 0;
+
+        return *this;
+    }
+
+    // Add element
     void push_back(T value)
     {
         if (_size == _capacity)
         {
             _capacity *= 2;
-
             T *new_data = new T[_capacity];
-
             for (size_t i = 0; i < _size; i++)
             {
                 new_data[i] = _data[i];
@@ -48,6 +115,7 @@ public:
         _data[_size++] = value;
     }
 
+    // Remove last element
     void pop()
     {
         if (_size == 0)
@@ -58,6 +126,7 @@ public:
         _size--;
     }
 
+    // Element access with bounds checking
     T &at(size_t index)
     {
         if (index >= _size)
@@ -67,49 +136,45 @@ public:
         return _data[index];
     }
 
+    const T &at(size_t index) const
+    {
+        if (index >= _size)
+        {
+            throw std::out_of_range("Index out of bounds");
+        }
+        return _data[index];
+    }
+
+    // Size and capacity access
     std::size_t size() const { return _size; }
     std::size_t capacity() const { return _capacity; }
 
-    T &operator[](int index) { return at(index); };
-    const T &operator[](int index) const { return at(index); };
+    // Index operators
+    T &operator[](int index) { return at(index); }
+    const T &operator[](int index) const { return at(index); }
 
+    // += operator to push_back
     void operator+=(T val)
     {
         push_back(val);
     }
 
-    void operator=(MeshVector val)
-    {
-        delete[] _data;
-        _size = 0;
-        _capacity = val.capacity();
-
-        for (auto i : val)
-        {
-            push_back(i);
-        }
-    }
-
-    /// ITERATOR SETUP - Allows you to use "auto" syntax to loop ///
+    // Iterator support
     struct Iterator
     {
-    public:
-        Iterator(T *ptr) : _ptr(ptr) {}
-
-        T &operator*() const { return *_ptr; }
-        T *operator->() const { return _ptr; }
+        T *ptr;
+        Iterator(T *p) : ptr(p) {}
+        T &operator*() const { return *ptr; }
+        T *operator->() const { return ptr; }
 
         Iterator &operator++()
         {
-            ++_ptr;
+            ++ptr;
             return *this;
         }
 
-        bool operator==(const Iterator &other) const { return _ptr == other._ptr; }
-        bool operator!=(const Iterator &other) const { return _ptr != other._ptr; }
-
-    private:
-        T *_ptr; // Pointer to the current element
+        bool operator==(const Iterator &other) const { return ptr == other.ptr; }
+        bool operator!=(const Iterator &other) const { return ptr != other.ptr; }
     };
 
     Iterator begin() { return Iterator(_data); }
