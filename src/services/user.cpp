@@ -1,5 +1,5 @@
 #include <string>
-
+#include "_hash.hpp"
 #include "data_structures.hpp"
 #include "db.hpp"
 #include "services.hpp"
@@ -31,7 +31,45 @@ bool log_in(std::string username, std::string password)
 /// @brief Creates a new user with the provided details and stores them in the system.
 void create_user(CreateUser createUser)
 {
+
+    if (createUser.name.empty() || createUser.hashed_password.empty() || createUser.username.empty())
+    {
+        throw std::invalid_argument("ID, name, username, or password cannot be empty!");
+    }
+
+    for (const auto& user : users)
+    {
+        if (user.id == createUser.id)
+        {
+            throw std::invalid_argument("A user with the same ID already exists!");
+        }
+
+        if (user.username == createUser.username)
+        {
+            throw std::invalid_argument("A user with the same Username already exists!");
+        }
+    }
+
+    User newUser;
+    newUser.id = createUser.id;
+    newUser.username = createUser.name;
+    newUser.name = createUser.username;
+    newUser.hashed_password = hash_password(createUser.hashed_password, createUser.id);
+
+    users.push_back(newUser);
 }
+
+
+/// @brief Retrieves a user by their ID.
+User get_user_by_id(const int& id) {
+    for (const auto& user : users) {
+        if (user.id == id) {
+            return user;
+        }
+    }
+    throw std::invalid_argument("User not found!");
+}
+
 
 /// @brief Edits the details of an existing user in the system.
 void edit_user(EditUser editUser)

@@ -5,6 +5,10 @@
 
 struct CreateUser
 {
+    int id;
+    std::string name;
+    std::string hashed_password;
+    std::string username;
 };
 
 struct EditUser

@@ -3,6 +3,10 @@
 #include "_hash.hpp"
 #include "_structs.hpp"
 
+User get_user_by_id(const int& id);
+
+void create_user(CreateUser createUser);
+
 Poll create_poll(CreatePoll createPoll);
 
 void fixIds(int);
