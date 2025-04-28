@@ -337,11 +337,21 @@ void CreatePollPage::onCreatePollClicked()
     auto voterId  = voterIdEdit->text().toStdString();
     MeshVector <std::pair<std::string,std::string>> options;
 
+    if (pollName.find(',') != std::string::npos|| voterId.find(',') != std::string::npos)
+    {
+        QMessageBox::warning(NULL,"Warning","Invalid character detected! don't type \",\"");
+        return;
+    }
     for (QWidget *optWidget : optionWidgets)
     {
         auto nameEdit = optWidget->findChild<QLineEdit*>()->text().toStdString();
         auto descEdit = optWidget->findChild<QTextEdit*>()->toPlainText().toStdString();
-        if (!nameEdit.empty())
+        if (nameEdit.find(',') != std::string::npos || descEdit.find(',') != std::string::npos)
+        {
+            QMessageBox::warning(NULL,"Warning","Invalid Character detected! don't type \",\"");
+            return;
+        }
+        else if (!nameEdit.empty())
         {
             options.push_back({nameEdit,descEdit});
         }

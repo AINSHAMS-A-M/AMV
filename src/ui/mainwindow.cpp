@@ -146,6 +146,10 @@ void MainWindow::on_registerBtn_clicked()
     {
         QMessageBox::warning(this,"Warning","Fields cannot be empty!");
     }
+    else if (username.find(',') != std::string::npos|| realname.find(',') != std::string::npos)
+    {
+        QMessageBox::warning(this,"Warning","Invalid Character! don't type \",\" ");
+    }
     else if (password == confirm)
     {
         bool capital = 0, small = 0, number = 0, special = 0;

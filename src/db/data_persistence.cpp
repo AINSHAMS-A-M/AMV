@@ -1,6 +1,7 @@
 #include <fstream>
 #include <string>
 #include <iostream>
+#include <sstream>
 #include "data_structures.hpp"
 #include "services.hpp"
 
@@ -24,7 +25,6 @@ void load_data()
         {
             CWD = path.substr(0, db_pos);
         }
-
     }
 
     std::string data_dir = CWD + "/data/"; // Construct data directory path
@@ -40,15 +40,31 @@ void load_data()
         return;
     }
 
-    User current_user;
+    std::string line;
+    // Read header line if it exists (and discard)
+    // std::getline(csv_in, line);
 
-    while (csv_in >> current_user.id >> current_user.name >> current_user.username >> current_user.hashed_password)
+    while (std::getline(csv_in, line))
     {
-        users.push_back(current_user);
-    }
-    // Check if the loop terminated due to an error other than EOF
-    if (!csv_in.eof() && csv_in.fail()) {
-        std::cerr << "Error reading users.csv. Check file format." << std::endl;
+        std::stringstream ss(line);
+        std::string segment;
+        User current_user;
+
+        try {
+            // Read id
+            if (std::getline(ss, segment, ',')) current_user.id = std::stoi(segment); else throw std::runtime_error("Missing user id");
+            // Read name (can contain spaces)
+            if (std::getline(ss, segment, ',')) current_user.name = segment; else throw std::runtime_error("Missing user name");
+            // Read username (can contain spaces)
+            if (std::getline(ss, segment, ',')) current_user.username = segment; else throw std::runtime_error("Missing user username");
+            // Read hashed_password (can contain spaces)
+            if (std::getline(ss, segment, ',')) current_user.hashed_password = segment; else throw std::runtime_error("Missing user hashed_password");
+
+            users.push_back(current_user);
+        } catch (const std::exception& e) {
+            std::cerr << "Error parsing users.csv line: '" << line << "' - " << e.what() << std::endl;
+            // Decide whether to skip the line or stop loading
+        }
     }
     csv_in.close();
 
@@ -62,13 +78,32 @@ void load_data()
         return;
     }
 
-    Poll current_poll;
-    while (csv_in >> current_poll.id >> current_poll.name >> current_poll.voter_id >> current_poll.owner_id >> current_poll.created_at)
+    // Read header line if it exists (and discard)
+    // std::getline(csv_in, line);
+
+    while (std::getline(csv_in, line))
     {
-        polls.push_back(current_poll);
-    }
-    if (!csv_in.eof() && csv_in.fail()) {
-        std::cerr << "Error reading polls.csv. Check file format." << std::endl;
+        std::stringstream ss(line);
+        std::string segment;
+        Poll current_poll;
+
+        try {
+            // Read id
+            if (std::getline(ss, segment, ',')) current_poll.id = std::stoi(segment); else throw std::runtime_error("Missing poll id");
+            // Read name (can contain spaces)
+            if (std::getline(ss, segment, ',')) current_poll.name = segment; else throw std::runtime_error("Missing poll name");
+            // Read voter_id
+            if (std::getline(ss, segment, ',')) current_poll.voter_id = segment; else throw std::runtime_error("Missing poll voter_id");
+            // Read owner_id
+            if (std::getline(ss, segment, ',')) current_poll.owner_id = std::stoi(segment); else throw std::runtime_error("Missing poll owner_id");
+            // Read created_at (can contain spaces)
+            if (std::getline(ss, segment, ',')) current_poll.created_at = (time_t)stoll(segment); else throw std::runtime_error("Missing poll created_at");
+
+            polls.push_back(current_poll);
+        } catch (const std::exception& e) {
+            std::cerr << "Error parsing polls.csv line: '" << line << "' - " << e.what() << std::endl;
+
+        }
     }
     csv_in.close();
 
@@ -82,13 +117,30 @@ void load_data()
         return;
     }
 
-    PollOption current_poll_option;
-    while (csv_in >> current_poll_option.id >> current_poll_option.poll_id >> current_poll_option.name >> current_poll_option.description)
+    // Read header line if it exists (and discard)
+    // std::getline(csv_in, line);
+
+    while (std::getline(csv_in, line))
     {
-        pollOptions.push_back(current_poll_option);
-    }
-    if (!csv_in.eof() && csv_in.fail()) {
-        std::cerr << "Error reading pollOptions.csv. Check file format." << std::endl;
+        std::stringstream ss(line);
+        std::string segment;
+        PollOption current_poll_option;
+
+        try {
+            // Read id
+            if (std::getline(ss, segment, ',')) current_poll_option.id = std::stoi(segment); else throw std::runtime_error("Missing poll option id");
+            // Read poll_id
+            if (std::getline(ss, segment, ',')) current_poll_option.poll_id = std::stoi(segment); else throw std::runtime_error("Missing poll option poll_id");
+            // Read name (can contain spaces)
+            if (std::getline(ss, segment, ',')) current_poll_option.name = segment; else throw std::runtime_error("Missing poll option name");
+            // Read description (can contain spaces)
+            if (std::getline(ss, segment, ',')) current_poll_option.description = segment; else current_poll_option.description = "";
+
+            pollOptions.push_back(current_poll_option);
+        } catch (const std::exception& e) {
+            std::cerr << "Error parsing pollOptions.csv line: '" << line << "' - " << e.what() << std::endl;
+            // Decide whether to skip the line or stop loading
+        }
     }
     csv_in.close();
 
@@ -102,18 +154,36 @@ void load_data()
         return;
     }
 
-    UserVote current_user_vote;
-    while (csv_in >> current_user_vote.id >> current_user_vote.user_id >> current_user_vote.poll_id >> current_user_vote.poll_option_id)
+    // Read header line if it exists (and discard)
+    // std::getline(csv_in, line);
+
+    while (std::getline(csv_in, line))
     {
-        userVotes.push_back(current_user_vote);
-    }
-    if (!csv_in.eof() && csv_in.fail()) {
-        std::cerr << "Error reading userVotes.csv. Check file format." << std::endl;
+        std::stringstream ss(line);
+        std::string segment;
+        UserVote current_user_vote;
+
+        try {
+            // Read id
+            if (std::getline(ss, segment, ',')) current_user_vote.id = std::stoi(segment); else throw std::runtime_error("Missing user vote id");
+            // Read user_id
+            if (std::getline(ss, segment, ',')) current_user_vote.user_id = std::stoi(segment); else throw std::runtime_error("Missing user vote user_id");
+            // Read poll_id
+            if (std::getline(ss, segment, ',')) current_user_vote.poll_id = std::stoi(segment); else throw std::runtime_error("Missing user vote poll_id");
+            // Read poll_option_id
+            if (std::getline(ss, segment, ',')) current_user_vote.poll_option_id = std::stoi(segment); else throw std::runtime_error("Missing user vote poll_option_id");
+
+            userVotes.push_back(current_user_vote);
+        } catch (const std::exception& e) {
+            std::cerr << "Error parsing userVotes.csv line: '" << line << "' - " << e.what() << std::endl;
+            // Decide whether to skip the line or stop loading
+        }
     }
     csv_in.close();
 }
 
 /// @brief Saves current data to CSV files for persistent storage.
+// This function writes comma-separated values.
 void save_data()
 {
     std::string path = __FILE__;
@@ -122,12 +192,10 @@ void save_data()
 
     if (db_pos != std::string::npos)
     {
-
         if (db_pos + 2 >= path.length() || path[db_pos + 2] == '/' || path[db_pos + 2] == '\\')
         {
             CWD = path.substr(0, db_pos);
         }
-
     }
 
     std::string data_dir = CWD + "/data/";
@@ -144,14 +212,12 @@ void save_data()
         return; // Or handle error appropriately
     }
 
-    // Use const& to avoid copying objects
+    // Write users data, comma-delimited
     for (const User& current_user : users)
     {
-        // Assuming space-separated CSV and operator<< is defined or works by default
-        // ADDED space delimiters and newline
-        csv_out << current_user.id << ' '
-                << current_user.name << ' '
-                << current_user.username << ' '
+        csv_out << current_user.id << ','
+                << current_user.name << ','
+                << current_user.username << ','
                 << current_user.hashed_password << '\n';
     }
     // Check for errors after writing loop
@@ -170,13 +236,13 @@ void save_data()
         return;
     }
 
+    // Write polls data, comma-delimited
     for (const Poll& current_poll : polls)
     {
-        // ADDED space delimiters and newline
-        csv_out << current_poll.id << ' '
-                << current_poll.name << ' '
-                << current_poll.voter_id << ' '
-                << current_poll.owner_id << ' '
+        csv_out << current_poll.id << ','
+                << current_poll.name << ','
+                << current_poll.voter_id << ','
+                << current_poll.owner_id << ','
                 << current_poll.created_at << '\n';
     }
     if (csv_out.fail()) {
@@ -194,13 +260,13 @@ void save_data()
         return;
     }
 
+    // Write poll options data, comma-delimited
     for (const PollOption& current_poll_option : pollOptions)
     {
-        // ADDED space delimiters and newline
-        csv_out << current_poll_option.id << ' '
-                << current_poll_option.poll_id << ' '
-                << current_poll_option.name << ' '
-                << current_poll_option.description << '\n'; // Added newline
+        csv_out << current_poll_option.id << ','
+                << current_poll_option.poll_id << ','
+                << current_poll_option.name << ','
+                << current_poll_option.description << '\n';
     }
     if (csv_out.fail()) {
         std::cerr << "Error writing to pollOptions.csv." << std::endl;
@@ -217,13 +283,13 @@ void save_data()
         return;
     }
 
+    // Write user votes data, comma-delimited
     for (const UserVote& current_user_vote : userVotes)
     {
-        // ADDED space delimiters and newline
-        csv_out << current_user_vote.id << ' '
-                << current_user_vote.user_id << ' '
-                << current_user_vote.poll_id << ' '
-                << current_user_vote.poll_option_id << '\n'; // Added newline
+        csv_out << current_user_vote.id << ','
+                << current_user_vote.user_id << ','
+                << current_user_vote.poll_id << ','
+                << current_user_vote.poll_option_id << '\n';
     }
     if (csv_out.fail()) {
         std::cerr << "Error writing to userVotes.csv." << std::endl;
