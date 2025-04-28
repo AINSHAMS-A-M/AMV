@@ -3,9 +3,10 @@
 #include "data_structures.hpp"
 #include "db.hpp"
 #include "services.hpp"
+#include <QMessageBox>
 
 /// @brief logs the user into the system
-bool log_in(std::string username, std::string password)
+std::string log_in(std::string username, std::string password)
 {
     for (int user = 0; user < users.size(); user++)
     {
@@ -14,39 +15,37 @@ bool log_in(std::string username, std::string password)
             std::string hashed = hash_password(password,users[user].id);
             if (hashed == users[user].hashed_password)
             {
-                return true;
+                return "true";
             }
             else
             {
-                std::cerr << "Wrong password!";
-                return false;
+                return "Incorrect Password, Try Again!";
             }
         }
 
     }
-    std::cerr << "User not found!";
-    return false;
+    return "User Not Found, Please check your credentials!";
 }
 
 /// @brief Creates a new user with the provided details and stores them in the system.
-void create_user(CreateUser createUser)
+std::string create_user(CreateUser createUser)
 {
 
     if (createUser.name.empty() || createUser.hashed_password.empty() || createUser.username.empty())
     {
-        throw std::invalid_argument("ID, name, username, or password cannot be empty!");
+        return "Em";
     }
 
     for (const auto& user : users)
     {
         if (user.id == createUser.id)
         {
-            throw std::invalid_argument("A user with the same ID already exists!");
+            return "Already Exist";
         }
 
         if (user.username == createUser.username)
         {
-            throw std::invalid_argument("A user with the same Username already exists!");
+            return "Already Exist";
         }
     }
 
@@ -54,9 +53,10 @@ void create_user(CreateUser createUser)
     newUser.id = createUser.id;
     newUser.username = createUser.name;
     newUser.name = createUser.username;
-    newUser.hashed_password = hash_password(createUser.hashed_password, createUser.id);
+    newUser.hashed_password = createUser.hashed_password;
 
     users.push_back(newUser);
+    return "Success";
 }
 
 

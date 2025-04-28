@@ -5,7 +5,7 @@
 
 User get_user_by_id(const int& id);
 
-void create_user(CreateUser createUser);
+std::string create_user(CreateUser createUser);
 
 Poll create_poll(CreatePoll createPoll);
 
@@ -31,4 +31,4 @@ RetrievePollDTO retrieve_public_poll(int poll_id);
 
 int get_new_id(MeshVector<UserVote>);
 
-bool log_in(std::string username, std::string password);
+std::string log_in(std::string username, std::string password);

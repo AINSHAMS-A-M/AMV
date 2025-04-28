@@ -8,12 +8,8 @@ std::string hash_password(std::string password, int user_id)
 {
     if (password.empty())
     {
-        throw std::invalid_argument("Password cannot be empty");
+        return "Em";
     }
-    // if (user_id.empty())
-    // {
-    //     throw std::invalid_argument("User ID cannot be empty");
-    // }
 
     unsigned long long FIRST_XOR = (unsigned long long)557834610982;
     unsigned long long MOD = ULLONG_MAX; // 2^64 -1
@@ -29,7 +25,7 @@ std::string hash_password(std::string password, int user_id)
         cur_char ^= FIRST_XOR;
         unsigned long long temp = cur_char % MOD;
         cur_char = temp;
-        cur_char *= (i + 13);
+        cur_char *= (i + 7);
         cur_char ^= salt;
         temp = cur_char % MOD;
         cur_char = temp;

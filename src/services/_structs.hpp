@@ -5,7 +5,7 @@
 
 struct CreateUser
 {
-    int id;
+    size_t id;
     std::string name;
     std::string hashed_password;
     std::string username;

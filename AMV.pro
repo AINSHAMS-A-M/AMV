@@ -1,7 +1,7 @@
 TEMPLATE = app
-TARGET = vote
+TARGET = "AMV Vote"
 
-QT       += core gui widgets
+QT       += widgets
 CONFIG   += c++23
 
 # Warn on all
@@ -17,14 +17,15 @@ INCLUDEPATH += src \
 SOURCES += main.cpp \
            $$files(src/db/*.cpp) \
            $$files(src/services/*.cpp) \
-           $$files(src/ui/*.cpp)
+           $$files(src/ui/*.cpp) \
+
 
 # Header files
 HEADERS += $$files(src/db/*.hpp) \
            $$files(src/services/*.hpp) \
            $$files(src/ui/*.hpp) \
            $$files(src/ui/*.h) \
-           $$files(src/*.hpp)
+           $$files(src/*.hpp) \
 
 # UI forms
 FORMS += $$files(src/ui/*.ui)
@@ -34,3 +35,6 @@ unix:!android {
     target.path = /opt/$${TARGET}/bin
     INSTALLS += target
 }
+
+RESOURCES += \
+    imgs/resources.qrc
