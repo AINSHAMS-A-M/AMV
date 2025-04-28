@@ -148,4 +148,18 @@ RegisterPage::RegisterPage(QWidget *parent)
     connect(registerBtn, &QPushButton::clicked, this, &RegisterPage::registerClicked);
     connect(loginLabel, &QLabel::linkActivated,
             this,        &RegisterPage::loginLinkActivated);
+
+    connect(realNameEdit, &QLineEdit::returnPressed, [this]() {
+        usernameEdit->setFocus();
+    });
+
+    connect(usernameEdit, &QLineEdit::returnPressed, [this]() {
+        passwordEdit->setFocus();
+    });
+
+    connect(passwordEdit, &QLineEdit::returnPressed, [this]() {
+        confirmEdit->setFocus();
+    });
+
+    connect(confirmEdit, &QLineEdit::returnPressed, this, &RegisterPage::registerClicked);
 }

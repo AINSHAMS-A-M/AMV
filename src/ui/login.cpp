@@ -130,6 +130,12 @@ LoginPage::LoginPage(QWidget *parent)
     connect(registerLabel, &QLabel::linkActivated,
             this,           &LoginPage::registerLinkActivated);
 
+    connect(userEdit, &QLineEdit::returnPressed, [this]() {
+        passEdit->setFocus();  // Move focus to password field
+    });
+
+
+    connect(passEdit, &QLineEdit::returnPressed, this, &LoginPage::loginClicked);
 
 
 
