@@ -1,31 +1,35 @@
-// helppage.cpp
 #include "createPoll.h"
 #include <QHBoxLayout>
 #include <QVBoxLayout>
+#include <QFormLayout>
 #include <QLabel>
+#include <QLineEdit>
 #include <QTextEdit>
-#include <QPixmap>
-#include <QPainter>
-#include <QPainterPath>
-#include <QDebug>
 #include <QPushButton>
+#include <QPixmap>
+#include <QScrollArea>
 #include "utils.h"
 
 CreatePollPage::CreatePollPage(QWidget *parent)
     : QWidget(parent),
     sidebar(nullptr),
-    content(nullptr)
+    content(nullptr),
+    optionsScrollArea(nullptr),
+    pollNameEdit(nullptr),
+    voterIdEdit(nullptr),
+    optionsContainer(nullptr),
+    optionsLayout(nullptr)
 {
-    const QString sidebarColor  = "#2C3E50";
-    const QString bgColor       = "#F5F6F8";
-    const QString primaryColor  = "#007BFF";
-    const QString primaryHover  = "#339CFF";
-    const QString textColor     = "#FFFFFF";
+    const QString sidebarColor = "#2C3E50";
+    const QString bgColor = "#F5F6F8";
+    const QString textColor = "#333333";
 
+    // Root layout
     auto *rootLayout = new QHBoxLayout(this);
     rootLayout->setContentsMargins(0, 0, 0, 0);
     rootLayout->setSpacing(0);
 
+    // ================= Sidebar ================= (keep identical)
     sidebar = new QWidget(this);
     sidebar->setFixedWidth(200);
     sidebar->setStyleSheet(QString("background-color: %1;").arg(sidebarColor));
@@ -33,10 +37,11 @@ CreatePollPage::CreatePollPage(QWidget *parent)
     sbLayout->setSpacing(15);
     sbLayout->setContentsMargins(20, 20, 20, 20);
 
+    // Logo
     const int logoSize = 120;
     QPixmap logoPixmap(":/logo.png");
-
     QPixmap roundedLogo = createRoundedLogo(logoPixmap, logoSize);
+
     if (!roundedLogo.isNull()) {
         QLabel *logoLabel = new QLabel(sidebar);
         logoLabel->setPixmap(roundedLogo);
@@ -47,44 +52,271 @@ CreatePollPage::CreatePollPage(QWidget *parent)
     } else {
         QLabel *errorLabel = new QLabel("Logo Error", sidebar);
         errorLabel->setAlignment(Qt::AlignCenter);
-        errorLabel->setStyleSheet(QString("color: %1;").arg(textColor));
-        sbLayout->addWidget(errorLabel, 0, Qt::AlignHCenter);
+        errorLabel->setStyleSheet("color: white;");
+        sbLayout->addWidget(errorLabel);
     }
 
+    // Menu Items
     QStringList menuItems = {"Help", "Vote", "My Votes", "Create Poll", "My Polls", "Profile"};
     for (const QString &item : menuItems) {
         QPushButton *btn = new QPushButton(item, sidebar);
-        btn->setStyleSheet(QString(
-                               "QPushButton { color: %1; background: none; border: none; text-align: left; font-size: 18px; padding: 10px; }"
-                               "QPushButton:hover { background-color: rgba(255,255,255,0.1); }"
-                               ).arg(textColor));
+        btn->setStyleSheet(
+            "QPushButton {"
+            "  color: white;"
+            "  background: none;"
+            "  border: none;"
+            "  text-align: left;"
+            "  font-size: 18px;"
+            "  padding: 10px;"
+            "  border-radius: 4px;"
+            "}"
+            "QPushButton:hover {"
+            "  background-color: rgba(255,255,255,0.1);"
+            "}"
+            );
         btn->setCursor(Qt::PointingHandCursor);
         sbLayout->addWidget(btn);
-        if (item == "Help") {
-            connect(btn, &QPushButton::clicked, this, &::CreatePollPage::onHelpClicked);
-        } else if (item == "Vote") {
-            connect(btn, &QPushButton::clicked, this, &::CreatePollPage::onVoteClicked);
-        } else if (item == "My Votes") {
-            connect(btn, &QPushButton::clicked, this, &::CreatePollPage::onMyVotesClicked);
-        } else if (item == "Create Poll") {
-            connect(btn, &QPushButton::clicked, this, &::CreatePollPage::onCreatePollClicked);
-        } else if (item == "My Polls") {
-            connect(btn, &QPushButton::clicked, this, &::CreatePollPage::onMyPollsClicked);
-        } else if (item == "Profile") {
-            connect(btn, &QPushButton::clicked, this, &::CreatePollPage::onProfileClicked);
-        }
+
+        // Connect signals
+        if (item == "Help") connect(btn, &QPushButton::clicked, this, &CreatePollPage::onHelpClicked);
+        else if (item == "Vote") connect(btn, &QPushButton::clicked, this, &CreatePollPage::onVoteClicked);
+        else if (item == "My Votes") connect(btn, &QPushButton::clicked, this, &CreatePollPage::onMyVotesClicked);
+        else if (item == "Create Poll") connect(btn, &QPushButton::clicked, this, &CreatePollPage::onCreatePollClicked);
+        else if (item == "My Polls") connect(btn, &QPushButton::clicked, this, &CreatePollPage::onMyPollsClicked);
+        else if (item == "Profile") connect(btn, &QPushButton::clicked, this, &CreatePollPage::onProfileClicked);
     }
     sbLayout->addStretch();
 
-
+    // ================= Content Area =================
     content = new QWidget(this);
     content->setStyleSheet(QString("background-color: %1;").arg(bgColor));
     auto *contentLayout = new QVBoxLayout(content);
-    contentLayout->setContentsMargins(0,0,0,0);
-    contentLayout->setSpacing(0);
+    contentLayout->setContentsMargins(40, 30, 40, 30);
+    contentLayout->setSpacing(20);
+
+    // Title
+    QLabel *titleLabel = new QLabel("Create New Poll");
+    titleLabel->setStyleSheet(
+        "QLabel {"
+        "  font-size: 26px;"
+        "  font-weight: 600;"
+        "  color: #2D3748;"
+        "  margin-bottom: 25px;"
+        "}"
+        );
+    contentLayout->addWidget(titleLabel);
+
+    // Form Fields
+    QWidget *formWidget = new QWidget();
+    QFormLayout *formLayout = new QFormLayout(formWidget);
+    formLayout->setContentsMargins(0, 0, 0, 0);
+    formLayout->setSpacing(20);
+
+    const QString inputStyle =
+        "QLineEdit, QTextEdit {"
+        "  background: white;"
+        "  border: 2px solid #E2E8F0;"
+        "  border-radius: 8px;"
+        "  padding: 14px;"
+        "  font-size: 14px;"
+        "  color: #4A5568;"
+        "}"
+        "QLineEdit:focus, QTextEdit:focus {"
+        "  border-color: #667EEA;"
+        "  outline: none;"
+        "}"
+        "QLineEdit::placeholder, QTextEdit::placeholder {"
+        "  color: #A0AEC0;"
+        "  font-style: italic;"
+        "}";
+
+    pollNameEdit = new QLineEdit();
+    pollNameEdit->setPlaceholderText("Enter poll title...");
+    pollNameEdit->setStyleSheet(inputStyle);
+    formLayout->addRow("Poll Name:", pollNameEdit);
+
+    voterIdEdit = new QLineEdit();
+    voterIdEdit->setPlaceholderText("Enter voter ID...");
+    voterIdEdit->setStyleSheet(inputStyle);
+    formLayout->addRow("Voter ID:", voterIdEdit);
+
+    contentLayout->addWidget(formWidget);
+
+    // Scrollable Options Area
+    optionsScrollArea = new QScrollArea(content);
+    optionsScrollArea->setWidgetResizable(true);
+    optionsScrollArea->setStyleSheet(
+        "QScrollArea {"
+        "  border: none;"
+        "  background: transparent;"
+        "}"
+        "QScrollBar:vertical {"
+        "  width: 10px;"
+        "  background: #F8FAFC;"
+        "  border-radius: 4px;"
+        "}"
+        "QScrollBar::handle:vertical {"
+        "  background: #CBD5E0;"
+        "  border-radius: 4px;"
+        "  min-height: 40px;"
+        "}"
+        "QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {"
+        "  height: 0px;"
+        "}"
+        );
+
+    optionsContainer = new QWidget();
+    optionsLayout = new QVBoxLayout(optionsContainer);
+    optionsLayout->setContentsMargins(2, 2, 12, 2); // Right margin for scrollbar
+    optionsLayout->setSpacing(18);
+
+    optionsScrollArea->setWidget(optionsContainer);
+    contentLayout->addWidget(optionsScrollArea, 1); // Take remaining space
+
+    // Button Container
+    QWidget *buttonContainer = new QWidget();
+    QHBoxLayout *buttonLayout = new QHBoxLayout(buttonContainer);
+    buttonLayout->setContentsMargins(0, 20, 0, 0);
+    buttonLayout->setSpacing(15);
+
+    // Add Option Button
+    QPushButton *addOptionBtn = new QPushButton("Add Option");
+    addOptionBtn->setStyleSheet(
+        "QPushButton {"
+        "  background-color: #667EEA;"
+        "  color: white;"
+        "  padding: 14px 28px;"
+        "  border-radius: 8px;"
+        "  font-size: 15px;"
+        "  font-weight: 500;"
+        "  border: none;"
+        "  transition: background 0.3s ease;"
+        "}"
+        "QPushButton:hover {"
+        "  background-color: #5A67D8;"
+        "}"
+        "QPushButton:pressed {"
+        "  background-color: #4C51BF;"
+        "}"
+        );
+    connect(addOptionBtn, &QPushButton::clicked, this, &CreatePollPage::onAddOptionClicked);
+
+    // Create Poll Button
+    QPushButton *createBtn = new QPushButton("Create Poll");
+    createBtn->setStyleSheet(
+        "QPushButton {"
+        "  background-color: #48BB78;"
+        "  color: white;"
+        "  padding: 16px 32px;"
+        "  border-radius: 8px;"
+        "  font-size: 16px;"
+        "  font-weight: 600;"
+        "  border: none;"
+        "  transition: background 0.3s ease;"
+        "}"
+        "QPushButton:hover {"
+        "  background-color: #38A169;"
+        "}"
+        "QPushButton:pressed {"
+        "  background-color: #2F855A;"
+        "}"
+        );
+    connect(createBtn, &QPushButton::clicked, this, &CreatePollPage::onCreatePollClicked);
+
+    buttonLayout->addWidget(addOptionBtn);
+    buttonLayout->addStretch();
+    buttonLayout->addWidget(createBtn);
+    contentLayout->addWidget(buttonContainer);
 
     rootLayout->addWidget(sidebar);
     rootLayout->addWidget(content);
-    rootLayout->setStretch(0, 0);
-    rootLayout->setStretch(1, 1);
+}
+
+void CreatePollPage::addOptionWidget()
+{
+    QWidget *optWidget = new QWidget(optionsContainer);
+    optWidget->setStyleSheet("background: transparent;");
+    QHBoxLayout *optLayout = new QHBoxLayout(optWidget);
+    optLayout->setContentsMargins(0, 0, 0, 0);
+    optLayout->setSpacing(15);
+
+    QLineEdit *nameEdit = new QLineEdit(optWidget);
+    nameEdit->setPlaceholderText("Option name");
+    nameEdit->setStyleSheet(
+        "QLineEdit {"
+        "  background: white;"
+        "  border: 2px solid #E2E8F0;"
+        "  border-radius: 6px;"
+        "  padding: 12px;"
+        "  font-size: 15px;"
+        "  color: #4A5568;"
+        "  min-width: 220px;"
+        "}"
+        "QLineEdit:focus {"
+        "  border-color: #667EEA;"
+        "}"
+        );
+
+    QTextEdit *descEdit = new QTextEdit(optWidget);
+    descEdit->setPlaceholderText("Option description");
+    descEdit->setStyleSheet(
+        "QTextEdit {"
+        "  background: white;"
+        "  border: 2px solid #E2E8F0;"
+        "  border-radius: 6px;"
+        "  padding: 12px;"
+        "  font-size: 13px;"
+        "  color: #4A5568;"
+        "}"
+        "QTextEdit:focus {"
+        "  border-color: #667EEA;"
+        "}"
+        );
+    descEdit->setFixedHeight(80);
+
+    QPushButton *removeBtn = new QPushButton("Remove");
+    removeBtn->setStyleSheet(
+        "QPushButton {"
+        "  background-color: #FC8181;"
+        "  color: #63171B;"
+        "  padding: 10px 18px;"
+        "  border-radius: 6px;"
+        "  font-size: 14px;"
+        "  font-weight: 500;"
+        "  border: none;"
+        "  transition: background 0.3s ease;"
+        "}"
+        "QPushButton:hover {"
+        "  background-color: #F56565;"
+        "}"
+        "QPushButton:pressed {"
+        "  background-color: #E53E3E;"
+        "}"
+        );
+
+    optLayout->addWidget(nameEdit, 2); // 2:1 ratio
+    optLayout->addWidget(descEdit, 3);
+    optLayout->addWidget(removeBtn);
+
+    optionsLayout->addWidget(optWidget);
+    optionWidgets.append(optWidget);
+
+    connect(removeBtn, &QPushButton::clicked, this, &CreatePollPage::onRemoveOptionClicked);
+}
+
+
+void CreatePollPage::onRemoveOptionClicked()
+{
+    if (QPushButton *btn = qobject_cast<QPushButton*>(sender())) {
+        if (QWidget *optWidget = btn->parentWidget()) {
+            optionsLayout->removeWidget(optWidget);
+            optionWidgets.removeOne(optWidget);
+            optWidget->deleteLater();
+        }
+    }
+}
+
+void CreatePollPage::onAddOptionClicked()
+{
+    addOptionWidget();
 }

@@ -1,14 +1,19 @@
-
 #pragma once
 
-#include <QWidget> // Base class
-#include <QStringList> // Needed for menu items
+#include <QWidget>
+#include <QScrollArea>
+#include <QStringList>
+#include <QList>
+#include <QLineEdit>
+#include <QVector>
 
 QT_BEGIN_NAMESPACE
 class QLabel;
 class QTextEdit;
-class QWidget;
-class QPushButton; // Include QPushButton forward declaration
+class QPushButton;
+class QVBoxLayout;
+class QHBoxLayout;
+class QFormLayout;
 QT_END_NAMESPACE
 
 class CreatePollPage : public QWidget
@@ -16,22 +21,31 @@ class CreatePollPage : public QWidget
     Q_OBJECT
 
 public:
-    // Constructor declaration only
     explicit CreatePollPage(QWidget *parent = nullptr);
     ~CreatePollPage() override = default;
 
 signals:
-    // Signals to indicate which sidebar menu item was clicked
     void onHelpClicked();
     void onVoteClicked();
     void onMyVotesClicked();
     void onCreatePollClicked();
     void onMyPollsClicked();
     void onProfileClicked();
+
+private slots:
+    void onAddOptionClicked();
+    void onRemoveOptionClicked();
+
 private:
-    QWidget    *sidebar;
-    QWidget    *content;
+    void addOptionWidget();
 
+    QWidget         *sidebar;
+    QWidget         *content;
+    QScrollArea     *optionsScrollArea;
     QList<QPushButton*> sidebarButtons;
-
+    QLineEdit       *pollNameEdit;
+    QLineEdit       *voterIdEdit;
+    QWidget         *optionsContainer;
+    QVBoxLayout     *optionsLayout;
+    QVector<QWidget*> optionWidgets;
 };

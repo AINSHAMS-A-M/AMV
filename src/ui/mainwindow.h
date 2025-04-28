@@ -1,17 +1,15 @@
-// mainwindow.h
 #pragma once
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
 #include <QMainWindow>
 #include <QStackedWidget>
-#include <QString>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
-// Forward declarations for page widgets
+// Keep forward declarations as they were
 class LoginPage;
 class RegisterPage;
 class VotePage;
@@ -30,6 +28,7 @@ public:
     ~MainWindow() override;
 
 private slots:
+    // Keep slot declarations exactly as they were
     void on_loginBtn_clicked();
     void on_registerBtn_clicked();
     void on_register_linkActivated(const QString &link);
@@ -45,15 +44,15 @@ private:
     Ui::MainWindow *ui;
     QStackedWidget *stackedWidget;
 
-    // Page instances
-    LoginPage               *loginPage;
-    RegisterPage            *registerPage;
-    VotePage                *votePage;
-    MyVotesPage             *myVotesPage;
-    MyPollsPage             *myPollsPage;
-    ProfileEditPage         *profileEditPage;
-    CreatePollPage          *createPollPage;
-    HelpPage                *helpPage;
+    // Maintain original pointer names
+    LoginPage       *loginPage;
+    RegisterPage    *registerPage;
+    VotePage        *votePage;
+    MyVotesPage     *myVotesPage;
+    MyPollsPage     *myPollsPage;
+    ProfileEditPage *profileEditPage;
+    CreatePollPage  *createPollPage;
+    HelpPage        *helpPage;
 };
 
 #endif // MAINWINDOW_H

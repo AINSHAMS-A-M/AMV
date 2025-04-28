@@ -7,6 +7,7 @@
 *****************************************************************************/
 
 #include "../../../src/ui/createPoll.h"
+#include <QtGui/qtextcursor.h>
 #include <QtCore/qmetatype.h>
 
 #include <QtCore/qtmochelpers.h>
@@ -45,7 +46,9 @@ template <> constexpr inline auto CreatePollPage::qt_create_metaobjectdata<qt_me
         "onMyVotesClicked",
         "onCreatePollClicked",
         "onMyPollsClicked",
-        "onProfileClicked"
+        "onProfileClicked",
+        "onAddOptionClicked",
+        "onRemoveOptionClicked"
     };
 
     QtMocHelpers::UintData qt_methods {
@@ -61,6 +64,10 @@ template <> constexpr inline auto CreatePollPage::qt_create_metaobjectdata<qt_me
         QtMocHelpers::SignalData<void()>(6, 2, QMC::AccessPublic, QMetaType::Void),
         // Signal 'onProfileClicked'
         QtMocHelpers::SignalData<void()>(7, 2, QMC::AccessPublic, QMetaType::Void),
+        // Slot 'onAddOptionClicked'
+        QtMocHelpers::SlotData<void()>(8, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'onRemoveOptionClicked'
+        QtMocHelpers::SlotData<void()>(9, 2, QMC::AccessPrivate, QMetaType::Void),
     };
     QtMocHelpers::UintData qt_properties {
     };
@@ -90,6 +97,8 @@ void CreatePollPage::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _
         case 3: _t->onCreatePollClicked(); break;
         case 4: _t->onMyPollsClicked(); break;
         case 5: _t->onProfileClicked(); break;
+        case 6: _t->onAddOptionClicked(); break;
+        case 7: _t->onRemoveOptionClicked(); break;
         default: ;
         }
     }
@@ -128,14 +137,14 @@ int CreatePollPage::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 6)
+        if (_id < 8)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 6;
+        _id -= 8;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 6)
+        if (_id < 8)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 6;
+        _id -= 8;
     }
     return _id;
 }
