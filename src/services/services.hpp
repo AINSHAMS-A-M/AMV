@@ -5,6 +5,8 @@
 
 User get_user_by_id(const int& id);
 
+User get_id_by_user(const std::string& username);
+
 std::string create_user(CreateUser createUser);
 
 Poll create_poll(CreatePoll createPoll);

@@ -8,7 +8,10 @@
 #include <QPushButton>
 #include <QPixmap>
 #include <QScrollArea>
+#include "qmessagebox"
 #include "utils.h"
+#include "services.hpp"
+#include <utility>
 
 CreatePollPage::CreatePollPage(QWidget *parent)
     : QWidget(parent),
@@ -200,6 +203,7 @@ CreatePollPage::CreatePollPage(QWidget *parent)
         "}"
         );
     connect(addOptionBtn, &QPushButton::clicked, this, &CreatePollPage::onAddOptionClicked);
+    addOptionBtn->setCursor(Qt::PointingHandCursor);
 
     // Create Poll Button
     QPushButton *createBtn = new QPushButton("Create Poll");
@@ -222,6 +226,8 @@ CreatePollPage::CreatePollPage(QWidget *parent)
         "}"
         );
     connect(createBtn, &QPushButton::clicked, this, &CreatePollPage::onCreatePollClicked);
+    createBtn->setDefault(true);
+    createBtn->setCursor(Qt::PointingHandCursor);
 
     buttonLayout->addWidget(addOptionBtn);
     buttonLayout->addStretch();
@@ -230,6 +236,9 @@ CreatePollPage::CreatePollPage(QWidget *parent)
 
     rootLayout->addWidget(sidebar);
     rootLayout->addWidget(content);
+    connect(pollNameEdit, &QLineEdit::returnPressed, [this]() {
+        voterIdEdit->setFocus();
+    });
 }
 
 void CreatePollPage::addOptionWidget()
@@ -302,6 +311,7 @@ void CreatePollPage::addOptionWidget()
     optionWidgets.append(optWidget);
 
     connect(removeBtn, &QPushButton::clicked, this, &CreatePollPage::onRemoveOptionClicked);
+    removeBtn->setCursor(Qt::PointingHandCursor);
 }
 
 
@@ -319,4 +329,42 @@ void CreatePollPage::onRemoveOptionClicked()
 void CreatePollPage::onAddOptionClicked()
 {
     addOptionWidget();
+}
+
+void CreatePollPage::onCreatePollClicked()
+{
+    auto pollName = pollNameEdit->text().toStdString();
+    auto voterId  = voterIdEdit->text().toStdString();
+    MeshVector <std::pair<std::string,std::string>> options;
+
+    for (QWidget *optWidget : optionWidgets)
+    {
+        auto nameEdit = optWidget->findChild<QLineEdit*>()->text().toStdString();
+        auto descEdit = optWidget->findChild<QTextEdit*>()->toPlainText().toStdString();
+        if (!nameEdit.empty())
+        {
+            options.push_back({nameEdit,descEdit});
+        }
+        else
+        {
+            QMessageBox::warning(NULL,"Warning","Empty Option Detected!");
+            return;
+        }
+    }
+    if (pollName.empty() || voterId.empty()|| options.size() == 0)
+    {
+        QMessageBox::warning(NULL,"Warning","Please provide a name and a voter ID and add some options!");
+        return;
+    }
+    CreatePoll newPoll
+        {
+            voterId,
+            pollName,
+            activeUser.id,
+            options
+        };
+
+    create_poll(newPoll);
+    QMessageBox::information(nullptr,"Success","Poll Created Successfully!");
+
 }

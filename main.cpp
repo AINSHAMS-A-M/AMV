@@ -10,14 +10,8 @@
 int main(int argc, char *argv[])
 {
     QApplication ab(argc, argv);
+    load_data();
     MainWindow w;
     w.show();
-    std::cout << "WELCOME TO AMV\n";
-    MeshVector<int> a;
-    a.push_back(2);
-    a.push_back(4);
-    a.push_back(5);
-    for (auto x : a)
-        std::cout << x << ' ';
     return ab.exec();
 }

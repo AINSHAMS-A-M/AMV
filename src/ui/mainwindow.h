@@ -4,6 +4,7 @@
 
 #include <QMainWindow>
 #include <QStackedWidget>
+#include <QCloseEvent>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -26,6 +27,10 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow() override;
+
+protected:
+    // Override the close event handler
+    void closeEvent(QCloseEvent *event) override;
 
 private slots:
     // Keep slot declarations exactly as they were

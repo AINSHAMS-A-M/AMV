@@ -51,8 +51,8 @@ std::string create_user(CreateUser createUser)
 
     User newUser;
     newUser.id = createUser.id;
-    newUser.username = createUser.name;
-    newUser.name = createUser.username;
+    newUser.username = createUser.username;
+    newUser.name = createUser.name;
     newUser.hashed_password = createUser.hashed_password;
 
     users.push_back(newUser);
@@ -70,6 +70,14 @@ User get_user_by_id(const int& id) {
     throw std::invalid_argument("User not found!");
 }
 
+User get_id_by_user(const std::string& username) {
+    for (const auto& user : users) {
+        if (user.username == username) {
+            return user;
+        }
+    }
+    throw std::invalid_argument("User not found!");
+}
 
 /// @brief Edits the details of an existing user in the system.
 void edit_user(EditUser editUser)

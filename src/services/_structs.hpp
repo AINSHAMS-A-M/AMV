@@ -27,19 +27,13 @@ struct EditUserPassword
 
 struct CreatePoll
 {
-    struct CreatePollOption
-    {
-        std::string name;
-        std::string description;
-    };
-
     std::string voter_id;
 
     std::string poll_name;
 
-    int owner_id;
+    size_t owner_id;
 
-    MeshVector<CreatePollOption> options;
+    MeshVector<std::pair<std::string,std::string>> options;
 };
 
 // i.e. vote in a poll

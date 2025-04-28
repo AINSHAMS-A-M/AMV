@@ -6,7 +6,7 @@
 /// This function initializes and stores a new poll with its associated options and metadata.
 Poll create_poll(CreatePoll createPoll)
 {
-    int poll_id = polls.size();
+    size_t poll_id = polls.size();
     Poll new_poll = 
     {
         poll_id,
@@ -17,15 +17,15 @@ Poll create_poll(CreatePoll createPoll)
     };
     polls.push_back(new_poll);
 
-    int poll_option_id = pollOptions.size();
+    size_t poll_option_id = pollOptions.size();
     for (auto option : createPoll.options)
     {
         PollOption new_option = 
         {
             poll_option_id,
             poll_id,
-            option.name,
-            option.description
+            option.first,
+            option.second
         };
         pollOptions.push_back(new_option);
         poll_option_id++;

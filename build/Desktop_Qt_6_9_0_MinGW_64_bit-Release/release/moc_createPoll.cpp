@@ -44,11 +44,11 @@ template <> constexpr inline auto CreatePollPage::qt_create_metaobjectdata<qt_me
         "",
         "onVoteClicked",
         "onMyVotesClicked",
-        "onCreatePollClicked",
         "onMyPollsClicked",
         "onProfileClicked",
         "onAddOptionClicked",
-        "onRemoveOptionClicked"
+        "onRemoveOptionClicked",
+        "onCreatePollClicked"
     };
 
     QtMocHelpers::UintData qt_methods {
@@ -58,16 +58,16 @@ template <> constexpr inline auto CreatePollPage::qt_create_metaobjectdata<qt_me
         QtMocHelpers::SignalData<void()>(3, 2, QMC::AccessPublic, QMetaType::Void),
         // Signal 'onMyVotesClicked'
         QtMocHelpers::SignalData<void()>(4, 2, QMC::AccessPublic, QMetaType::Void),
-        // Signal 'onCreatePollClicked'
-        QtMocHelpers::SignalData<void()>(5, 2, QMC::AccessPublic, QMetaType::Void),
         // Signal 'onMyPollsClicked'
-        QtMocHelpers::SignalData<void()>(6, 2, QMC::AccessPublic, QMetaType::Void),
+        QtMocHelpers::SignalData<void()>(5, 2, QMC::AccessPublic, QMetaType::Void),
         // Signal 'onProfileClicked'
-        QtMocHelpers::SignalData<void()>(7, 2, QMC::AccessPublic, QMetaType::Void),
+        QtMocHelpers::SignalData<void()>(6, 2, QMC::AccessPublic, QMetaType::Void),
         // Slot 'onAddOptionClicked'
-        QtMocHelpers::SlotData<void()>(8, 2, QMC::AccessPrivate, QMetaType::Void),
+        QtMocHelpers::SlotData<void()>(7, 2, QMC::AccessPublic, QMetaType::Void),
         // Slot 'onRemoveOptionClicked'
-        QtMocHelpers::SlotData<void()>(9, 2, QMC::AccessPrivate, QMetaType::Void),
+        QtMocHelpers::SlotData<void()>(8, 2, QMC::AccessPublic, QMetaType::Void),
+        // Slot 'onCreatePollClicked'
+        QtMocHelpers::SlotData<void()>(9, 2, QMC::AccessPublic, QMetaType::Void),
     };
     QtMocHelpers::UintData qt_properties {
     };
@@ -94,11 +94,11 @@ void CreatePollPage::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _
         case 0: _t->onHelpClicked(); break;
         case 1: _t->onVoteClicked(); break;
         case 2: _t->onMyVotesClicked(); break;
-        case 3: _t->onCreatePollClicked(); break;
-        case 4: _t->onMyPollsClicked(); break;
-        case 5: _t->onProfileClicked(); break;
-        case 6: _t->onAddOptionClicked(); break;
-        case 7: _t->onRemoveOptionClicked(); break;
+        case 3: _t->onMyPollsClicked(); break;
+        case 4: _t->onProfileClicked(); break;
+        case 5: _t->onAddOptionClicked(); break;
+        case 6: _t->onRemoveOptionClicked(); break;
+        case 7: _t->onCreatePollClicked(); break;
         default: ;
         }
     }
@@ -109,11 +109,9 @@ void CreatePollPage::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _
             return;
         if (QtMocHelpers::indexOfMethod<void (CreatePollPage::*)()>(_a, &CreatePollPage::onMyVotesClicked, 2))
             return;
-        if (QtMocHelpers::indexOfMethod<void (CreatePollPage::*)()>(_a, &CreatePollPage::onCreatePollClicked, 3))
+        if (QtMocHelpers::indexOfMethod<void (CreatePollPage::*)()>(_a, &CreatePollPage::onMyPollsClicked, 3))
             return;
-        if (QtMocHelpers::indexOfMethod<void (CreatePollPage::*)()>(_a, &CreatePollPage::onMyPollsClicked, 4))
-            return;
-        if (QtMocHelpers::indexOfMethod<void (CreatePollPage::*)()>(_a, &CreatePollPage::onProfileClicked, 5))
+        if (QtMocHelpers::indexOfMethod<void (CreatePollPage::*)()>(_a, &CreatePollPage::onProfileClicked, 4))
             return;
     }
 }
@@ -168,20 +166,14 @@ void CreatePollPage::onMyVotesClicked()
 }
 
 // SIGNAL 3
-void CreatePollPage::onCreatePollClicked()
+void CreatePollPage::onMyPollsClicked()
 {
     QMetaObject::activate(this, &staticMetaObject, 3, nullptr);
 }
 
 // SIGNAL 4
-void CreatePollPage::onMyPollsClicked()
-{
-    QMetaObject::activate(this, &staticMetaObject, 4, nullptr);
-}
-
-// SIGNAL 5
 void CreatePollPage::onProfileClicked()
 {
-    QMetaObject::activate(this, &staticMetaObject, 5, nullptr);
+    QMetaObject::activate(this, &staticMetaObject, 4, nullptr);
 }
 QT_WARNING_POP

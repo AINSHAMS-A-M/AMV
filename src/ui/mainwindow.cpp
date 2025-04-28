@@ -126,6 +126,7 @@ void MainWindow::on_loginBtn_clicked()
 
     if (response == "true")
     {
+        activeUser = get_id_by_user(username);
         stackedWidget->setCurrentWidget(helpPage);
     }
     else
@@ -158,9 +159,8 @@ void MainWindow::on_registerBtn_clicked()
 
         if (capital && small && number && special && password.size() >= 8)
         {
-            size_t new_id;
-            if (users.size() > 0) new_id = (users[users.size()-1].id)+1;
-            else new_id = 0;
+            size_t new_id = users.size();
+
             CreateUser newUser =
                 {
                     new_id,
@@ -236,5 +236,25 @@ void MainWindow::onMyVotesClicked()
 void MainWindow::onVoteClicked()
 {
     stackedWidget->setCurrentWidget(votePage);
+}
+
+void MainWindow::closeEvent(QCloseEvent *event) {
+    // Ask the user if they want to quit
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(
+        this,
+        "Exit",
+        "Are you sure you want to exit?",
+        QMessageBox::Yes | QMessageBox::No
+        );
+
+    if (reply == QMessageBox::Yes) {
+        // Allow the window to close
+        save_data();
+        event->accept();
+    } else {
+        // Prevent the window from closing
+        event->ignore();
+    }
 }
 
