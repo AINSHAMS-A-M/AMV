@@ -9,6 +9,7 @@
 #include <QPainterPath>
 #include <QDebug>
 #include <QPushButton>
+#include "db.hpp"
 #include "utils.h"
 
 HelpPage::HelpPage(QWidget *parent)
@@ -76,6 +77,11 @@ HelpPage::HelpPage(QWidget *parent)
             connect(btn, &QPushButton::clicked, this, &::HelpPage::onProfileClicked);
         }
     }
+    QLabel *welcomeLabel = new QLabel("Welcome \n" + QString::fromStdString(activeUser.name) + "!", sidebar);
+    welcomeLabel->setStyleSheet(QString("color: %1; font-size: 15px; padding: 5px 10px; font-style: italic; font-weight: bold;").arg("#EBECF0"));
+    welcomeLabel->setWordWrap(true);
+    welcomeLabel->setAlignment(Qt::AlignLeft);
+    sbLayout->addWidget(welcomeLabel);
     sbLayout->addStretch();
 
     content = new QWidget(this);
@@ -103,7 +109,7 @@ HelpPage::HelpPage(QWidget *parent)
     helpTextEdit->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     QString helpContent =
-        "<h3>Home (Help)</h3>"
+        "<h3>Help</h3>"
         "<p>This page provides information about the different sections and functionalities of the application.</p>"
         "<h3>Vote</h3>"
         "<p>Allows you to participate in a new poll. You will typically need a valid Voter ID to cast your vote.</p>"
@@ -112,13 +118,13 @@ HelpPage::HelpPage(QWidget *parent)
         "<p>View a history of the polls you have participated in and the options you selected. This section might also allow you to remove or change a previous vote.</p>"
 
         "<h3>Create Poll</h3>"
-        "<p>Provides tools for creating a new election or poll. You can define the poll's name, description, duration, and add the various options that users can vote for.</p>"
+        "<p>Provides tools for creating a new election or poll. You can define the poll's name, and add the various options that users can vote for.</p>"
 
         "<h3>My Polls</h3>"
         "<p>View the polls you have created, and their results thus far.</p>"
 
         "<h3>Profile</h3>"
-        "<p>View and edit your user account information, including your real name, username, and password. Keep your profile details up-to-date here.</p>";
+        "<p>Edit your user account information, including your real name, username, and password. Keep your profile details up-to-date here.</p>";
 
     helpTextEdit->setHtml(helpContent);
     contentLayout->addWidget(helpTextEdit);
@@ -126,5 +132,4 @@ HelpPage::HelpPage(QWidget *parent)
     rootLayout->addWidget(sidebar);
     rootLayout->addWidget(content);
     rootLayout->setStretch(0, 0);
-    rootLayout->setStretch(1, 1);
 }

@@ -61,7 +61,7 @@ std::string create_user(CreateUser createUser)
 
 
 /// @brief Retrieves a user by their ID.
-User get_user_by_id(const int& id) {
+User get_user_by_id(const size_t& id) {
     for (const auto& user : users) {
         if (user.id == id) {
             return user;
@@ -80,14 +80,13 @@ User get_id_by_user(const std::string& username) {
 }
 
 /// @brief Edits the details of an existing user in the system.
-void edit_user(EditUser editUser)
+std::string edit_user(EditUser editUser)
 {
     for (int user = 0; user < users.size(); user++)
     {
         if (editUser.new_username == users[user].username && editUser.user_id != users[user].id)
         {
-            throw std::invalid_argument("A user with the same username already exists!");
-            return;
+            return ("A user with the same username already exists!");
         }
     }
     for (int user = 0; user < users.size(); user++)
@@ -96,14 +95,14 @@ void edit_user(EditUser editUser)
         {
             users[user].username = editUser.new_username;
             users[user].name = editUser.new_real_name;
-            return;
+            return "done";
         }
     }
-    throw std::invalid_argument("Can't find user!");
+    return("Can't find user!");
 }
 
 /// @brief Edits the password for an existing user in the system.
-void edit_user_password(EditUserPassword editUserPassword)
+std::string edit_user_password(EditUserPassword editUserPassword)
 {
     bool found = 0;
     for (int client = 0; client < users.size(); client++)
@@ -115,12 +114,12 @@ void edit_user_password(EditUserPassword editUserPassword)
                 found = 1;
                 std::string now_password_hashed = hash_password(editUserPassword.now_password, editUserPassword.id);
                 users[client].hashed_password = now_password_hashed;
-                break;
+                return "done";
             }
         }
     }
     if (!found)
     {
-        throw std::invalid_argument("unnable to find the user :( ");
+        return ("The Old Password is wrong, Please try again!");
     }
 }

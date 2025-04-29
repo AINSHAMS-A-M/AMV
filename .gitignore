@@ -1,3 +1,8 @@
 *.o
 vote.exe
 vote
+AMV.pro.user
+release/
+debug/
+build/
+.vscode/

@@ -13,14 +13,14 @@ struct CreateUser
 
 struct EditUser
 {
-    int user_id;
+    size_t user_id;
     std::string new_username;
     std::string new_real_name;
 };
 
 struct EditUserPassword
 {
-    int id;
+    size_t id;
     std::string hashed_password;
     std::string now_password;
 };

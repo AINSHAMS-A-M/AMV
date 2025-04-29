@@ -119,7 +119,6 @@ RegisterPage::RegisterPage(QWidget *parent)
         "    border: none;"
         "    border-radius: 6px;"
         "    padding: 6px 12px;"
-        "    transition: all 0.3s ease;"
         "}"
         "QPushButton:hover {"
         "    background-color: #339CFF;"

@@ -33,7 +33,6 @@ protected:
     void closeEvent(QCloseEvent *event) override;
 
 private slots:
-    // Keep slot declarations exactly as they were
     void on_loginBtn_clicked();
     void on_registerBtn_clicked();
     void on_register_linkActivated(const QString &link);

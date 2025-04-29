@@ -28,13 +28,15 @@ signals:
     void onHelpClicked();
     void onVoteClicked();
     void onMyVotesClicked();
+    void onCreatePollClicked();
     void onMyPollsClicked();
     void onProfileClicked();
+
 
 public slots:
     void onAddOptionClicked();
     void onRemoveOptionClicked();
-    void onCreatePollClicked();
+    void onCreatePollBtnClicked();
 
 private:
     void addOptionWidget();

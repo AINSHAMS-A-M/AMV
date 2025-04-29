@@ -88,7 +88,13 @@ CreatePollPage::CreatePollPage(QWidget *parent)
         else if (item == "My Polls") connect(btn, &QPushButton::clicked, this, &CreatePollPage::onMyPollsClicked);
         else if (item == "Profile") connect(btn, &QPushButton::clicked, this, &CreatePollPage::onProfileClicked);
     }
+    QLabel *welcomeLabel = new QLabel("Welcome \n" + QString::fromStdString(activeUser.name) + "!", sidebar);
+    welcomeLabel->setStyleSheet(QString("color: %1; font-size: 15px; padding: 5px 10px; font-style: italic; font-weight: bold;").arg("#EBECF0"));
+    welcomeLabel->setWordWrap(true);
+    welcomeLabel->setAlignment(Qt::AlignLeft);
+    sbLayout->addWidget(welcomeLabel);
     sbLayout->addStretch();
+
 
     // ================= Content Area =================
     content = new QWidget(this);
@@ -193,7 +199,6 @@ CreatePollPage::CreatePollPage(QWidget *parent)
         "  font-size: 15px;"
         "  font-weight: 500;"
         "  border: none;"
-        "  transition: background 0.3s ease;"
         "}"
         "QPushButton:hover {"
         "  background-color: #5A67D8;"
@@ -216,7 +221,6 @@ CreatePollPage::CreatePollPage(QWidget *parent)
         "  font-size: 16px;"
         "  font-weight: 600;"
         "  border: none;"
-        "  transition: background 0.3s ease;"
         "}"
         "QPushButton:hover {"
         "  background-color: #38A169;"
@@ -225,7 +229,7 @@ CreatePollPage::CreatePollPage(QWidget *parent)
         "  background-color: #2F855A;"
         "}"
         );
-    connect(createBtn, &QPushButton::clicked, this, &CreatePollPage::onCreatePollClicked);
+    connect(createBtn, &QPushButton::clicked, this, &CreatePollPage::onCreatePollBtnClicked);
     createBtn->setDefault(true);
     createBtn->setCursor(Qt::PointingHandCursor);
 
@@ -293,7 +297,6 @@ void CreatePollPage::addOptionWidget()
         "  font-size: 14px;"
         "  font-weight: 500;"
         "  border: none;"
-        "  transition: background 0.3s ease;"
         "}"
         "QPushButton:hover {"
         "  background-color: #F56565;"
@@ -331,7 +334,7 @@ void CreatePollPage::onAddOptionClicked()
     addOptionWidget();
 }
 
-void CreatePollPage::onCreatePollClicked()
+void CreatePollPage::onCreatePollBtnClicked()
 {
     auto pollName = pollNameEdit->text().toStdString();
     auto voterId  = voterIdEdit->text().toStdString();

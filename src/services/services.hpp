@@ -9,6 +9,10 @@ User get_id_by_user(const std::string& username);
 
 std::string create_user(CreateUser createUser);
 
+std::string edit_user(EditUser editUser);
+
+std::string edit_user_password(EditUserPassword editUserPassword);
+
 Poll create_poll(CreatePoll createPoll);
 
 void fixIds(int);

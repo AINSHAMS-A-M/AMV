@@ -9,6 +9,7 @@
 #include <QPainterPath>
 #include <QDebug>
 #include <QPushButton>
+#include "db.hpp"
 #include "utils.h"
 
 VotePage::VotePage(QWidget *parent)
@@ -74,6 +75,11 @@ VotePage::VotePage(QWidget *parent)
             connect(btn, &QPushButton::clicked, this, &::VotePage::onProfileClicked);
         }
     }
+    QLabel *welcomeLabel = new QLabel("Welcome \n" + QString::fromStdString(activeUser.name) + "!", sidebar);
+    welcomeLabel->setStyleSheet(QString("color: %1; font-size: 15px; padding: 5px 10px; font-style: italic; font-weight: bold;").arg("#EBECF0"));
+    welcomeLabel->setWordWrap(true);
+    welcomeLabel->setAlignment(Qt::AlignLeft);
+    sbLayout->addWidget(welcomeLabel);
     sbLayout->addStretch();
 
     content = new QWidget(this);
@@ -85,5 +91,4 @@ VotePage::VotePage(QWidget *parent)
     rootLayout->addWidget(sidebar);
     rootLayout->addWidget(content);
     rootLayout->setStretch(0, 0);
-    rootLayout->setStretch(1, 1);
 }

@@ -12,7 +12,6 @@
 #include <QMessageBox>
 #include "vote.h"
 #include <iostream>
-#include <algorithm>
 #include "services.hpp"
 #include "data_structures.hpp"
 #include "db.hpp"
@@ -33,21 +32,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     loginPage     = new LoginPage(this);
     registerPage  = new RegisterPage(this);
-    helpPage = new HelpPage(this);
-    votePage = new VotePage(this);
-    createPollPage = new CreatePollPage(this);
-    myPollsPage = new MyPollsPage(this);
-    myVotesPage = new MyVotesPage(this);
-    profileEditPage = new ProfileEditPage(this);
 
     stackedWidget->addWidget(loginPage);     // index 0
     stackedWidget->addWidget(registerPage);  // index 1
-    stackedWidget->addWidget(helpPage); // index 2
-    stackedWidget->addWidget(votePage); // index 3
-    stackedWidget->addWidget(createPollPage); // index 4
-    stackedWidget->addWidget(myPollsPage); // index 5
-    stackedWidget->addWidget(myVotesPage); // index 6
-    stackedWidget->addWidget(profileEditPage); // index 7
 
     stackedWidget->setCurrentWidget(loginPage);
 
@@ -64,52 +51,7 @@ MainWindow::MainWindow(QWidget *parent)
             this,          &MainWindow::on_login_linkActivated);
 
 
-    connect(helpPage,       &HelpPage::onHelpClicked,       this, &MainWindow::onHelpClicked);
-    connect(votePage,       &VotePage::onHelpClicked,       this, &MainWindow::onHelpClicked);
-    connect(myVotesPage,    &MyVotesPage::onHelpClicked,    this, &MainWindow::onHelpClicked);
-    connect(createPollPage, &CreatePollPage::onHelpClicked, this, &MainWindow::onHelpClicked);
-    connect(myPollsPage,    &MyPollsPage::onHelpClicked,    this, &MainWindow::onHelpClicked);
-    connect(profileEditPage,&ProfileEditPage::onHelpClicked,this, &MainWindow::onHelpClicked);
 
-    // Connecting onVoteClicked signal from all relevant pages
-    connect(helpPage,       &HelpPage::onVoteClicked,       this, &MainWindow::onVoteClicked);
-    connect(votePage,       &VotePage::onVoteClicked,       this, &MainWindow::onVoteClicked);
-    connect(myVotesPage,    &MyVotesPage::onVoteClicked,    this, &MainWindow::onVoteClicked);
-    connect(createPollPage, &CreatePollPage::onVoteClicked, this, &MainWindow::onVoteClicked);
-    connect(myPollsPage,    &MyPollsPage::onVoteClicked,    this, &MainWindow::onVoteClicked);
-    connect(profileEditPage,&ProfileEditPage::onVoteClicked,this, &MainWindow::onVoteClicked);
-
-    // Connecting onMyVotesClicked signal from all relevant pages
-    connect(helpPage,       &HelpPage::onMyVotesClicked,       this, &MainWindow::onMyVotesClicked);
-    connect(votePage,       &VotePage::onMyVotesClicked,       this, &MainWindow::onMyVotesClicked);
-    connect(myVotesPage,    &MyVotesPage::onMyVotesClicked,    this, &MainWindow::onMyVotesClicked);
-    connect(createPollPage, &CreatePollPage::onMyVotesClicked, this, &MainWindow::onMyVotesClicked);
-    connect(myPollsPage,    &MyPollsPage::onMyVotesClicked,    this, &MainWindow::onMyVotesClicked);
-    connect(profileEditPage,&ProfileEditPage::onMyVotesClicked,this, &MainWindow::onMyVotesClicked);
-
-    // Connecting onCreatePollClicked signal from all relevant pages
-    connect(helpPage,       &HelpPage::onCreatePollClicked,       this, &MainWindow::onCreatePollClicked);
-    connect(votePage,       &VotePage::onCreatePollClicked,       this, &MainWindow::onCreatePollClicked);
-    connect(myVotesPage,    &MyVotesPage::onCreatePollClicked,    this, &MainWindow::onCreatePollClicked);
-    connect(createPollPage, &CreatePollPage::onCreatePollClicked, this, &MainWindow::onCreatePollClicked);
-    connect(myPollsPage,    &MyPollsPage::onCreatePollClicked,    this, &MainWindow::onCreatePollClicked);
-    connect(profileEditPage,&ProfileEditPage::onCreatePollClicked,this, &MainWindow::onCreatePollClicked);
-
-    // Connecting onMyPollsClicked signal from all relevant pages
-    connect(helpPage,       &HelpPage::onMyPollsClicked,       this, &MainWindow::onMyPollsClicked);
-    connect(votePage,       &VotePage::onMyPollsClicked,       this, &MainWindow::onMyPollsClicked);
-    connect(myVotesPage,    &MyVotesPage::onMyPollsClicked,    this, &MainWindow::onMyPollsClicked);
-    connect(createPollPage, &CreatePollPage::onMyPollsClicked, this, &MainWindow::onMyPollsClicked);
-    connect(myPollsPage,    &MyPollsPage::onMyPollsClicked,    this, &MainWindow::onMyPollsClicked);
-    connect(profileEditPage,&ProfileEditPage::onMyPollsClicked,this, &MainWindow::onMyPollsClicked);
-
-    // Connecting onProfileClicked signal from all relevant pages
-    connect(helpPage,       &HelpPage::onProfileClicked,       this, &MainWindow::onProfileClicked);
-    connect(votePage,       &VotePage::onProfileClicked,       this, &MainWindow::onProfileClicked);
-    connect(myVotesPage,    &MyVotesPage::onProfileClicked,    this, &MainWindow::onProfileClicked);
-    connect(createPollPage, &CreatePollPage::onProfileClicked, this, &MainWindow::onProfileClicked);
-    connect(myPollsPage,    &MyPollsPage::onProfileClicked,    this, &MainWindow::onProfileClicked);
-    connect(profileEditPage,&ProfileEditPage::onProfileClicked,this, &MainWindow::onProfileClicked);
 }
 
 MainWindow::~MainWindow()
@@ -127,7 +69,69 @@ void MainWindow::on_loginBtn_clicked()
     if (response == "true")
     {
         activeUser = get_id_by_user(username);
+        helpPage = new HelpPage(this);
+        votePage = new VotePage(this);
+        createPollPage = new CreatePollPage(this);
+        myPollsPage = new MyPollsPage(this);
+        myVotesPage = new MyVotesPage(this);
+        profileEditPage = new ProfileEditPage(this);
+        stackedWidget->addWidget(helpPage); // index 2
+        stackedWidget->addWidget(votePage); // index 3
+        stackedWidget->addWidget(createPollPage); // index 4
+        stackedWidget->addWidget(myPollsPage); // index 5
+        stackedWidget->addWidget(myVotesPage); // index 6
+        stackedWidget->addWidget(profileEditPage); // index 7
+
+        connect(helpPage,       &HelpPage::onHelpClicked,       this, &MainWindow::onHelpClicked);
+        connect(votePage,       &VotePage::onHelpClicked,       this, &MainWindow::onHelpClicked);
+        connect(myVotesPage,    &MyVotesPage::onHelpClicked,    this, &MainWindow::onHelpClicked);
+        connect(createPollPage, &CreatePollPage::onHelpClicked, this, &MainWindow::onHelpClicked);
+        connect(myPollsPage,    &MyPollsPage::onHelpClicked,    this, &MainWindow::onHelpClicked);
+        connect(profileEditPage,&ProfileEditPage::onHelpClicked,this, &MainWindow::onHelpClicked);
+
+        // Connecting onVoteClicked signal from all relevant pages
+        connect(helpPage,       &HelpPage::onVoteClicked,       this, &MainWindow::onVoteClicked);
+        connect(votePage,       &VotePage::onVoteClicked,       this, &MainWindow::onVoteClicked);
+        connect(myVotesPage,    &MyVotesPage::onVoteClicked,    this, &MainWindow::onVoteClicked);
+        connect(createPollPage, &CreatePollPage::onVoteClicked, this, &MainWindow::onVoteClicked);
+        connect(myPollsPage,    &MyPollsPage::onVoteClicked,    this, &MainWindow::onVoteClicked);
+        connect(profileEditPage,&ProfileEditPage::onVoteClicked,this, &MainWindow::onVoteClicked);
+
+        // Connecting onMyVotesClicked signal from all relevant pages
+        connect(helpPage,       &HelpPage::onMyVotesClicked,       this, &MainWindow::onMyVotesClicked);
+        connect(votePage,       &VotePage::onMyVotesClicked,       this, &MainWindow::onMyVotesClicked);
+        connect(myVotesPage,    &MyVotesPage::onMyVotesClicked,    this, &MainWindow::onMyVotesClicked);
+        connect(createPollPage, &CreatePollPage::onMyVotesClicked, this, &MainWindow::onMyVotesClicked);
+        connect(myPollsPage,    &MyPollsPage::onMyVotesClicked,    this, &MainWindow::onMyVotesClicked);
+        connect(profileEditPage,&ProfileEditPage::onMyVotesClicked,this, &MainWindow::onMyVotesClicked);
+
+        // Connecting onCreatePollClicked signal from all relevant pages
+        connect(helpPage,       &HelpPage::onCreatePollClicked,       this, &MainWindow::onCreatePollClicked);
+        connect(votePage,       &VotePage::onCreatePollClicked,       this, &MainWindow::onCreatePollClicked);
+        connect(myVotesPage,    &MyVotesPage::onCreatePollClicked,    this, &MainWindow::onCreatePollClicked);
+        connect(createPollPage, &CreatePollPage::onCreatePollClicked, this, &MainWindow::onCreatePollClicked);
+        connect(myPollsPage,    &MyPollsPage::onCreatePollClicked,    this, &MainWindow::onCreatePollClicked);
+        connect(profileEditPage,&ProfileEditPage::onCreatePollClicked,this, &MainWindow::onCreatePollClicked);
+
+        // Connecting onMyPollsClicked signal from all relevant pages
+        connect(helpPage,       &HelpPage::onMyPollsClicked,       this, &MainWindow::onMyPollsClicked);
+        connect(votePage,       &VotePage::onMyPollsClicked,       this, &MainWindow::onMyPollsClicked);
+        connect(myVotesPage,    &MyVotesPage::onMyPollsClicked,    this, &MainWindow::onMyPollsClicked);
+        connect(createPollPage, &CreatePollPage::onMyPollsClicked, this, &MainWindow::onMyPollsClicked);
+        connect(myPollsPage,    &MyPollsPage::onMyPollsClicked,    this, &MainWindow::onMyPollsClicked);
+        connect(profileEditPage,&ProfileEditPage::onMyPollsClicked,this, &MainWindow::onMyPollsClicked);
+
+        // Connecting onProfileClicked signal from all relevant pages
+        connect(helpPage,       &HelpPage::onProfileClicked,       this, &MainWindow::onProfileClicked);
+        connect(votePage,       &VotePage::onProfileClicked,       this, &MainWindow::onProfileClicked);
+        connect(myVotesPage,    &MyVotesPage::onProfileClicked,    this, &MainWindow::onProfileClicked);
+        connect(createPollPage, &CreatePollPage::onProfileClicked, this, &MainWindow::onProfileClicked);
+        connect(myPollsPage,    &MyPollsPage::onProfileClicked,    this, &MainWindow::onProfileClicked);
+        connect(profileEditPage,&ProfileEditPage::onProfileClicked,this, &MainWindow::onProfileClicked);
+
         stackedWidget->setCurrentWidget(helpPage);
+
+
     }
     else
     {
@@ -214,7 +218,7 @@ void MainWindow::on_login_linkActivated(const QString &)
 
 void MainWindow::onProfileClicked()
 {
-    stackedWidget->setCurrentWidget(loginPage);
+    stackedWidget->setCurrentWidget(profileEditPage);
 }
 
 void MainWindow::onHelpClicked()
