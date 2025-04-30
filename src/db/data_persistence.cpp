@@ -2,6 +2,7 @@
 #include <string>
 #include <iostream>
 #include <sstream>
+#include <vector>
 #include "data_structures.hpp"
 #include "services.hpp"
 
@@ -9,7 +10,7 @@
 MeshVector<User> users;
 MeshVector<Poll> polls;
 MeshVector<PollOption> pollOptions;
-MeshVector<UserVote> userVotes;
+std::vector<UserVote> userVotes;
 User activeUser;
 
 /// @brief Loads data from CSV files and populates in-memory data structures.
@@ -92,6 +93,8 @@ void load_data()
             if (std::getline(ss, segment, ',')) current_poll.id = std::stoi(segment); else throw std::runtime_error("Missing poll id");
             // Read name (can contain spaces)
             if (std::getline(ss, segment, ',')) current_poll.name = segment; else throw std::runtime_error("Missing poll name");
+            // Read description
+            if (std::getline(ss, segment, ',')) current_poll.desc = segment; else throw std::runtime_error("Missing poll description");
             // Read voter_id
             if (std::getline(ss, segment, ',')) current_poll.voter_id = segment; else throw std::runtime_error("Missing poll voter_id");
             // Read owner_id
@@ -133,8 +136,6 @@ void load_data()
             if (std::getline(ss, segment, ',')) current_poll_option.poll_id = std::stoi(segment); else throw std::runtime_error("Missing poll option poll_id");
             // Read name (can contain spaces)
             if (std::getline(ss, segment, ',')) current_poll_option.name = segment; else throw std::runtime_error("Missing poll option name");
-            // Read description (can contain spaces)
-            if (std::getline(ss, segment, ',')) current_poll_option.description = segment; else current_poll_option.description = "";
 
             pollOptions.push_back(current_poll_option);
         } catch (const std::exception& e) {
@@ -241,6 +242,7 @@ void save_data()
     {
         csv_out << current_poll.id << ','
                 << current_poll.name << ','
+                << current_poll.desc << ','
                 << current_poll.voter_id << ','
                 << current_poll.owner_id << ','
                 << current_poll.created_at << '\n';
@@ -265,8 +267,7 @@ void save_data()
     {
         csv_out << current_poll_option.id << ','
                 << current_poll_option.poll_id << ','
-                << current_poll_option.name << ','
-                << current_poll_option.description << '\n';
+                << current_poll_option.name << '\n';
     }
     if (csv_out.fail()) {
         std::cerr << "Error writing to pollOptions.csv." << std::endl;

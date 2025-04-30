@@ -20,9 +20,9 @@ struct UserVote
 {
     size_t id;
 
-    int user_id;
-    int poll_id;
-    int poll_option_id;
+    size_t user_id;
+    size_t poll_id;
+    size_t poll_option_id;
 };
 
 struct Poll
@@ -31,6 +31,7 @@ struct Poll
 
     // id GIVEN to users/voters to allow them to vote in the poll
     std::string name;
+    std::string desc;
     std::string voter_id;
     size_t owner_id;
     std::time_t created_at;
@@ -42,6 +43,4 @@ struct PollOption
 
     size_t poll_id;
     std::string name;
-    // used in GUI, a brief description of the option, can be an empty string.
-    std::string description;
 };

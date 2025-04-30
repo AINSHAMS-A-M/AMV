@@ -1,36 +1,56 @@
-#pragma once
+#ifndef VOTE_H
+#define VOTE_H
 
-#include <QWidget> // Base class
-#include <QStringList> // Needed for menu items
+#include "data_structures.hpp"
+#include <QWidget>
+#include <QLineEdit>
+#include <QLabel>
+#include <QVBoxLayout>
+#include <QButtonGroup>
 
-QT_BEGIN_NAMESPACE
-class QLabel;
-class QTextEdit;
-class QWidget;
-class QPushButton; // Include QPushButton forward declaration
-QT_END_NAMESPACE
+class QStackedWidget;
 
 class VotePage : public QWidget
 {
     Q_OBJECT
 
 public:
-    // Constructor declaration only
     explicit VotePage(QWidget *parent = nullptr);
-    ~VotePage() override = default;
 
 signals:
-    // Signals to indicate which sidebar menu item was clicked
     void onHelpClicked();
     void onVoteClicked();
     void onMyVotesClicked();
     void onCreatePollClicked();
     void onMyPollsClicked();
     void onProfileClicked();
+
+private slots:
+    void validateVoterCredentials();
+    void submitVote();
+    void showVoterIdPage();
+
 private:
-    QWidget    *sidebar;
-    QWidget    *content;
+    QWidget *sidebar;
+    QWidget *content;
+    QStackedWidget *stackedWidget;
+    QWidget *voterIdPage;
+    QWidget *pollOptionsPage;
 
-    QList<QPushButton*> sidebarButtons;
+    // Form inputs
+    QLineEdit *voterIdInput;
+    QLineEdit *pollIdInput;
 
+    // Poll display
+    QLabel *pollTitleLabel;
+    QLabel *pollDescLabel;
+    QWidget *optionsContainer;
+    QVBoxLayout *optionsLayout;
+    QButtonGroup *optionsGroup;
+    size_t pollId;
+
+    // Helper methods
+    void loadPollOptions();
 };
+
+#endif // VOTE_H

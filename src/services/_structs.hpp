@@ -31,14 +31,11 @@ struct CreatePoll
 
     std::string poll_name;
 
+    std::string poll_desc;
+
     size_t owner_id;
 
-    MeshVector<std::pair<std::string,std::string>> options;
-};
-
-// i.e. vote in a poll
-struct CreateUserPoll
-{
+    MeshVector<std::string> options;
 };
 
 // Service: Retrieve Poll - ADMIN, Service: Retrieve Poll - User, functions structs and returns:
@@ -47,10 +44,10 @@ struct RetrievePollResultAdmin
     struct Result
     {
         // holds a counter for a specific option in a vote:
-        int poll_id;
-        int option_id;
+        size_t poll_id;
+        size_t option_id;
         std::string option_name;
-        int option_votes_count;
+        size_t option_votes_count;
     };
 
     Poll pollInfo;
@@ -64,6 +61,7 @@ struct RetrievePollDTO
 {
     std::string id;
     std::string name;
+    std::string desc;
     std::string creation_date;
     MeshVector<PollOption> options; // Holds options for the public poll
 };

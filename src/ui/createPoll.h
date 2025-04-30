@@ -5,11 +5,11 @@
 #include <QStringList>
 #include <QList>
 #include <QLineEdit>
+#include <QTextEdit>
 #include <QVector>
 
 QT_BEGIN_NAMESPACE
 class QLabel;
-class QTextEdit;
 class QPushButton;
 class QVBoxLayout;
 class QHBoxLayout;
@@ -32,7 +32,6 @@ signals:
     void onMyPollsClicked();
     void onProfileClicked();
 
-
 public slots:
     void onAddOptionClicked();
     void onRemoveOptionClicked();
@@ -41,13 +40,14 @@ public slots:
 private:
     void addOptionWidget();
 
-    QWidget         *sidebar;
-    QWidget         *content;
-    QScrollArea     *optionsScrollArea;
-    QList<QPushButton*> sidebarButtons;
-    QLineEdit       *pollNameEdit;
-    QLineEdit       *voterIdEdit;
-    QWidget         *optionsContainer;
-    QVBoxLayout     *optionsLayout;
-    QVector<QWidget*> optionWidgets;
+    QWidget               *sidebar;
+    QWidget               *content;
+    QScrollArea           *optionsScrollArea;
+    QList<QPushButton*>    sidebarButtons;
+    QLineEdit             *pollNameEdit;
+    QTextEdit             *pollDescEdit;
+    QLineEdit             *voterIdEdit;
+    QWidget               *optionsContainer;
+    QVBoxLayout           *optionsLayout;
+    QVector<QWidget*>      optionWidgets;
 };

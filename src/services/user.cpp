@@ -61,14 +61,6 @@ std::string create_user(CreateUser createUser)
 
 
 /// @brief Retrieves a user by their ID.
-User get_user_by_id(const size_t& id) {
-    for (const auto& user : users) {
-        if (user.id == id) {
-            return user;
-        }
-    }
-    throw std::invalid_argument("User not found!");
-}
 
 User get_id_by_user(const std::string& username) {
     for (const auto& user : users) {
@@ -104,22 +96,17 @@ std::string edit_user(EditUser editUser)
 /// @brief Edits the password for an existing user in the system.
 std::string edit_user_password(EditUserPassword editUserPassword)
 {
-    bool found = 0;
     for (int client = 0; client < users.size(); client++)
     {
         if (editUserPassword.id == users[client].id)
         {
             if (editUserPassword.hashed_password == users[client].hashed_password)
             {
-                found = 1;
                 std::string now_password_hashed = hash_password(editUserPassword.now_password, editUserPassword.id);
                 users[client].hashed_password = now_password_hashed;
                 return "done";
             }
         }
     }
-    if (!found)
-    {
-        return ("The Old Password is wrong, Please try again!");
-    }
+    return ("The Old Password is wrong, Please try again!");
 }

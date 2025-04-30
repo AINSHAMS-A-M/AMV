@@ -14,14 +14,15 @@
 #include <utility>
 
 CreatePollPage::CreatePollPage(QWidget *parent)
-    : QWidget(parent),
-    sidebar(nullptr),
-    content(nullptr),
-    optionsScrollArea(nullptr),
-    pollNameEdit(nullptr),
-    voterIdEdit(nullptr),
-    optionsContainer(nullptr),
-    optionsLayout(nullptr)
+    : QWidget(parent)
+    , sidebar(nullptr)
+    , content(nullptr)
+    , optionsScrollArea(nullptr)
+    , pollNameEdit(nullptr)
+    , pollDescEdit(nullptr)
+    , voterIdEdit(nullptr)
+    , optionsContainer(nullptr)
+    , optionsLayout(nullptr)
 {
     const QString sidebarColor = "#2C3E50";
     const QString bgColor = "#F5F6F8";
@@ -45,14 +46,17 @@ CreatePollPage::CreatePollPage(QWidget *parent)
     QPixmap logoPixmap(":/logo.png");
     QPixmap roundedLogo = createRoundedLogo(logoPixmap, logoSize);
 
-    if (!roundedLogo.isNull()) {
+    if (!roundedLogo.isNull())
+    {
         QLabel *logoLabel = new QLabel(sidebar);
         logoLabel->setPixmap(roundedLogo);
         logoLabel->setFixedSize(logoSize, logoSize);
         logoLabel->setAlignment(Qt::AlignCenter);
         logoLabel->setStyleSheet("background-color: transparent;");
         sbLayout->addWidget(logoLabel, 0, Qt::AlignHCenter);
-    } else {
+    }
+    else
+    {
         QLabel *errorLabel = new QLabel("Logo Error", sidebar);
         errorLabel->setAlignment(Qt::AlignCenter);
         errorLabel->setStyleSheet("color: white;");
@@ -61,7 +65,8 @@ CreatePollPage::CreatePollPage(QWidget *parent)
 
     // Menu Items
     QStringList menuItems = {"Help", "Vote", "My Votes", "Create Poll", "My Polls", "Profile"};
-    for (const QString &item : menuItems) {
+    for (const QString &item : menuItems)
+    {
         QPushButton *btn = new QPushButton(item, sidebar);
         btn->setStyleSheet(
             "QPushButton {"
@@ -81,13 +86,32 @@ CreatePollPage::CreatePollPage(QWidget *parent)
         sbLayout->addWidget(btn);
 
         // Connect signals
-        if (item == "Help") connect(btn, &QPushButton::clicked, this, &CreatePollPage::onHelpClicked);
-        else if (item == "Vote") connect(btn, &QPushButton::clicked, this, &CreatePollPage::onVoteClicked);
-        else if (item == "My Votes") connect(btn, &QPushButton::clicked, this, &CreatePollPage::onMyVotesClicked);
-        else if (item == "Create Poll") connect(btn, &QPushButton::clicked, this, &CreatePollPage::onCreatePollClicked);
-        else if (item == "My Polls") connect(btn, &QPushButton::clicked, this, &CreatePollPage::onMyPollsClicked);
-        else if (item == "Profile") connect(btn, &QPushButton::clicked, this, &CreatePollPage::onProfileClicked);
+        if (item == "Help")
+        {
+            connect(btn, &QPushButton::clicked, this, &CreatePollPage::onHelpClicked);
+        }
+        else if (item == "Vote")
+        {
+            connect(btn, &QPushButton::clicked, this, &CreatePollPage::onVoteClicked);
+        }
+        else if (item == "My Votes")
+        {
+            connect(btn, &QPushButton::clicked, this, &CreatePollPage::onMyVotesClicked);
+        }
+        else if (item == "Create Poll")
+        {
+            connect(btn, &QPushButton::clicked, this, &CreatePollPage::onCreatePollClicked);
+        }
+        else if (item == "My Polls")
+        {
+            connect(btn, &QPushButton::clicked, this, &CreatePollPage::onMyPollsClicked);
+        }
+        else if (item == "Profile")
+        {
+            connect(btn, &QPushButton::clicked, this, &CreatePollPage::onProfileClicked);
+        }
     }
+
     QLabel *welcomeLabel = new QLabel("Welcome \n" + QString::fromStdString(activeUser.name) + "!", sidebar);
     welcomeLabel->setStyleSheet(QString("color: %1; font-size: 15px; padding: 5px 10px; font-style: italic; font-weight: bold;").arg("#EBECF0"));
     welcomeLabel->setWordWrap(true);
@@ -144,6 +168,12 @@ CreatePollPage::CreatePollPage(QWidget *parent)
     pollNameEdit->setStyleSheet(inputStyle);
     formLayout->addRow("Poll Name:", pollNameEdit);
 
+    pollDescEdit = new QTextEdit();
+    pollDescEdit->setPlaceholderText("Enter poll description...");
+    pollDescEdit->setStyleSheet(inputStyle);
+    pollDescEdit->setFixedHeight(100);
+    formLayout->addRow("Description:", pollDescEdit);
+
     voterIdEdit = new QLineEdit();
     voterIdEdit->setPlaceholderText("Enter voter ID...");
     voterIdEdit->setStyleSheet(inputStyle);
@@ -176,11 +206,11 @@ CreatePollPage::CreatePollPage(QWidget *parent)
 
     optionsContainer = new QWidget();
     optionsLayout = new QVBoxLayout(optionsContainer);
-    optionsLayout->setContentsMargins(2, 2, 12, 2); // Right margin for scrollbar
+    optionsLayout->setContentsMargins(2, 2, 12, 2);
     optionsLayout->setSpacing(18);
 
     optionsScrollArea->setWidget(optionsContainer);
-    contentLayout->addWidget(optionsScrollArea, 1); // Take remaining space
+    contentLayout->addWidget(optionsScrollArea, 1);
 
     // Button Container
     QWidget *buttonContainer = new QWidget();
@@ -240,9 +270,10 @@ CreatePollPage::CreatePollPage(QWidget *parent)
 
     rootLayout->addWidget(sidebar);
     rootLayout->addWidget(content);
-    connect(pollNameEdit, &QLineEdit::returnPressed, [this]() {
-        voterIdEdit->setFocus();
-    });
+    connect(pollNameEdit, &QLineEdit::returnPressed, [this]()
+            {
+                voterIdEdit->setFocus();
+            });
 }
 
 void CreatePollPage::addOptionWidget()
@@ -270,23 +301,6 @@ void CreatePollPage::addOptionWidget()
         "}"
         );
 
-    QTextEdit *descEdit = new QTextEdit(optWidget);
-    descEdit->setPlaceholderText("Option description");
-    descEdit->setStyleSheet(
-        "QTextEdit {"
-        "  background: white;"
-        "  border: 2px solid #E2E8F0;"
-        "  border-radius: 6px;"
-        "  padding: 12px;"
-        "  font-size: 13px;"
-        "  color: #4A5568;"
-        "}"
-        "QTextEdit:focus {"
-        "  border-color: #667EEA;"
-        "}"
-        );
-    descEdit->setFixedHeight(80);
-
     QPushButton *removeBtn = new QPushButton("Remove");
     removeBtn->setStyleSheet(
         "QPushButton {"
@@ -306,8 +320,7 @@ void CreatePollPage::addOptionWidget()
         "}"
         );
 
-    optLayout->addWidget(nameEdit, 2); // 2:1 ratio
-    optLayout->addWidget(descEdit, 3);
+    optLayout->addWidget(nameEdit, 1);
     optLayout->addWidget(removeBtn);
 
     optionsLayout->addWidget(optWidget);
@@ -317,11 +330,12 @@ void CreatePollPage::addOptionWidget()
     removeBtn->setCursor(Qt::PointingHandCursor);
 }
 
-
 void CreatePollPage::onRemoveOptionClicked()
 {
-    if (QPushButton *btn = qobject_cast<QPushButton*>(sender())) {
-        if (QWidget *optWidget = btn->parentWidget()) {
+    if (QPushButton *btn = qobject_cast<QPushButton*>(sender()))
+    {
+        if (QWidget *optWidget = btn->parentWidget())
+        {
             optionsLayout->removeWidget(optWidget);
             optionWidgets.removeOne(optWidget);
             optWidget->deleteLater();
@@ -337,47 +351,50 @@ void CreatePollPage::onAddOptionClicked()
 void CreatePollPage::onCreatePollBtnClicked()
 {
     auto pollName = pollNameEdit->text().toStdString();
+    auto pollDesc = pollDescEdit->toPlainText().toStdString();
     auto voterId  = voterIdEdit->text().toStdString();
-    MeshVector <std::pair<std::string,std::string>> options;
+    MeshVector<std::string> options;
 
-    if (pollName.find(',') != std::string::npos|| voterId.find(',') != std::string::npos)
+    if (pollName.find(',') != std::string::npos || pollDesc.find(',') != std::string::npos || voterId.find(',') != std::string::npos)
     {
-        QMessageBox::warning(NULL,"Warning","Invalid character detected! don't type \",\"");
+        QMessageBox::warning(nullptr, "Warning", "Invalid character detected! don't type ','");
         return;
     }
+
     for (QWidget *optWidget : optionWidgets)
     {
         auto nameEdit = optWidget->findChild<QLineEdit*>()->text().toStdString();
-        auto descEdit = optWidget->findChild<QTextEdit*>()->toPlainText().toStdString();
-        if (nameEdit.find(',') != std::string::npos || descEdit.find(',') != std::string::npos)
+        if (nameEdit.find(',') != std::string::npos)
         {
-            QMessageBox::warning(NULL,"Warning","Invalid Character detected! don't type \",\"");
+            QMessageBox::warning(nullptr, "Warning", "Invalid character detected! don't type ','");
             return;
         }
         else if (!nameEdit.empty())
         {
-            options.push_back({nameEdit,descEdit});
+            options.push_back(nameEdit);
         }
         else
         {
-            QMessageBox::warning(NULL,"Warning","Empty Option Detected!");
+            QMessageBox::warning(nullptr, "Warning", "Empty option detected!");
             return;
         }
     }
-    if (pollName.empty() || voterId.empty()|| options.size() == 0)
+
+    if (pollName.empty() || voterId.empty() || !options.size())
     {
-        QMessageBox::warning(NULL,"Warning","Please provide a name and a voter ID and add some options!");
+        QMessageBox::warning(nullptr, "Warning", "Please provide a title, description, voter ID, and add some options!");
         return;
     }
+
     CreatePoll newPoll
         {
             voterId,
             pollName,
+            pollDesc,
             activeUser.id,
             options
         };
 
     create_poll(newPoll);
-    QMessageBox::information(nullptr,"Success","Poll Created Successfully!");
-
+    QMessageBox::information(nullptr, "Success", "Poll created successfully!");
 }

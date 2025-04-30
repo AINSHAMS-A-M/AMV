@@ -11,6 +11,7 @@ Poll create_poll(CreatePoll createPoll)
     {
         poll_id,
         createPoll.poll_name,
+        createPoll.poll_desc,
         createPoll.voter_id,
         createPoll.owner_id,
         time(0)
@@ -18,14 +19,13 @@ Poll create_poll(CreatePoll createPoll)
     polls.push_back(new_poll);
 
     size_t poll_option_id = pollOptions.size();
-    for (auto option : createPoll.options)
+    for (auto &option : createPoll.options)
     {
         PollOption new_option = 
         {
             poll_option_id,
             poll_id,
-            option.first,
-            option.second
+            option
         };
         pollOptions.push_back(new_option);
         poll_option_id++;
@@ -34,48 +34,29 @@ Poll create_poll(CreatePoll createPoll)
     return new_poll;
 }
 
-// Fix the id in UserVotes after erase
-void fixIds(int id)
-{
-    for (size_t i = id; i < userVotes.size(); i++)
-    {
-        userVotes[i].id--;
-    }
-}
-
 // Check if the user has voted or not
-std::pair<bool, size_t> check_user_vote(int user_id, int poll_id)
+std::pair<bool,size_t> check_user_vote(size_t user_id, size_t poll_id)
 {
-    // Search for the user vote in UserPolls
-    std::pair<bool, size_t> checkData = {0, -1};
 
     for (size_t i = 0; i < userVotes.size(); i++)
     {
         if (userVotes[i].poll_id == poll_id && userVotes[i].user_id == user_id)
         {
-            checkData.first = true;
-            checkData.second = i;
-            break;
+            return {true,i};
         }
     }
-    return checkData;
+    return {false,-1};
 }
 
 /// @brief Makes a user vote in the poll.
-/// Make sure the user hadn't voted before.
-void create_user_vote(int user_id, int poll_id, int poll_option_id)
+void create_user_vote(size_t user_id, size_t poll_id, size_t poll_option_id)
 {
-    // Check if the poll option is voted already
-    auto checkData = check_user_vote(user_id, poll_id);
-
-    if (!checkData.first)
-    {
         // Create a new UserVote & fill it with formal parameters.
         UserVote UserChoiceData;
         size_t newid;
 
         // Check if the userpolls not empty
-        if (!userVotes.size())
+        if (userVotes.size())
         {
             newid = userVotes[userVotes.size() - 1].id + 1;
         }
@@ -92,20 +73,16 @@ void create_user_vote(int user_id, int poll_id, int poll_option_id)
 
         // Push the uservote to the UserPolls.
         userVotes.push_back(UserChoiceData);
-    }
-    else
-        throw "You Have already voted";
 }
 
-void delete_user_vote(int user_id, int poll_id)
+void delete_user_vote(size_t user_id, size_t poll_id)
 {
     // get the userpoll id
     auto checkData = check_user_vote(user_id, poll_id);
     if (checkData.first)
     {
         // Erase the user vote by userpoll id
-        // userVotes.erase(userVotes.begin() + checkData.second);
-        fixIds(checkData.second);
+        userVotes.erase(userVotes.begin() + checkData.second);
     }
     else
         // If !found throws an error (100% invalid function call).
@@ -114,14 +91,14 @@ void delete_user_vote(int user_id, int poll_id)
 
 /// @brief Retrieves a public poll for general viewing.
 /// This function returns basic poll information without revealing user-specific or private data.
-RetrievePollDTO retrieve_public_poll(int poll_id)
+RetrievePollDTO retrieve_public_poll(size_t poll_id)
 {
     // Find the poll with the given poll_id
     Poll foundPoll;
     bool pollFound = false;
     for (const auto &p : polls)
     {
-        if (p.id == poll_id) // Ensure matching type (poll_id is string)
+        if (p.id == poll_id) // Ensure matching type
         {
             foundPoll = p;
             pollFound = true;
@@ -140,6 +117,7 @@ RetrievePollDTO retrieve_public_poll(int poll_id)
     publicPoll.id = foundPoll.id;
     publicPoll.name = foundPoll.name;
     publicPoll.creation_date = foundPoll.created_at;
+    publicPoll.desc = foundPoll.desc;
 
     // Add options to the public poll (without revealing any user-specific data)
     for (const auto &option : pollOptions)
@@ -157,7 +135,7 @@ RetrievePollDTO retrieve_public_poll(int poll_id)
 /// @param user_id The ID of the poll owner.
 /// @param poll_id The ID of the poll to retrieve.
 /// @return Full poll details including all options, metadata, and configuration settings.
-RetrievePollResultAdmin retrieve_poll_as_owner(const int user_id, const int poll_id)
+RetrievePollResultAdmin retrieve_poll_as_owner(const size_t user_id, const size_t poll_id)
 {
     RetrievePollResultAdmin result;
     result.success = false;
@@ -229,7 +207,7 @@ RetrievePollResultAdmin retrieve_poll_as_owner(const int user_id, const int poll
     return result;
 }
 
-MeshVector<UserVote> retrieve_poll_for_user(int user_id)
+MeshVector<UserVote> retrieve_poll_for_user(size_t user_id)
 {
     MeshVector<UserVote> votes_with_the_user_id;
     for (auto &v : userVotes)
@@ -246,9 +224,9 @@ MeshVector<UserVote> retrieve_poll_for_user(int user_id)
 /// @brief Retrieves the last 10 polls the user has participated in.
 /// @param user_id The ID of the user.
 /// @return A list of up to 10 polls the user has voted in, including the selected option for each.
-MeshVector<PollRead> retrieve_last_10_polls(int user_id)
+MeshVector<PollRead> retrieve_last_10_polls(size_t user_id)
 {
-    MeshVector<int> poll_id, option_id;
+    MeshVector<size_t> poll_id, option_id;
 
     for (long long last = userVotes.size() - 1; last >= 0; last--)
     {
@@ -265,7 +243,7 @@ MeshVector<PollRead> retrieve_last_10_polls(int user_id)
         }
     }
 
-    int number_of_polls = poll_id.size();
+    size_t number_of_polls = poll_id.size();
 
     if (number_of_polls == 0)
     {
@@ -273,9 +251,9 @@ MeshVector<PollRead> retrieve_last_10_polls(int user_id)
     }
 
     MeshVector<PollRead> last_polls(number_of_polls);
-    for (int i = 0; i < number_of_polls; i++)
+    for (size_t i = 0; i < number_of_polls; i++)
     {
-        for (auto current : polls)
+        for (auto &current : polls)
         {
             if (current.id == poll_id[i])
             {
@@ -283,7 +261,7 @@ MeshVector<PollRead> retrieve_last_10_polls(int user_id)
                 break;
             }
         }
-        for (auto current : pollOptions)
+        for (auto &current : pollOptions)
         {
             if (current.id == option_id[i])
             {
@@ -294,4 +272,29 @@ MeshVector<PollRead> retrieve_last_10_polls(int user_id)
     }
 
     return last_polls;
+}
+
+
+std::string getPollId(std::string &voterId)
+{
+    for (size_t i = 0; i < polls.size(); i++)
+    {
+        // find the poll id
+        if (polls[i].voter_id == voterId)
+        {
+            return std::to_string(polls[i].id);
+        }
+    }
+    return "f";
+}
+
+size_t getPollOptionId(size_t pollId)
+{
+    for (auto &option : pollOptions)
+    {
+        if (option.poll_id == pollId)
+        {
+            return option.id;
+        }
+    }
 }
