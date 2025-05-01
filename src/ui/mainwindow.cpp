@@ -1,8 +1,8 @@
 #include "mainwindow.h"
-#include "qlineedit"
-#include "ui_mainwindow.h"
-#include "utils.h"
+#include "QLineEdit"
 #include "login.h"
+#include "QMenuBar"
+#include "QStatusBar"
 #include "register.h"
 #include "help.h"
 #include "createPoll.h"
@@ -11,7 +11,6 @@
 #include "profile.h"
 #include <QMessageBox>
 #include "vote.h"
-#include <iostream>
 #include "services.hpp"
 #include "data_structures.hpp"
 #include "db.hpp"
@@ -20,10 +19,10 @@
 
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+    : QMainWindow(parent),
+    stackedWidget (new QStackedWidget(this))
 {
-    ui->setupUi(this);
+    // Hide the grey bars in the top and bottom of the window
     menuBar()->hide();
     statusBar()->hide();
 
@@ -52,11 +51,6 @@ MainWindow::MainWindow(QWidget *parent)
 
 
 
-}
-
-MainWindow::~MainWindow()
-{
-    delete ui;
 }
 
 void MainWindow::on_loginBtn_clicked()

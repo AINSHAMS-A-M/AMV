@@ -1,16 +1,10 @@
 #pragma once
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
 
 #include <QMainWindow>
 #include <QStackedWidget>
 #include <QCloseEvent>
 
-QT_BEGIN_NAMESPACE
-namespace Ui { class MainWindow; }
-QT_END_NAMESPACE
 
-// Keep forward declarations as they were
 class LoginPage;
 class RegisterPage;
 class VotePage;
@@ -26,7 +20,7 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);
-    ~MainWindow() override;
+    ~MainWindow() override = default;
 
 protected:
     // Override the close event handler
@@ -45,7 +39,6 @@ private slots:
     void onProfileClicked();
 
 private:
-    Ui::MainWindow *ui;
     QStackedWidget *stackedWidget;
 
     // Maintain original pointer names
@@ -59,4 +52,3 @@ private:
     HelpPage        *helpPage;
 };
 
-#endif // MAINWINDOW_H
