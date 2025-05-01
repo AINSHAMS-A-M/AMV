@@ -267,8 +267,6 @@ VotePage::VotePage(QWidget *parent)
     rootLayout->setStretch(0, 0);
     rootLayout->setStretch(1, 1);
 
-    // Ensure focus is set after everything is potentially visible
-    QMetaObject::invokeMethod(voterIdInput, "setFocus", Qt::QueuedConnection);
 }
 
 void VotePage::validateVoterCredentials()

@@ -16,12 +16,11 @@ class LoginPage : public QWidget
 public:
     explicit LoginPage(QWidget *parent = nullptr);
     ~LoginPage() override = default;
-    QString userName() const;
-    QString password() const;
+    void onLoginClicked();
 
 signals:
-    void loginClicked();
-    void registerLinkActivated(const QString &link);
+    void loginSuccessful();
+    void registerLinkActivated();
 
 private:
     QWidget    *leftPanel;

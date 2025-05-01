@@ -26,10 +26,6 @@ HEADERS += $$files(src/db/*.hpp) \
            $$files(src/ui/*.hpp) \
            $$files(src/ui/*.h) \
            $$files(src/*.hpp) \
-    src/ui/refreshable.h
-
-# UI forms
-FORMS += $$files(src/ui/*.ui)
 
 # Deployment (optional)
 unix:!android {

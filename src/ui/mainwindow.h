@@ -27,10 +27,10 @@ protected:
     void closeEvent(QCloseEvent *event) override;
 
 private slots:
-    void on_loginBtn_clicked();
-    void on_registerBtn_clicked();
-    void on_register_linkActivated(const QString &link);
-    void on_login_linkActivated(const QString &link);
+    void onLoginClicked();
+    void onRegisterClicked();
+    void onRegisterLink();
+    void onLoginLink();
     void onHelpClicked();
     void onVoteClicked();
     void onMyVotesClicked();

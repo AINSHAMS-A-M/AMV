@@ -16,10 +16,12 @@ class RegisterPage : public QWidget
 public:
     explicit RegisterPage(QWidget *parent = nullptr);
     ~RegisterPage() override = default;
+    void onRegisterClicked();
 
 signals:
-    void registerClicked();
-    void loginLinkActivated(const QString &link);
+    void loginLinkActivated();
+    void registrationSuccessful();
+
 
 private:
     QWidget     *leftPanel;

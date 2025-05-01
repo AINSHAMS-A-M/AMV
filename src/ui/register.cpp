@@ -1,4 +1,7 @@
 #include "register.h"
+#include "_structs.hpp"
+#include "db.hpp"
+#include "services.hpp"
 #include "utils.h"
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -8,6 +11,7 @@
 #include <QPixmap>
 #include <QPainter>
 #include <QPainterPath>
+#include <QMessageBox>
 #include <QDebug>
 
 RegisterPage::RegisterPage(QWidget *parent)
@@ -144,9 +148,16 @@ RegisterPage::RegisterPage(QWidget *parent)
     mainLayout->addWidget(rightPanel, 1);
 
     // Connect signals
-    connect(registerBtn, &QPushButton::clicked, this, &RegisterPage::registerClicked);
-    connect(loginLabel, &QLabel::linkActivated,
-            this,        &RegisterPage::loginLinkActivated);
+    connect(registerBtn, &QPushButton::clicked, this, &RegisterPage::onRegisterClicked);
+
+
+    connect(loginLabel, &QLabel::linkActivated, [this]() {
+        emit loginLinkActivated();
+        realNameEdit->clear();
+        usernameEdit->clear();
+        passwordEdit->clear();
+        confirmEdit->clear();
+    });
 
     connect(realNameEdit, &QLineEdit::returnPressed, [this]() {
         usernameEdit->setFocus();
@@ -160,5 +171,77 @@ RegisterPage::RegisterPage(QWidget *parent)
         confirmEdit->setFocus();
     });
 
-    connect(confirmEdit, &QLineEdit::returnPressed, this, &RegisterPage::registerClicked);
+    connect(confirmEdit, &QLineEdit::returnPressed, this, &RegisterPage::onRegisterClicked);
+}
+
+
+void RegisterPage::onRegisterClicked()
+{
+    auto username = usernameEdit->text().toStdString();
+    auto password = passwordEdit->text().toStdString();
+    auto confirm = confirmEdit->text().toStdString();
+    auto realname = realNameEdit->text().toStdString();
+
+    if (username == "" || realname == "" || password == "" || confirm == "")
+    {
+        QMessageBox::warning(this,"Warning","Fields cannot be empty!");
+    }
+    else if (username.find('`') != std::string::npos|| realname.find('`') != std::string::npos)
+    {
+        QMessageBox::warning(this,"Warning","Invalid Character! don't type \"`\" ");
+    }
+    else if (password == confirm)
+    {
+        bool capital = 0, small = 0, number = 0, special = 0;
+        for (auto ch : password)
+        {
+            if (ch >= 'a' && ch <= 'z') small = 1;
+            else if (ch >= 'A' && ch <= 'Z') capital = 1;
+            else if (ch >= '0' && ch <= '9') number = 1;
+            else special = 1;
+        }
+
+        if (capital && small && number && special && password.size() >= 8)
+        {
+            size_t new_id = users.size();
+
+            CreateUser newUser =
+                {
+                    new_id,
+                    realname,
+                    hash_password(password,new_id),
+                    username
+                };
+            auto response = create_user(newUser);
+            if (response == "Em")
+            {
+                QMessageBox::warning(this,"Warning","Fields cannot be empty!");
+            }
+            else if (response == "Already Exist")
+            {
+                QMessageBox::warning(this,"Warning","User already exists! Please login");
+            }
+            else if (response == "Success")
+            {
+                emit registrationSuccessful();
+                usernameEdit->clear();
+                passwordEdit->clear();
+                confirmEdit->clear();
+                realNameEdit->clear();
+            }
+        }
+        else
+        {
+            QMessageBox::warning(this,"Warning","Invalid password, Please note that the "
+                                                  "password must contain at least: a capital letter,"
+                                                  "a small letter, a number, and a special character"
+                                                  "(!,@,#,$,%,^,&,/,\\,,) and must at least be 8 characters!");
+        }
+
+
+    }
+    else
+    {
+        QMessageBox::warning(this,"Warning","Passwords don't match!!");
+    }
 }

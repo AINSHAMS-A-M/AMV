@@ -1,4 +1,6 @@
 #include "login.h"
+#include "db.hpp"
+#include "services.hpp"
 #include "utils.h"
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -8,6 +10,7 @@
 #include <QPixmap>
 #include <QPainter>
 #include <QPainterPath>
+#include <QMessageBox>
 #include <QDebug>
 
 
@@ -125,17 +128,37 @@ LoginPage::LoginPage(QWidget *parent)
     mainLayout->addWidget(rightPanel, 1);
 
     // Connect signals
-    connect(loginBtn, &QPushButton::clicked, this, &LoginPage::loginClicked);
-    connect(registerLabel, &QLabel::linkActivated,
-            this,           &LoginPage::registerLinkActivated);
+    connect(loginBtn, &QPushButton::clicked, this, &LoginPage::onLoginClicked);
+    connect(registerLabel, &QLabel::linkActivated, [this]() {
+        userEdit->clear();
+        passEdit->clear();
+        emit registerLinkActivated();
+    });
 
     connect(userEdit, &QLineEdit::returnPressed, [this]() {
-        passEdit->setFocus();  // Move focus to password field
+        passEdit->setFocus();
     });
 
 
-    connect(passEdit, &QLineEdit::returnPressed, this, &LoginPage::loginClicked);
+    connect(passEdit, &QLineEdit::returnPressed, this, &LoginPage::onLoginClicked);
+}
 
+void LoginPage::onLoginClicked()
+{
+    auto username = userEdit->text().toStdString();
+    auto password = passEdit->text().toStdString();
 
-
+    //std::string response =  log_in(username,password);
+    std::string response = "true";
+    if (response == "true")
+    {
+        activeUser = get_id_by_user(username);
+        emit loginSuccessful();
+        userEdit->clear();
+        passEdit->clear();
+    }
+    else
+    {
+        QMessageBox::warning(nullptr,"Warning",QString::fromStdString(response));
+    }
 }
