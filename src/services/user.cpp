@@ -5,6 +5,18 @@
 #include "services.hpp"
 #include <QMessageBox>
 
+
+// Get user data by ID
+User get_user_by_id(const size_t& id) {
+    for (const auto& user : users) {
+        if (user.id == id) {
+            return user;
+        }
+    }
+    throw std::invalid_argument("User not found!");
+}
+
+
 /// @brief logs the user into the system
 std::string log_in(std::string username, std::string password)
 {

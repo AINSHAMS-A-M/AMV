@@ -59,10 +59,10 @@ struct RetrievePollResultAdmin
 
 struct RetrievePollDTO
 {
-    std::string id;
+    size_t id;
     std::string name;
     std::string desc;
-    std::string creation_date;
+    QDateTime creation_date;
     MeshVector<PollOption> options; // Holds options for the public poll
 };
 
@@ -70,4 +70,13 @@ struct PollRead
 {
     Poll poll;
     PollOption option;
+};
+
+struct voteData
+{
+    size_t pollId;
+    size_t optionId;
+    std::string pollTitle;
+    std::string votedOption;
+    std::string pollCreator;
 };

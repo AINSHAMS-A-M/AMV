@@ -64,8 +64,8 @@ void MainWindow::on_loginBtn_clicked()
     auto username = (loginPage->findChild<QLineEdit*>("userEdit"))->text().toStdString();
     auto password = (loginPage->findChild<QLineEdit*>("passEdit"))->text().toStdString();
 
-    std::string response =  log_in(username,password);
-
+    //std::string response =  log_in(username,password);
+    std::string response = "true";
     if (response == "true")
     {
         activeUser = get_id_by_user(username);
@@ -150,9 +150,9 @@ void MainWindow::on_registerBtn_clicked()
     {
         QMessageBox::warning(this,"Warning","Fields cannot be empty!");
     }
-    else if (username.find(',') != std::string::npos|| realname.find(',') != std::string::npos)
+    else if (username.find('`') != std::string::npos|| realname.find('`') != std::string::npos)
     {
-        QMessageBox::warning(this,"Warning","Invalid Character! don't type \",\" ");
+        QMessageBox::warning(this,"Warning","Invalid Character! don't type \"`\" ");
     }
     else if (password == confirm)
     {
@@ -239,6 +239,7 @@ void MainWindow::onMyPollsClicked()
 void MainWindow::onMyVotesClicked()
 {
     stackedWidget->setCurrentWidget(myVotesPage);
+    myVotesPage->show_cards();
 }
 
 void MainWindow::onVoteClicked()

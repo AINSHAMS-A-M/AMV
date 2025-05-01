@@ -85,6 +85,13 @@ CreatePollPage::CreatePollPage(QWidget *parent)
         btn->setCursor(Qt::PointingHandCursor);
         sbLayout->addWidget(btn);
 
+        if (item == "Create Poll") {
+            btn->setStyleSheet(
+                "QPushButton { color: #333333; background-color: rgba(255,255,255,0.2); border: none; text-align: left; font-size: 18px; padding: 10px; font-weight: bold; }"
+                "QPushButton:hover { background-color: rgba(255,255,255,0.3); }"
+                );
+        }
+
         // Connect signals
         if (item == "Help")
         {
@@ -355,18 +362,18 @@ void CreatePollPage::onCreatePollBtnClicked()
     auto voterId  = voterIdEdit->text().toStdString();
     MeshVector<std::string> options;
 
-    if (pollName.find(',') != std::string::npos || pollDesc.find(',') != std::string::npos || voterId.find(',') != std::string::npos)
+    if (pollName.find('`') != std::string::npos || pollDesc.find('`') != std::string::npos || voterId.find('`') != std::string::npos)
     {
-        QMessageBox::warning(nullptr, "Warning", "Invalid character detected! don't type ','");
+        QMessageBox::warning(nullptr, "Warning", "Invalid character detected! don't type '`'");
         return;
     }
 
     for (QWidget *optWidget : optionWidgets)
     {
         auto nameEdit = optWidget->findChild<QLineEdit*>()->text().toStdString();
-        if (nameEdit.find(',') != std::string::npos)
+        if (nameEdit.find('`') != std::string::npos)
         {
-            QMessageBox::warning(nullptr, "Warning", "Invalid character detected! don't type ','");
+            QMessageBox::warning(nullptr, "Warning", "Invalid character detected! don't type '`'");
             return;
         }
         else if (!nameEdit.empty())

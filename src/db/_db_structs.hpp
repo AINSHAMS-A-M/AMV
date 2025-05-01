@@ -2,6 +2,7 @@
 
 #include <string>
 #include "data_structures.hpp"
+#include "QDatetime"
 #include <chrono>
 
 struct User
@@ -29,12 +30,11 @@ struct Poll
 {
     size_t id;
 
-    // id GIVEN to users/voters to allow them to vote in the poll
     std::string name;
     std::string desc;
     std::string voter_id;
     size_t owner_id;
-    std::time_t created_at;
+    QDateTime created_at;
 };
 
 struct PollOption

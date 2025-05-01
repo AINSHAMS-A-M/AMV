@@ -77,6 +77,14 @@ VotePage::VotePage(QWidget *parent)
                                "QPushButton { color: %1; background: none; border: none; text-align: left; font-size: 18px; padding: 10px; }"
                                "QPushButton:hover { background-color: rgba(255,255,255,0.1); }"
                                ).arg(textColor));
+
+        if (item == "Vote") {
+            btn->setStyleSheet(
+                "QPushButton { color: #333333; background-color: rgba(255,255,255,0.2); border: none; text-align: left; font-size: 18px; padding: 10px; font-weight: bold; }"
+                "QPushButton:hover { background-color: rgba(255,255,255,0.3); }"
+                );
+        }
+
         btn->setCursor(Qt::PointingHandCursor);
         sbLayout->addWidget(btn);
         if (item == "Help") {

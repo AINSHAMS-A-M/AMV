@@ -30,6 +30,7 @@ private slots:
     void submitVote();
     void showVoterIdPage();
 
+
 private:
     QWidget *sidebar;
     QWidget *content;

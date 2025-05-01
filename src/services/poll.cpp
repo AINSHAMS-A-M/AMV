@@ -14,7 +14,7 @@ Poll create_poll(CreatePoll createPoll)
         createPoll.poll_desc,
         createPoll.voter_id,
         createPoll.owner_id,
-        time(0)
+        QDateTime::currentDateTime()
     };
     polls.push_back(new_poll);
 
@@ -207,48 +207,25 @@ RetrievePollResultAdmin retrieve_poll_as_owner(const size_t user_id, const size_
     return result;
 }
 
-MeshVector<UserVote> retrieve_poll_for_user(size_t user_id)
-{
-    MeshVector<UserVote> votes_with_the_user_id;
-    for (auto &v : userVotes)
-    {
-        if (user_id == v.user_id)
-        {
-            votes_with_the_user_id.push_back(v);
-        }
-    }
-    return votes_with_the_user_id;
-}
-
 
 /// @brief Retrieves the last 10 polls the user has participated in.
 /// @param user_id The ID of the user.
 /// @return A list of up to 10 polls the user has voted in, including the selected option for each.
-MeshVector<PollRead> retrieve_last_10_polls(size_t user_id)
+MeshVector<PollRead> retrieve_polls(size_t user_id)
 {
     MeshVector<size_t> poll_id, option_id;
 
-    for (long long last = userVotes.size() - 1; last >= 0; last--)
+    for (long long last = ((long long) userVotes.size()) - 1; last >= 0; last--)
     {
         auto current = userVotes[last];
         if (current.user_id == user_id)
         {
             poll_id.push_back(current.poll_id);
             option_id.push_back(current.poll_option_id);
-
-            if (poll_id.size() == 10)
-            {
-                break;
-            }
         }
     }
 
     size_t number_of_polls = poll_id.size();
-
-    if (number_of_polls == 0)
-    {
-        throw std::invalid_argument("There is no votes for this user :( ");
-    }
 
     MeshVector<PollRead> last_polls(number_of_polls);
     for (size_t i = 0; i < number_of_polls; i++)

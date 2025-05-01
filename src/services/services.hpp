@@ -19,9 +19,9 @@ std::pair<bool,size_t> check_user_vote(size_t user_id, size_t poll_id);
 
 void create_user_vote(size_t user_id, size_t poll_id, size_t poll_option_id);
 
-void delete_user_vote(std::string, std::string, std::string);
+void delete_user_vote(size_t user_id, size_t poll_id);
 
-MeshVector<PollRead> retrieve_last_10_polls(size_t user_id);
+MeshVector<PollRead> retrieve_polls(size_t user_id);
 
 RetrievePollResultAdmin retrieve_poll_as_owner(size_t user_id, size_t poll_id);
 
@@ -36,3 +36,5 @@ std::string log_in(std::string username, std::string password);
 std::string getPollId(std::string &voterId);
 
 size_t getPollOptionId(size_t pollId);
+
+User get_user_by_id(const size_t& id);

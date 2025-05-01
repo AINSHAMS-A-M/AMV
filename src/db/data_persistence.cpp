@@ -53,13 +53,13 @@ void load_data()
 
         try {
             // Read id
-            if (std::getline(ss, segment, ',')) current_user.id = std::stoi(segment); else throw std::runtime_error("Missing user id");
+            if (std::getline(ss, segment, '`')) current_user.id = std::stoi(segment); else throw std::runtime_error("Missing user id");
             // Read name (can contain spaces)
-            if (std::getline(ss, segment, ',')) current_user.name = segment; else throw std::runtime_error("Missing user name");
+            if (std::getline(ss, segment, '`')) current_user.name = segment; else throw std::runtime_error("Missing user name");
             // Read username (can contain spaces)
-            if (std::getline(ss, segment, ',')) current_user.username = segment; else throw std::runtime_error("Missing user username");
+            if (std::getline(ss, segment, '`')) current_user.username = segment; else throw std::runtime_error("Missing user username");
             // Read hashed_password (can contain spaces)
-            if (std::getline(ss, segment, ',')) current_user.hashed_password = segment; else throw std::runtime_error("Missing user hashed_password");
+            if (std::getline(ss, segment, '`')) current_user.hashed_password = segment; else throw std::runtime_error("Missing user hashed_password");
 
             users.push_back(current_user);
         } catch (const std::exception& e) {
@@ -90,17 +90,17 @@ void load_data()
 
         try {
             // Read id
-            if (std::getline(ss, segment, ',')) current_poll.id = std::stoi(segment); else throw std::runtime_error("Missing poll id");
+            if (std::getline(ss, segment, '`')) current_poll.id = std::stoi(segment); else throw std::runtime_error("Missing poll id");
             // Read name (can contain spaces)
-            if (std::getline(ss, segment, ',')) current_poll.name = segment; else throw std::runtime_error("Missing poll name");
+            if (std::getline(ss, segment, '`')) current_poll.name = segment; else throw std::runtime_error("Missing poll name");
             // Read description
-            if (std::getline(ss, segment, ',')) current_poll.desc = segment; else throw std::runtime_error("Missing poll description");
+            if (std::getline(ss, segment, '`')) current_poll.desc = segment; else throw std::runtime_error("Missing poll description");
             // Read voter_id
-            if (std::getline(ss, segment, ',')) current_poll.voter_id = segment; else throw std::runtime_error("Missing poll voter_id");
+            if (std::getline(ss, segment, '`')) current_poll.voter_id = segment; else throw std::runtime_error("Missing poll voter_id");
             // Read owner_id
-            if (std::getline(ss, segment, ',')) current_poll.owner_id = std::stoi(segment); else throw std::runtime_error("Missing poll owner_id");
+            if (std::getline(ss, segment, '`')) current_poll.owner_id = std::stoi(segment); else throw std::runtime_error("Missing poll owner_id");
             // Read created_at (can contain spaces)
-            if (std::getline(ss, segment, ',')) current_poll.created_at = (time_t)stoll(segment); else throw std::runtime_error("Missing poll created_at");
+            if (std::getline(ss, segment, '`')) current_poll.created_at = QDateTime::fromString(QString::fromStdString(segment),"yyyy-MM-dd"); else throw std::runtime_error("Missing poll created_at");
 
             polls.push_back(current_poll);
         } catch (const std::exception& e) {
@@ -131,11 +131,11 @@ void load_data()
 
         try {
             // Read id
-            if (std::getline(ss, segment, ',')) current_poll_option.id = std::stoi(segment); else throw std::runtime_error("Missing poll option id");
+            if (std::getline(ss, segment, '`')) current_poll_option.id = std::stoi(segment); else throw std::runtime_error("Missing poll option id");
             // Read poll_id
-            if (std::getline(ss, segment, ',')) current_poll_option.poll_id = std::stoi(segment); else throw std::runtime_error("Missing poll option poll_id");
+            if (std::getline(ss, segment, '`')) current_poll_option.poll_id = std::stoi(segment); else throw std::runtime_error("Missing poll option poll_id");
             // Read name (can contain spaces)
-            if (std::getline(ss, segment, ',')) current_poll_option.name = segment; else throw std::runtime_error("Missing poll option name");
+            if (std::getline(ss, segment, '`')) current_poll_option.name = segment; else throw std::runtime_error("Missing poll option name");
 
             pollOptions.push_back(current_poll_option);
         } catch (const std::exception& e) {
@@ -166,13 +166,13 @@ void load_data()
 
         try {
             // Read id
-            if (std::getline(ss, segment, ',')) current_user_vote.id = std::stoi(segment); else throw std::runtime_error("Missing user vote id");
+            if (std::getline(ss, segment, '`')) current_user_vote.id = std::stoi(segment); else throw std::runtime_error("Missing user vote id");
             // Read user_id
-            if (std::getline(ss, segment, ',')) current_user_vote.user_id = std::stoi(segment); else throw std::runtime_error("Missing user vote user_id");
+            if (std::getline(ss, segment, '`')) current_user_vote.user_id = std::stoi(segment); else throw std::runtime_error("Missing user vote user_id");
             // Read poll_id
-            if (std::getline(ss, segment, ',')) current_user_vote.poll_id = std::stoi(segment); else throw std::runtime_error("Missing user vote poll_id");
+            if (std::getline(ss, segment, '`')) current_user_vote.poll_id = std::stoi(segment); else throw std::runtime_error("Missing user vote poll_id");
             // Read poll_option_id
-            if (std::getline(ss, segment, ',')) current_user_vote.poll_option_id = std::stoi(segment); else throw std::runtime_error("Missing user vote poll_option_id");
+            if (std::getline(ss, segment, '`')) current_user_vote.poll_option_id = std::stoi(segment); else throw std::runtime_error("Missing user vote poll_option_id");
 
             userVotes.push_back(current_user_vote);
         } catch (const std::exception& e) {
@@ -216,9 +216,9 @@ void save_data()
     // Write users data, comma-delimited
     for (const User& current_user : users)
     {
-        csv_out << current_user.id << ','
-                << current_user.name << ','
-                << current_user.username << ','
+        csv_out << current_user.id << '`'
+                << current_user.name << '`'
+                << current_user.username << '`'
                 << current_user.hashed_password << '\n';
     }
     // Check for errors after writing loop
@@ -237,15 +237,14 @@ void save_data()
         return;
     }
 
-    // Write polls data, comma-delimited
     for (const Poll& current_poll : polls)
     {
-        csv_out << current_poll.id << ','
-                << current_poll.name << ','
-                << current_poll.desc << ','
-                << current_poll.voter_id << ','
-                << current_poll.owner_id << ','
-                << current_poll.created_at << '\n';
+        csv_out << current_poll.id << '`'
+                << current_poll.name << '`'
+                << current_poll.desc << '`'
+                << current_poll.voter_id << '`'
+                << current_poll.owner_id << '`'
+                << current_poll.created_at.toString("yyyy-MM-dd").toStdString() << '\n';
     }
     if (csv_out.fail()) {
         std::cerr << "Error writing to polls.csv." << std::endl;
@@ -265,8 +264,8 @@ void save_data()
     // Write poll options data, comma-delimited
     for (const PollOption& current_poll_option : pollOptions)
     {
-        csv_out << current_poll_option.id << ','
-                << current_poll_option.poll_id << ','
+        csv_out << current_poll_option.id << '`'
+                << current_poll_option.poll_id << '`'
                 << current_poll_option.name << '\n';
     }
     if (csv_out.fail()) {
@@ -287,9 +286,9 @@ void save_data()
     // Write user votes data, comma-delimited
     for (const UserVote& current_user_vote : userVotes)
     {
-        csv_out << current_user_vote.id << ','
-                << current_user_vote.user_id << ','
-                << current_user_vote.poll_id << ','
+        csv_out << current_user_vote.id << '`'
+                << current_user_vote.user_id << '`'
+                << current_user_vote.poll_id << '`'
                 << current_user_vote.poll_option_id << '\n';
     }
     if (csv_out.fail()) {

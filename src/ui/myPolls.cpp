@@ -60,6 +60,14 @@ MyPollsPage::MyPollsPage(QWidget *parent)
                                "QPushButton:hover { background-color: rgba(255,255,255,0.1); }"
                                ).arg(textColor));
         btn->setCursor(Qt::PointingHandCursor);
+
+        if (item == "My Polls") {
+            btn->setStyleSheet(
+                "QPushButton { color: #333333; background-color: rgba(255,255,255,0.2); border: none; text-align: left; font-size: 18px; padding: 10px; font-weight: bold; }"
+                "QPushButton:hover { background-color: rgba(255,255,255,0.3); }"
+                );
+        }
+
         sbLayout->addWidget(btn);
         if (item == "Help") {
             connect(btn, &QPushButton::clicked, this, &::MyPollsPage::onHelpClicked);
