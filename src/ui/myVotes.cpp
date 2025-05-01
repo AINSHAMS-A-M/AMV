@@ -16,6 +16,7 @@
 #include <QStackedWidget>
 #include "db.hpp"
 #include "_structs.hpp"
+#include "qscrollbar.h"
 #include "services.hpp"
 #include "utils.h"
 
@@ -267,7 +268,7 @@ void MyVotesPage::onViewVotePollClicked(const size_t& identifier, RetrievePollDT
 {
     // Clear existing content in poll view
     QLayoutItem *item;
-    while ((item = pollViewLayout->takeAt(1)) != nullptr) { // Start from index 1 to keep the back button
+    while ((item = pollViewLayout->takeAt(1)) != nullptr) {
         if (item->widget()) {
             item->widget()->deleteLater();
         }
@@ -291,6 +292,36 @@ void MyVotesPage::onViewVotePollClicked(const size_t& identifier, RetrievePollDT
     optionsTitle->setStyleSheet("font-size: 20px; font-weight: bold; color: #2C3E50; margin-bottom: 15px;");
     pollViewLayout->addWidget(optionsTitle);
 
+    // Create scroll area for options
+    QScrollArea* scrollArea = new QScrollArea(pollViewPage);
+    scrollArea->setWidgetResizable(true);
+    scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    scrollArea->setFrameShape(QFrame::NoFrame);
+
+    QWidget* scrollContentWidget = new QWidget();
+    QVBoxLayout* scrollLayout = new QVBoxLayout(scrollContentWidget);
+    scrollLayout->setContentsMargins(10, 10, 10, 10);
+    scrollLayout->setSpacing(10);
+
+    // Style scroll bar
+    scrollArea->verticalScrollBar()->setStyleSheet(
+        "QScrollBar:vertical {"
+        "    border: none;"
+        "    background: #F1F1F1;"
+        "    width: 8px;"
+        "}"
+        "QScrollBar::handle:vertical {"
+        "    background: #B0B0B0;"
+        "    border-radius: 4px;"
+        "}"
+        "QScrollBar::handle:vertical:hover {"
+        "    background: #909090;"
+        "}"
+        );
+
+    scrollArea->setWidget(scrollContentWidget);
+
     // Get the option that the user voted for
     size_t userVotedOptionId = 0;
     auto votes = retrieve_polls(activeUser.id);
@@ -301,42 +332,24 @@ void MyVotesPage::onViewVotePollClicked(const size_t& identifier, RetrievePollDT
         }
     }
 
-    // Display all options with the user's choice highlighted
+    // Display all options with the user's choice outlined
     for (const auto& option : selectedPoll.options) {
-        QFrame* optionCard = new QFrame(pollViewPage);
-        optionCard->setFrameShape(QFrame::StyledPanel);
+        QLabel* optionLabel = new QLabel(QString::fromStdString(option.name), pollViewPage);
+        optionLabel->setWordWrap(true);
+        optionLabel->setStyleSheet(
+            option.id == userVotedOptionId ?
+                "background-color: #E3F2FD; border: 2px solid #007BFF; border-radius: 8px; padding: 10px;" :
+                "background-color: #FFFFFF; border: 1px solid #D0D0D0; border-radius: 8px; padding: 10px;"
+            );
 
-        // Highlight user's selected option
-        if (option.id == userVotedOptionId) {
-            optionCard->setStyleSheet(
-                "QFrame { background-color: #E3F2FD; border-radius: 8px; border-left: 5px solid #007BFF; padding: 15px; }"
-                );
-        } else {
-            optionCard->setStyleSheet(
-                "QFrame { background-color: #FFFFFF; border-radius: 8px; padding: 15px; }"
-                );
-        }
+        QFont font = optionLabel->font();
+        font.setPointSize(14);
+        optionLabel->setFont(font);
 
-        QVBoxLayout* optionLayout = new QVBoxLayout(optionCard);
-        optionLayout->setContentsMargins(15, 15, 15, 15);
-
-        QLabel* optionName = new QLabel(QString::fromStdString(option.name), optionCard);
-        optionName->setStyleSheet("font-size: 16px; font-weight: bold; color: #2C3E50;");
-        optionName->setWordWrap(true);
-        optionLayout->addWidget(optionName);
-
-        // Show "Your Vote" indicator on the selected option
-        if (option.id == userVotedOptionId) {
-            QLabel* yourVoteLabel = new QLabel("Your Vote", optionCard);
-            yourVoteLabel->setStyleSheet(
-                "background-color: #007BFF; color: white; border-radius: 4px; padding: 3px 8px; "
-                "font-size: 12px; font-weight: bold; margin-top: 10px; width: fit-content;"
-                );
-            optionLayout->addWidget(yourVoteLabel);
-        }
-
-        pollViewLayout->addWidget(optionCard);
+        scrollLayout->addWidget(optionLabel);
     }
+
+    pollViewLayout->addWidget(scrollArea);
 
     // Add a remove vote button at the bottom
     QPushButton* removeVoteBtn = new QPushButton("Remove My Vote", pollViewPage);

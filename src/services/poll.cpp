@@ -187,7 +187,7 @@ RetrievePollResultAdmin retrieve_poll_as_owner(const size_t user_id, const size_
         if (up.poll_id == poll_id)
         {
             // find the matching option in tally
-            for (size_t i = 0; i < tally.size(); i++)
+            for (long long i = 0; i < tally.size(); i++)
             {
                 if (tally[i].option_id == up.poll_option_id)
                 {
@@ -208,9 +208,9 @@ RetrievePollResultAdmin retrieve_poll_as_owner(const size_t user_id, const size_
 }
 
 
-/// @brief Retrieves the last 10 polls the user has participated in.
+/// @brief Retrieves the polls the user has participated in.
 /// @param user_id The ID of the user.
-/// @return A list of up to 10 polls the user has voted in, including the selected option for each.
+/// @return A list of  polls the user has voted in, including the selected option for each.
 MeshVector<PollRead> retrieve_polls(size_t user_id)
 {
     MeshVector<size_t> poll_id, option_id;
@@ -274,4 +274,19 @@ size_t getPollOptionId(size_t pollId)
             return option.id;
         }
     }
+}
+
+
+MeshVector<size_t> show_created_polls(size_t user_id)
+{
+    MeshVector<size_t> poll_id;
+
+    for (long long last =  polls.size() - 1; last >= 0; last--)
+    {
+        if (polls[last].owner_id == user_id)
+        {
+            poll_id.push_back(polls[last].id);
+        }
+    }
+    return poll_id;
 }

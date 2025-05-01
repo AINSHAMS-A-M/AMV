@@ -362,9 +362,9 @@ void CreatePollPage::onCreatePollBtnClicked()
     auto voterId  = voterIdEdit->text().toStdString();
     MeshVector<std::string> options;
 
-    if (pollName.find('`') != std::string::npos || pollDesc.find('`') != std::string::npos || voterId.find('`') != std::string::npos)
+    if (pollName.find('`') != std::string::npos || pollDesc.find('`') != std::string::npos || voterId.find('`') != std::string::npos || pollDesc.find('\n') != std::string::npos)
     {
-        QMessageBox::warning(nullptr, "Warning", "Invalid character detected! don't type '`'");
+        QMessageBox::warning(nullptr, "Warning", "Invalid character detected!");
         return;
     }
 

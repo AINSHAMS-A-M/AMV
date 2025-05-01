@@ -1,21 +1,24 @@
-#pragma once
+#ifndef MYVOTES_H
+#define MYVOTES_H
 
 #include <QWidget>
-#include <QPixmap>
 #include <QVBoxLayout>
-#include <QLabel>
+#include <QHBoxLayout>
+#include <QScrollArea>
 #include <QStackedWidget>
+#include <QString>
 #include "_structs.hpp"
 
-
-class MyVotesPage : public QWidget
-{
+class MyVotesPage : public QWidget {
     Q_OBJECT
 
 public:
     explicit MyVotesPage(QWidget *parent = nullptr);
 
+    void show_cards();
+
 signals:
+    // Sidebar actions
     void onHelpClicked();
     void onVoteClicked();
     void onMyVotesClicked();
@@ -23,34 +26,22 @@ signals:
     void onMyPollsClicked();
     void onProfileClicked();
 
-public:
-    void show_cards();
-
 private:
-    // UI setup methods
-    void createSidebar();
-    void createVotesListPage();
-    void createPollViewPage();
-
-    // Action methods
-    void onRemoveVoteClicked(const size_t& identifier);
-    void onViewVotePollClicked(const size_t& identifier, RetrievePollDTO &selectedPoll);
-
-    // Main UI components
+    // Sidebar and main content
     QWidget *sidebar;
     QWidget *content;
+
+    // Stacked pages
     QStackedWidget *stackedWidget;
     QWidget *votesListPage;
     QWidget *pollViewPage;
+    QVBoxLayout* pollViewLayout;
 
-    // Layout for card display
+    // Vote list scroll
     QWidget *scrollContent;
     QVBoxLayout *scrollLayout;
 
-    // Layout for poll view
-    QVBoxLayout *pollViewLayout;
-
-    // Colors
+    // Color palette
     QString sidebarColor;
     QString bgColor;
     QString primaryColor;
@@ -61,4 +52,15 @@ private:
     QString dangerHoverBg;
     QString dangerHoverFg;
     QString cardBgColor;
+
+    // Initialization helpers
+    void createSidebar();
+    void createVotesListPage();
+    void createPollViewPage();
+
+    // Action handlers
+    void onRemoveVoteClicked(const size_t &identifier);
+    void onViewVotePollClicked(const size_t &identifier, RetrievePollDTO &selectedPoll);
 };
+
+#endif // MYVOTES_H

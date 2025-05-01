@@ -38,3 +38,5 @@ std::string getPollId(std::string &voterId);
 size_t getPollOptionId(size_t pollId);
 
 User get_user_by_id(const size_t& id);
+
+MeshVector<size_t> show_created_polls(size_t user_id);
