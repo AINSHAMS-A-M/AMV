@@ -171,6 +171,7 @@ VotePage::VotePage(QWidget *parent)
     QLabel *voterIdLabel = new QLabel("Enter your voter ID (Get it from the poll's owner):", formWidget);
     voterIdInput = new QLineEdit(formWidget);
     voterIdInput->setPlaceholderText("Voter ID");
+    voterIdInput->setObjectName("voterInput");
     voterIdInput->setAlignment(Qt::AlignCenter);
     connect(voterIdInput, &QLineEdit::returnPressed, this, &VotePage::validateVoterCredentials);
 
@@ -195,23 +196,26 @@ VotePage::VotePage(QWidget *parent)
     voterIdLayout->addWidget(submitBtn, 0, Qt::AlignHCenter);
 
     voterIdLayout->addStretch(1);
-    voterIdInput->setFocus();
+
 
     // --- Create poll options page ---
     pollOptionsPage = new QWidget(stackedWidget);
     auto *pollOptionsLayout = new QVBoxLayout(pollOptionsPage);
-    pollOptionsLayout->setContentsMargins(20, 20, 20, 20);
-    pollOptionsLayout->setSpacing(15);
+    pollOptionsLayout->setContentsMargins(20, 5, 20, 20);
+    pollOptionsLayout->setSpacing(5);
 
     pollTitleLabel = new QLabel("Poll Title", pollOptionsPage);
-    pollTitleLabel->setStyleSheet("font-size: 24px; font-weight: bold; color: #333;");
-    pollOptionsLayout->addWidget(pollTitleLabel, 0, Qt::AlignLeft);
+    pollTitleLabel->setWordWrap(true);
+    pollTitleLabel->setStyleSheet("font-size: 24px; font-weight: bold; color: #333; background: transparent;");
+    pollTitleLabel->setSizePolicy(QSizePolicy::Expanding,
+                                 QSizePolicy::Fixed);
+    pollOptionsLayout->addWidget(pollTitleLabel, 1, Qt::AlignLeft);
 
     pollDescLabel = new QLabel("Poll Description", pollOptionsPage);
     pollDescLabel->setWordWrap(true);
     pollDescLabel->setAlignment(Qt::AlignLeft);
     pollDescLabel->setSizePolicy(QSizePolicy::Expanding,
-                                 QSizePolicy::Preferred);
+                                 QSizePolicy::Fixed);
     pollDescLabel->setStyleSheet(
         "font-size: 16px; color: #555; "
         );
@@ -307,7 +311,7 @@ void VotePage::validateVoterCredentials()
     if (pollIdToLoad == "f")
     {
         QMessageBox::warning(this, "Invalid Voter ID", "The entered Voter ID does not exist.");
-        voterIdInput->selectAll();
+        voterIdInput->clear();
         voterIdInput->setFocus();
         return;
     }
@@ -423,5 +427,6 @@ void VotePage::showVoterIdPage()
     // Switch page
     stackedWidget->setCurrentWidget(voterIdPage);
     voterIdInput->setFocus();
+    voterIdInput->clear();
     voterIdInput->selectAll();
 }

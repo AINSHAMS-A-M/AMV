@@ -114,6 +114,11 @@ void MainWindow::onMyVotesClicked()
 void MainWindow::onVoteClicked()
 {
     stackedWidget->setCurrentWidget(votePage);
+    QLineEdit* voterInput = votePage->findChild<QLineEdit*>("voterInput");
+    if (voterInput) {
+        voterInput->clear();
+        voterInput->setFocus();
+    }
 }
 
 void MainWindow::closeEvent(QCloseEvent *event) {
@@ -173,14 +178,14 @@ void MainWindow::init_app()
 
 void MainWindow::handleNavigation(NavigationManager::Page page) {
     switch (page) {
-    case NavigationManager::Login:    stackedWidget->setCurrentWidget(loginPage); break;
-    case NavigationManager::Register: stackedWidget->setCurrentWidget(registerPage); break;
-    case NavigationManager::Help:     stackedWidget->setCurrentWidget(helpPage); break;
-    case NavigationManager::Vote:     stackedWidget->setCurrentWidget(votePage); break;
-    case NavigationManager::CreatePoll: stackedWidget->setCurrentWidget(createPollPage); break;
-    case NavigationManager::MyPolls:  stackedWidget->setCurrentWidget(myPollsPage); break;
-    case NavigationManager::MyVotes:  stackedWidget->setCurrentWidget(myVotesPage); break;
-    case NavigationManager::Profile:  stackedWidget->setCurrentWidget(profileEditPage); break;
+    case NavigationManager::Login:    onLoginLink(); break;
+    case NavigationManager::Register: onRegisterLink(); break;
+    case NavigationManager::Help:     onHelpClicked(); break;
+    case NavigationManager::Vote:     onVoteClicked(); break;
+    case NavigationManager::CreatePoll: onCreatePollClicked(); break;
+    case NavigationManager::MyPolls:  onMyPollsClicked(); break;
+    case NavigationManager::MyVotes:  onMyVotesClicked(); break;
+    case NavigationManager::Profile:  onProfileClicked(); break;
     }
 }
 

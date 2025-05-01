@@ -34,7 +34,6 @@ CreatePollPage::CreatePollPage(QWidget *parent)
     rootLayout->setContentsMargins(0, 0, 0, 0);
     rootLayout->setSpacing(0);
 
-    // ================= Sidebar ================= (keep identical)
     sidebar = new QWidget(this);
     sidebar->setFixedWidth(200);
     sidebar->setStyleSheet(QString("background-color: %1;").arg(sidebarColor));

@@ -10,7 +10,7 @@
 #include <QPainterPath>
 #include <QDebug>
 #include <QPushButton>
-#include <QDateTime>
+#include <QDatetime>
 #include <QFrame>
 #include <QMessageBox>
 #include <QStackedWidget>

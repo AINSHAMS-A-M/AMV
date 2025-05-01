@@ -22,8 +22,6 @@ HelpPage::HelpPage(QWidget *parent)
 {
     const QString sidebarColor  = "#2C3E50";
     const QString bgColor       = "#F5F6F8";
-    const QString primaryColor  = "#007BFF";
-    const QString primaryHover  = "#339CFF";
     const QString textColor     = "#FFFFFF";
 
     auto *rootLayout = new QHBoxLayout(this);
