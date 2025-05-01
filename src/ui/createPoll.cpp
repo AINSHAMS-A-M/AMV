@@ -8,6 +8,7 @@
 #include <QPushButton>
 #include <QPixmap>
 #include <QScrollArea>
+#include "mainwindow.h"
 #include "qmessagebox"
 #include "utils.h"
 #include "services.hpp"
@@ -95,27 +96,39 @@ CreatePollPage::CreatePollPage(QWidget *parent)
         // Connect signals
         if (item == "Help")
         {
-            connect(btn, &QPushButton::clicked, this, &CreatePollPage::onHelpClicked);
+            connect(btn, &QPushButton::clicked, []() {
+                NavigationManager::instance().navigate(NavigationManager::Help);
+            });
         }
         else if (item == "Vote")
         {
-            connect(btn, &QPushButton::clicked, this, &CreatePollPage::onVoteClicked);
+            connect(btn, &QPushButton::clicked, []() {
+                NavigationManager::instance().navigate(NavigationManager::Vote);
+            });
         }
         else if (item == "My Votes")
         {
-            connect(btn, &QPushButton::clicked, this, &CreatePollPage::onMyVotesClicked);
+            connect(btn, &QPushButton::clicked, []() {
+                NavigationManager::instance().navigate(NavigationManager::MyVotes);
+            });
         }
         else if (item == "Create Poll")
         {
-            connect(btn, &QPushButton::clicked, this, &CreatePollPage::onCreatePollClicked);
+            connect(btn, &QPushButton::clicked, []() {
+                NavigationManager::instance().navigate(NavigationManager::CreatePoll);
+            });
         }
         else if (item == "My Polls")
         {
-            connect(btn, &QPushButton::clicked, this, &CreatePollPage::onMyPollsClicked);
+            connect(btn, &QPushButton::clicked, []() {
+                NavigationManager::instance().navigate(NavigationManager::MyPolls);
+            });
         }
         else if (item == "Profile")
         {
-            connect(btn, &QPushButton::clicked, this, &CreatePollPage::onProfileClicked);
+            connect(btn, &QPushButton::clicked, []() {
+                NavigationManager::instance().navigate(NavigationManager::Profile);
+            });
         }
     }
 

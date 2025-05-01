@@ -16,6 +16,7 @@
 #include <QStackedWidget>
 #include "db.hpp"
 #include "_structs.hpp"
+#include "mainwindow.h"
 #include "qscrollbar.h"
 #include "services.hpp"
 #include "utils.h"
@@ -126,12 +127,43 @@ void MyVotesPage::createSidebar()
         btn->setCursor(Qt::PointingHandCursor);
         sbLayout->addWidget(btn);
 
-        if (item == "Help")        connect(btn, &QPushButton::clicked, this, &MyVotesPage::onHelpClicked);
-        else if (item == "Vote")   connect(btn, &QPushButton::clicked, this, &MyVotesPage::onVoteClicked);
-        else if (item == "My Votes") connect(btn, &QPushButton::clicked, this, &MyVotesPage::onMyVotesClicked);
-        else if (item == "Create Poll") connect(btn, &QPushButton::clicked, this, &MyVotesPage::onCreatePollClicked);
-        else if (item == "My Polls")  connect(btn, &QPushButton::clicked, this, &MyVotesPage::onMyPollsClicked);
-        else if (item == "Profile") connect(btn, &QPushButton::clicked, this, &MyVotesPage::onProfileClicked);
+        // Connect signals
+        if (item == "Help")
+        {
+            connect(btn, &QPushButton::clicked, []() {
+                NavigationManager::instance().navigate(NavigationManager::Help);
+            });
+        }
+        else if (item == "Vote")
+        {
+            connect(btn, &QPushButton::clicked, []() {
+                NavigationManager::instance().navigate(NavigationManager::Vote);
+            });
+        }
+        else if (item == "My Votes")
+        {
+            connect(btn, &QPushButton::clicked, []() {
+                NavigationManager::instance().navigate(NavigationManager::MyVotes);
+            });
+        }
+        else if (item == "Create Poll")
+        {
+            connect(btn, &QPushButton::clicked, []() {
+                NavigationManager::instance().navigate(NavigationManager::CreatePoll);
+            });
+        }
+        else if (item == "My Polls")
+        {
+            connect(btn, &QPushButton::clicked, []() {
+                NavigationManager::instance().navigate(NavigationManager::MyPolls);
+            });
+        }
+        else if (item == "Profile")
+        {
+            connect(btn, &QPushButton::clicked, []() {
+                NavigationManager::instance().navigate(NavigationManager::Profile);
+            });
+        }
     }
 
     // Welcome Label

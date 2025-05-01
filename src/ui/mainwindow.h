@@ -3,6 +3,7 @@
 #include <QMainWindow>
 #include <QStackedWidget>
 #include <QCloseEvent>
+#include "nav.h"
 
 
 class LoginPage;
@@ -21,6 +22,8 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow() override = default;
+    void init_app();
+    void handleNavigation(NavigationManager::Page page);
 
 protected:
     // Override the close event handler
@@ -28,7 +31,6 @@ protected:
 
 private slots:
     void onLoginClicked();
-    void onRegisterClicked();
     void onRegisterLink();
     void onLoginLink();
     void onHelpClicked();
@@ -41,14 +43,14 @@ private slots:
 private:
     QStackedWidget *stackedWidget;
 
-    // Maintain original pointer names
-    LoginPage       *loginPage;
-    RegisterPage    *registerPage;
-    VotePage        *votePage;
-    MyVotesPage     *myVotesPage;
-    MyPollsPage     *myPollsPage;
-    ProfileEditPage *profileEditPage;
-    CreatePollPage  *createPollPage;
-    HelpPage        *helpPage;
+    // Page pointers
+    LoginPage       *loginPage = nullptr;
+    RegisterPage    *registerPage= nullptr;
+    VotePage        *votePage= nullptr;
+    MyVotesPage     *myVotesPage= nullptr;
+    MyPollsPage     *myPollsPage= nullptr;
+    ProfileEditPage *profileEditPage= nullptr;
+    CreatePollPage  *createPollPage= nullptr;
+    HelpPage        *helpPage= nullptr;
 };
 
