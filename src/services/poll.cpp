@@ -7,26 +7,24 @@
 Poll create_poll(CreatePoll createPoll)
 {
     size_t poll_id = polls.size();
-    Poll new_poll = 
-    {
-        poll_id,
-        createPoll.poll_name,
-        createPoll.poll_desc,
-        createPoll.voter_id,
-        createPoll.owner_id,
-        QDateTime::currentDateTime()
-    };
+    Poll new_poll =
+        {
+            poll_id,
+            createPoll.poll_name,
+            createPoll.poll_desc,
+            createPoll.voter_id,
+            createPoll.owner_id,
+            QDateTime::currentDateTime()};
     polls.push_back(new_poll);
 
     size_t poll_option_id = pollOptions.size();
     for (auto &option : createPoll.options)
     {
-        PollOption new_option = 
-        {
-            poll_option_id,
-            poll_id,
-            option
-        };
+        PollOption new_option =
+            {
+                poll_option_id,
+                poll_id,
+                option};
         pollOptions.push_back(new_option);
         poll_option_id++;
     }
@@ -35,44 +33,44 @@ Poll create_poll(CreatePoll createPoll)
 }
 
 // Check if the user has voted or not
-std::pair<bool,size_t> check_user_vote(size_t user_id, size_t poll_id)
+std::pair<bool, size_t> check_user_vote(size_t user_id, size_t poll_id)
 {
 
     for (size_t i = 0; i < userVotes.size(); i++)
     {
         if (userVotes[i].poll_id == poll_id && userVotes[i].user_id == user_id)
         {
-            return {true,i};
+            return {true, i};
         }
     }
-    return {false,-1};
+    return {false, -1};
 }
 
 /// @brief Makes a user vote in the poll.
 void create_user_vote(size_t user_id, size_t poll_id, size_t poll_option_id)
 {
-        // Create a new UserVote & fill it with formal parameters.
-        UserVote UserChoiceData;
-        size_t newid;
+    // Create a new UserVote & fill it with formal parameters.
+    UserVote UserChoiceData;
+    size_t newid;
 
-        // Check if the userpolls not empty
-        if (userVotes.size())
-        {
-            newid = userVotes[userVotes.size() - 1].id + 1;
-        }
-        else
-        {
-            newid = 0;
-        }
+    // Check if the userpolls not empty
+    if (userVotes.size())
+    {
+        newid = userVotes[userVotes.size() - 1].id + 1;
+    }
+    else
+    {
+        newid = 0;
+    }
 
-        // Fill the UserChoiceData
-        UserChoiceData.id = newid;
-        UserChoiceData.poll_id = poll_id;
-        UserChoiceData.poll_option_id = poll_option_id;
-        UserChoiceData.user_id = user_id;
+    // Fill the UserChoiceData
+    UserChoiceData.id = newid;
+    UserChoiceData.poll_id = poll_id;
+    UserChoiceData.poll_option_id = poll_option_id;
+    UserChoiceData.user_id = user_id;
 
-        // Push the uservote to the UserPolls.
-        userVotes.push_back(UserChoiceData);
+    // Push the uservote to the UserPolls.
+    userVotes.push_back(UserChoiceData);
 }
 
 void delete_user_vote(size_t user_id, size_t poll_id)
@@ -207,7 +205,6 @@ RetrievePollResultAdmin retrieve_poll_as_owner(const size_t user_id, const size_
     return result;
 }
 
-
 /// @brief Retrieves the polls the user has participated in.
 /// @param user_id The ID of the user.
 /// @return A list of  polls the user has voted in, including the selected option for each.
@@ -215,7 +212,7 @@ MeshVector<PollRead> retrieve_polls(size_t user_id)
 {
     MeshVector<size_t> poll_id, option_id;
 
-    for (long long last = ((long long) userVotes.size()) - 1; last >= 0; last--)
+    for (long long last = ((long long)userVotes.size()) - 1; last >= 0; last--)
     {
         auto current = userVotes[last];
         if (current.user_id == user_id)
@@ -251,7 +248,6 @@ MeshVector<PollRead> retrieve_polls(size_t user_id)
     return last_polls;
 }
 
-
 std::string getPollId(std::string &voterId)
 {
     for (size_t i = 0; i < polls.size(); i++)
@@ -276,12 +272,11 @@ size_t getPollOptionId(size_t pollId)
     }
 }
 
-
 MeshVector<size_t> show_created_polls(size_t user_id)
 {
     MeshVector<size_t> poll_id;
 
-    for (long long last =  polls.size() - 1; last >= 0; last--)
+    for (long long last = polls.size() - 1; last >= 0; last--)
     {
         if (polls[last].owner_id == user_id)
         {
@@ -289,4 +284,30 @@ MeshVector<size_t> show_created_polls(size_t user_id)
         }
     }
     return poll_id;
+}
+
+// delete poll and all its related options
+
+void delete_poll(size_t pollID)
+{
+    // erase poll with id
+    for (size_t i = 0; i < polls.size(); i++)
+    {
+        if (polls[i].id == pollID)
+        {
+            polls.erase(i);
+            break;
+        }
+    }
+
+    // erase all poll options related to the poll
+    for (long long i = 0; i < pollOptions.size(); i++)
+    {
+        if (pollOptions[i].poll_id == pollID)
+        {
+            pollOptions.erase(i);
+            // decrease index by one in order to not skip the next element
+            i--;
+        }
+    }
 }

@@ -5,17 +5,18 @@
 #include "services.hpp"
 #include <QMessageBox>
 
-
 // Get user data by ID
-User get_user_by_id(const size_t& id) {
-    for (const auto& user : users) {
-        if (user.id == id) {
+User get_user_by_id(const size_t &id)
+{
+    for (const auto &user : users)
+    {
+        if (user.id == id)
+        {
             return user;
         }
     }
     throw std::invalid_argument("User not found!");
 }
-
 
 /// @brief logs the user into the system
 std::string log_in(std::string username, std::string password)
@@ -24,7 +25,7 @@ std::string log_in(std::string username, std::string password)
     {
         if (users[user].username == username)
         {
-            std::string hashed = hash_password(password,users[user].id);
+            std::string hashed = hash_password(password, users[user].id);
             if (hashed == users[user].hashed_password)
             {
                 return "true";
@@ -34,7 +35,6 @@ std::string log_in(std::string username, std::string password)
                 return "Incorrect Password, Try Again!";
             }
         }
-
     }
     return "User Not Found, Please check your credentials!";
 }
@@ -48,7 +48,7 @@ std::string create_user(CreateUser createUser)
         return "Em";
     }
 
-    for (const auto& user : users)
+    for (const auto &user : users)
     {
         if (user.id == createUser.id)
         {
@@ -71,12 +71,14 @@ std::string create_user(CreateUser createUser)
     return "Success";
 }
 
-
 /// @brief Retrieves a user by their ID.
 
-User get_id_by_user(const std::string& username) {
-    for (const auto& user : users) {
-        if (user.username == username) {
+User get_id_by_user(const std::string &username)
+{
+    for (const auto &user : users)
+    {
+        if (user.username == username)
+        {
             return user;
         }
     }
@@ -102,7 +104,7 @@ std::string edit_user(EditUser editUser)
             return "done";
         }
     }
-    return("Can't find user!");
+    return ("Can't find user!");
 }
 
 /// @brief Edits the password for an existing user in the system.

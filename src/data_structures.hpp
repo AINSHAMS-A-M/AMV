@@ -126,8 +126,24 @@ public:
         _size--;
     }
 
+    // Erase element with index
+    void erase(size_t index)
+    {
+        if (index >= _size)
+        {
+            throw std::out_of_range("Index out of bounds");
+        }
+        for (size_t i = index + 1; i < _size; i++)
+        {
+            _data[i - 1] = _data[i];
+        }
+
+        _size--;
+    }
+
     // Element access with bounds checking
-    T &at(size_t index)
+    T &
+    at(size_t index)
     {
         if (index >= _size)
         {

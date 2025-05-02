@@ -3,7 +3,7 @@
 #include "_hash.hpp"
 #include "_structs.hpp"
 
-User get_id_by_user(const std::string& username);
+User get_id_by_user(const std::string &username);
 
 std::string create_user(CreateUser createUser);
 
@@ -15,7 +15,9 @@ Poll create_poll(CreatePoll createPoll);
 
 void fixIds(size_t);
 
-std::pair<bool,size_t> check_user_vote(size_t user_id, size_t poll_id);
+void delete_poll(size_t);
+
+std::pair<bool, size_t> check_user_vote(size_t user_id, size_t poll_id);
 
 void create_user_vote(size_t user_id, size_t poll_id, size_t poll_option_id);
 
@@ -37,6 +39,6 @@ std::string getPollId(std::string &voterId);
 
 size_t getPollOptionId(size_t pollId);
 
-User get_user_by_id(const size_t& id);
+User get_user_by_id(const size_t &id);
 
 MeshVector<size_t> show_created_polls(size_t user_id);
