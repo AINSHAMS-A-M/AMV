@@ -14,7 +14,7 @@ class MyPollsPage : public QWidget
 
 public:
     explicit MyPollsPage(QWidget *parent = nullptr);
-    void populatePollList(); // Fetches and displays user's polls
+    void populatePollList();
     void onBackToListClicked();
     QWidget *pollListView;
     QStackedWidget  *contentStack;
@@ -28,30 +28,20 @@ signals:
     void onProfileClicked();
 
 private slots:
-    // Poll list view slots
     void onViewPollClicked(size_t pollId);
 
 private:
-    // UI Components
     SidebarWidget *sidebar;
     QWidget         *content;
-
-    // Pages within the contentStack
-    QWidget         *pollDetailsView;   // Page showing details of a selected poll
-
-    // Widgets within pollListView
+    QWidget         *pollDetailsView;   
     QScrollArea     *pollListScrollArea;
-    QWidget         *pollListContainerWidget; // Widget inside scroll area
-    QVBoxLayout     *pollListLayout;          // Layout for poll cards
-
-    // Widgets within pollDetailsView
+    QWidget         *pollListContainerWidget;
+    QVBoxLayout     *pollListLayout;
     QVBoxLayout     *pollDetailsLayout;
     QPushButton     *backButton;
     QLabel          *pollDetailsTitleLabel;
-    QTableWidget    *optionsTable; // To display options and vote counts
-
-    // Helper function for UI setup
+    QTableWidget    *optionsTable;
     void setupPollListView();
     void setupPollDetailsView();
-    void displayPollDetails(const RetrievePollResultAdmin& poll); // Populates the details view
+    void displayPollDetails(const RetrievePollResultAdmin& poll);
 };

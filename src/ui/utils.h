@@ -5,4 +5,4 @@
 
 auto createRoundedLogo(const QPixmap &pixmap, int size) -> QPixmap;
 
-#endif // UTILS_H
+#endif

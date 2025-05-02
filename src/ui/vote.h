@@ -1,7 +1,6 @@
 #ifndef VOTE_H
 #define VOTE_H
 
-#include "data_structures.hpp"
 #include "sidebar.h"
 #include <QWidget>
 #include <QLineEdit>
@@ -39,19 +38,13 @@ private:
     QStackedWidget *stackedWidget;
     QWidget *voterIdPage;
     QWidget *pollOptionsPage;
-
-
-
-    // Poll display
     QLabel *pollTitleLabel;
     QLabel *pollDescLabel;
     QWidget *optionsContainer;
     QVBoxLayout *optionsLayout;
     QButtonGroup *optionsGroup;
     size_t pollId;
-
-    // Helper methods
     void loadPollOptions();
 };
 
-#endif // VOTE_H
+#endif

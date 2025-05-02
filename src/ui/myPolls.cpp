@@ -18,10 +18,10 @@
 
 MyPollsPage::MyPollsPage(QWidget *parent)
     : QWidget(parent),
+    pollListView(nullptr),
+    contentStack(nullptr),
     sidebar(nullptr),
     content(nullptr),
-    contentStack(nullptr),
-    pollListView(nullptr),
     pollDetailsView(nullptr),
     pollListScrollArea(nullptr),
     pollListContainerWidget(nullptr),
@@ -49,11 +49,13 @@ MyPollsPage::MyPollsPage(QWidget *parent)
     contentLayout->addWidget(contentStack);
     setupPollListView();
     setupPollDetailsView();
+
     // Add the content widget to the root layout
     rootLayout->addWidget(sidebar);
     rootLayout->addWidget(content);
-    rootLayout->setStretch(0, 0); // Sidebar fixed width
-    rootLayout->setStretch(1, 1); // Content takes remaining space
+    rootLayout->setStretch(0, 0);
+    rootLayout->setStretch(1, 1);
+
     // Populate the poll list when the page is created
     populatePollList();
 }
@@ -63,7 +65,7 @@ void MyPollsPage::setupPollListView() {
     pollListView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     auto *pageLayout = new QVBoxLayout(pollListView);
     pageLayout->setContentsMargins(0, 0, 0, 0);
-    pageLayout->setSpacing(15); // Spacing between poll cards
+    pageLayout->setSpacing(15);
     QLabel *titleLabel = new QLabel("My Created Polls", pollListView);
     titleLabel->setStyleSheet("font-size: 24px; font-weight: bold; color: #333333; margin-bottom: 10px;");
     pageLayout->addWidget(titleLabel);
@@ -101,11 +103,11 @@ void MyPollsPage::setupPollListView() {
             background: transparent;
         }
     )");
-    pollListContainerWidget = new QWidget(); // The actual container for cards
+    pollListContainerWidget = new QWidget();
     pollListLayout = new QVBoxLayout(pollListContainerWidget);
     pollListLayout->setContentsMargins(0, 0, 0, 0);
-    pollListLayout->setSpacing(10); // Spacing between poll cards inside container
-    pollListLayout->setAlignment(Qt::AlignTop); // Align cards to the top
+    pollListLayout->setSpacing(10);
+    pollListLayout->setAlignment(Qt::AlignTop);
     pollListScrollArea->setWidget(pollListContainerWidget);
     pageLayout->addWidget(pollListScrollArea);
     contentStack->addWidget(pollListView);
@@ -143,8 +145,6 @@ void MyPollsPage::setupPollDetailsView() {
     optionsTable = new QTableWidget(pollDetailsView);
     optionsTable->setColumnCount(2);
     optionsTable->setHorizontalHeaderLabels({"Option Text", "Votes"});
-
-    // Improved header styling
     optionsTable->horizontalHeader()->setStyleSheet(QString(
         "QHeaderView::section {"
         "background-color: #F0F0F0;"
@@ -155,13 +155,10 @@ void MyPollsPage::setupPollDetailsView() {
         "font-weight: bold;"
         "}"
         ));
-
     optionsTable->verticalHeader()->setVisible(false);
     optionsTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
     optionsTable->setSelectionBehavior(QAbstractItemView::SelectRows);
     optionsTable->setSelectionMode(QAbstractItemView::NoSelection);
-
-    // Enhanced table styling with larger text
     optionsTable->setStyleSheet(QString(R"(
         QTableWidget {
             background-color: #FFFFFF;
@@ -198,7 +195,7 @@ void MyPollsPage::setupPollDetailsView() {
 
     optionsTable->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
     optionsTable->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Fixed);
-    optionsTable->setColumnWidth(1, 130); // Compact width for vote counts
+    optionsTable->setColumnWidth(1, 130);
 
     pollDetailsLayout->addWidget(optionsTable);
     contentStack->addWidget(pollDetailsView);
@@ -213,7 +210,7 @@ void MyPollsPage::populatePollList() {
         }
         delete item;
     }
-    pollListLayout->addStretch(); // Add the stretch back after clearing
+    pollListLayout->addStretch();
     auto myPolls = show_created_polls(activeUser.id);
     if (!myPolls.size()) {
         QLabel *noPollsLabel = new QLabel("You haven't created any polls yet.", pollListContainerWidget);
@@ -223,6 +220,7 @@ void MyPollsPage::populatePollList() {
     } else {
         for (const auto& id : myPolls) {
             auto poll =  retrieve_poll_as_owner(activeUser.id,id);
+
             // Create a widget for the poll card
             QWidget *cardWidget = new QWidget(pollListContainerWidget);
             QHBoxLayout *cardLayout = new QHBoxLayout(cardWidget);
@@ -235,14 +233,14 @@ void MyPollsPage::populatePollList() {
             QLabel *pollTitleLabel = new QLabel(QString::fromStdString(poll.pollInfo.name), cardWidget);
             pollTitleLabel->setStyleSheet("font-size: 18px; font-weight: bold; color: #333333;");
             pollTitleLabel->setWordWrap(true);
-            cardLayout->addWidget(pollTitleLabel, 1); // Title takes most space
+            cardLayout->addWidget(pollTitleLabel, 1);
             QPushButton *viewButton = new QPushButton("View", cardWidget);
             viewButton->setStyleSheet(QString(
                                           "QPushButton { color: %1; background-color: %2; border: none; padding: 8px 20px; border-radius: 5px; font-size: 16px; }"
                                           "QPushButton:hover { background-color: %3; }"
-                                          ).arg("#FFFFFF", "#007BFF", "#339CFF")); // White text, Primary Blue background
+                                          ).arg("#FFFFFF", "#007BFF", "#339CFF"));
             viewButton->setCursor(Qt::PointingHandCursor);
-            viewButton->setFixedWidth(100); // Fixed width for view button
+            viewButton->setFixedWidth(100);
             cardLayout->addWidget(viewButton);
             pollListLayout->addWidget(cardWidget);
             connect(viewButton, &QPushButton::clicked, this, [this, id]() {
@@ -257,29 +255,28 @@ void MyPollsPage::onBackToListClicked() {
     contentStack->setCurrentWidget(pollListView);
     optionsTable->clearContents();
     optionsTable->setRowCount(0);
-    pollDetailsTitleLabel->setText("Poll Title"); // Reset title
+    pollDetailsTitleLabel->setText("Poll Title");
 }
 
 void MyPollsPage::displayPollDetails(const RetrievePollResultAdmin& poll) {
-    pollDetailsTitleLabel->setText(QString::fromStdString(poll.pollInfo.name)); // Set the poll title
+    pollDetailsTitleLabel->setText(QString::fromStdString(poll.pollInfo.name));
+
     // Populate the options table
-    optionsTable->clearContents(); // Clear previous data
-    optionsTable->setRowCount(poll.results.size()); // Set number of rows
+    optionsTable->clearContents();
+    optionsTable->setRowCount(poll.results.size());
     for (size_t i = 0; i < poll.results.size(); ++i) {
         const auto& option = poll.results[i];
         QTableWidgetItem *textItem = new QTableWidgetItem(QString::fromStdString(option.option_name));
         QTableWidgetItem *votesItem = new QTableWidgetItem(QString::number(option.option_votes_count));
-        votesItem->setTextAlignment(Qt::AlignCenter); // Align vote count to center
+        votesItem->setTextAlignment(Qt::AlignCenter);
         optionsTable->setItem(i, 0, textItem);
         optionsTable->setItem(i, 1, votesItem);
     }
-    // Auto-size columns for better fit
+
     optionsTable->resizeColumnsToContents();
     optionsTable->resizeRowsToContents();
-    // Make the first column (Option Text) stretch
     optionsTable->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
     optionsTable->setColumnWidth(1, 120);
-    // optionsTable->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Fixed);
 }
 
 void MyPollsPage::onViewPollClicked(size_t pollId) {

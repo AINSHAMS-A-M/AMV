@@ -26,7 +26,6 @@ public:
     void handleNavigation(NavigationManager::Page page);
 
 protected:
-    // Override the close event handler
     void closeEvent(QCloseEvent *event) override;
 
 private slots:
@@ -42,8 +41,6 @@ private slots:
 
 private:
     QStackedWidget *stackedWidget;
-
-    // Page pointers
     LoginPage       *loginPage = nullptr;
     RegisterPage    *registerPage= nullptr;
     VotePage        *votePage= nullptr;

@@ -92,8 +92,7 @@ VotePage::VotePage(QWidget *parent)
     // Add form widget centered
     voterIdLayout->addWidget(formWidget, 0, Qt::AlignHCenter);
 
-    // Add some space
-    voterIdLayout->addSpacing(20); // Increased spacing before button
+    voterIdLayout->addSpacing(20);
 
     // Add submit button
     QPushButton *submitBtn = new QPushButton("Vote", voterIdPage);

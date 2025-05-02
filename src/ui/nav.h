@@ -1,4 +1,4 @@
-// nav.h
+
 #ifndef NAV_H
 #define NAV_H
 
@@ -9,7 +9,6 @@ class NavigationManager : public QObject {
 public:
     enum Page { Login, Register, Help, Vote, CreatePoll, MyPolls, MyVotes, Profile };
     static NavigationManager& instance();
-
     void navigate(Page page) { emit navigateTo(page); }
 
 signals:
@@ -19,4 +18,4 @@ private:
     NavigationManager(QObject* parent = nullptr);
 };
 
-#endif // NAV_H
+#endif

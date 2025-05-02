@@ -20,7 +20,6 @@ public:
     QStackedWidget *stackedWidget;
 
 signals:
-    // Sidebar actions
     void onHelpClicked();
     void onVoteClicked();
     void onMyVotesClicked();
@@ -29,20 +28,12 @@ signals:
     void onProfileClicked();
 
 private:
-    // Sidebar and main content
    SidebarWidget *sidebar;
     QWidget *content;
-
-    // Stacked pages
-
     QWidget *pollViewPage;
     QVBoxLayout* pollViewLayout;
-
-    // Vote list scroll
     QWidget *scrollContent;
     QVBoxLayout *scrollLayout;
-
-    // Color palette
     QString sidebarColor;
     QString bgColor;
     QString primaryColor;
@@ -53,15 +44,11 @@ private:
     QString dangerHoverBg;
     QString dangerHoverFg;
     QString cardBgColor;
-
-    // Initialization helpers
     void createSidebar();
     void createVotesListPage();
     void createPollViewPage();
-
-    // Action handlers
     void onRemoveVoteClicked(const size_t &identifier);
     void onViewVotePollClicked(const size_t &identifier, RetrievePollDTO &selectedPoll);
 };
 
-#endif // MYVOTES_H
+#endif

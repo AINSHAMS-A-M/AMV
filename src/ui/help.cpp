@@ -1,4 +1,4 @@
-// helppage.cpp
+
 #include "help.h"
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -57,7 +57,7 @@ HelpPage::HelpPage(QWidget *parent)
         "<p>Allows you to participate in a new poll. You will typically need a valid Voter ID to cast your vote.</p>"
 
         "<h3>My Votes</h3>"
-        "<p>View a history of the polls you have participated in and the options you selected. This section might also allow you to remove or change a previous vote.</p>"
+        "<p>View a history of the polls you have participated in and the options you selected. This section might also allow you to remove a previous vote.</p>"
 
         "<h3>Create Poll</h3>"
         "<p>Provides tools for creating a new election or poll. You can define the poll's name, and add the various options that users can vote for.</p>"
@@ -65,7 +65,7 @@ HelpPage::HelpPage(QWidget *parent)
         "<h3>My Polls</h3>"
         "<p>View the polls you have created, and their results thus far.</p>"
 
-        "<h3>Profile</h3>"
+        "<h3>Edit Profile</h3>"
         "<p>Edit your user account information, including your real name, username, and password. Keep your profile details up-to-date here.</p>";
 
     helpTextEdit->setHtml(helpContent);

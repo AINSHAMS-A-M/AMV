@@ -1,36 +1,30 @@
 #pragma once
 #include "sidebar.h"
-#include <QWidget> // Base class
-#include <QStringList> // Needed for menu items
+#include <QWidget>
+#include <QStringList>
 
 QT_BEGIN_NAMESPACE
 class QLabel;
 class QTextEdit;
 class QWidget;
-class QPushButton; // Include QPushButton forward declaration
-class QLineEdit; // For input fields
-class QStackedWidget; // For stacked content
+class QPushButton;
+class QLineEdit;
+class QStackedWidget;
 QT_END_NAMESPACE
 
 class ProfileEditPage : public QWidget
 {
     Q_OBJECT
 public:
-    // Constructor declaration only
     explicit ProfileEditPage(QWidget *parent = nullptr);
     ~ProfileEditPage() override = default;
-
-    // Profile form fields
     QLineEdit *usernameField;
     QLineEdit *realNameField;
-
-    // Password form fields
     QLineEdit *oldPasswordField;
     QLineEdit *newPasswordField;
     QLineEdit *confirmPasswordField;
 
 signals:
-    // Signals to indicate which sidebar menu item was clicked
     void onHelpClicked();
     void onVoteClicked();
     void onMyVotesClicked();
@@ -48,12 +42,8 @@ private:
     QWidget *content;
     QStackedWidget *stackedWidget;
     QList<QPushButton*> sidebarButtons;
-
-
-    // Tab navigation buttons
     QPushButton *profileInfoBtn;
     QPushButton *changePasswordTabBtn;
-
     QString bgColor;
     QString cardColor;
     QString borderColor;

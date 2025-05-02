@@ -22,13 +22,12 @@
 
 MyVotesPage::MyVotesPage(QWidget *parent)
     : QWidget(parent),
+    votesListPage(nullptr),
+    stackedWidget(nullptr),
     sidebar(nullptr),
     content(nullptr),
-    stackedWidget(nullptr),
-    votesListPage(nullptr),
     pollViewPage(nullptr)
 {
-    // --- Color Definitions ---
     bgColor       = "#F5F6F8";
     primaryColor  = "#007BFF";
     primaryHover  = "#339CFF";
@@ -89,7 +88,7 @@ void MyVotesPage::createVotesListPage()
     auto *headerWidget = new QWidget(votesListPage);
     headerWidget->setStyleSheet(QString("background-color: %1;").arg(bgColor));
     auto *headerLayout = new QVBoxLayout(headerWidget);
-    headerLayout->setContentsMargins(40, 40, 40, 30); // Keep padding
+    headerLayout->setContentsMargins(40, 40, 40, 30);
 
     QLabel *pageTitle = new QLabel("My Votes", headerWidget);
     pageTitle->setStyleSheet("font-size: 32px; font-weight: bold; color: #2C3E50; background: transparent; border: none;");
@@ -169,7 +168,6 @@ void MyVotesPage::createPollViewPage()
 
     pollViewLayout->addWidget(backButton);
 
-    // We'll populate the rest of this widget dynamically when a poll is selected
     pollViewLayout->addStretch();
 }
 

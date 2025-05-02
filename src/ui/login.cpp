@@ -32,8 +32,6 @@ LoginPage::LoginPage(QWidget *parent)
     leftLayout->setSpacing(0);
     leftLayout->setAlignment(Qt::AlignCenter);
 
-    // Rounded logo helper
-
     // Load and add logo
     const int logoSize = 200;
     QPixmap logoPixmap(":/logo.png");
@@ -50,7 +48,7 @@ LoginPage::LoginPage(QWidget *parent)
         leftLayout->addWidget(errorLabel);
     }
 
-    // Right panel: white background with form
+    // Right panel
     rightPanel = new QWidget(this);
     rightPanel->setStyleSheet("background-color: #FFFFFF;");
     QVBoxLayout *rightLayout = new QVBoxLayout(rightPanel);

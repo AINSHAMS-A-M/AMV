@@ -18,4 +18,4 @@ private:
     QVBoxLayout* sbLayout;
 };
 
-#endif // SIDEBAR_H
+#endif

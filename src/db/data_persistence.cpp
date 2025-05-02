@@ -6,7 +6,6 @@
 #include "data_structures.hpp"
 #include "services.hpp"
 
-// Global data structures
 MeshVector<User> users;
 MeshVector<Poll> polls;
 MeshVector<PollOption> pollOptions;
@@ -42,9 +41,9 @@ void load_data()
     }
 
     std::string line;
+
     // Read header line if it exists (and discard)
     // std::getline(csv_in, line);
-
     while (std::getline(csv_in, line))
     {
         std::stringstream ss(line);
@@ -184,7 +183,6 @@ void load_data()
 }
 
 /// @brief Saves current data to CSV files for persistent storage.
-// This function writes comma-separated values.
 void save_data()
 {
     std::string path = __FILE__;
@@ -210,7 +208,7 @@ void save_data()
     if (!csv_out.is_open())
     {
         std::cerr << "Error: Unable to open user database file for writing: " << users_path << std::endl;
-        return; // Or handle error appropriately
+        return;
     }
 
     // Write users data, comma-delimited

@@ -14,12 +14,12 @@
 
 CreatePollPage::CreatePollPage(QWidget *parent)
     : QWidget(parent)
-    , sidebar(nullptr)
-    , content(nullptr)
-    , optionsScrollArea(nullptr)
     , pollNameEdit(nullptr)
     , pollDescEdit(nullptr)
     , voterIdEdit(nullptr)
+    , sidebar(nullptr)
+    , content(nullptr)
+    , optionsScrollArea(nullptr)
     , optionsContainer(nullptr)
     , optionsLayout(nullptr)
 {

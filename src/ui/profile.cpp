@@ -18,13 +18,13 @@
 
 ProfileEditPage::ProfileEditPage(QWidget *parent)
     : QWidget(parent),
-    sidebar(nullptr),
-    content(nullptr),
     usernameField(nullptr),
     realNameField(nullptr),
     oldPasswordField(nullptr),
     newPasswordField(nullptr),
-    confirmPasswordField(nullptr)
+    confirmPasswordField(nullptr),
+    sidebar(nullptr),
+    content(nullptr)
 {
     bgColor       = "#F5F6F8";
     cardColor     = "#FFFFFF";
@@ -571,6 +571,7 @@ void ProfileEditPage::onEditProfileClicked()
     confirmPasswordField->clear();
     usernameField->setFocus();
     stackedWidget->setCurrentIndex(0);
+
     // Style for the active tab
     profileInfoBtn->setStyleSheet(
         QString("QPushButton {"
@@ -588,11 +589,12 @@ void ProfileEditPage::onEditProfileClicked()
                 "    background-color: %3;"
                 "}").arg(primaryBtnColor, primaryBtnHoverColor, primaryBtnPressedColor)
         );
+
     // Style for the inactive tab (password tab)
     changePasswordTabBtn->setStyleSheet(
         QString("QPushButton {"
-                "    background-color: transparent;" // Removed grey background
-                "    color: %1;" // Changed text color to labelColor
+                "    background-color: transparent;"
+                "    color: %1;"
                 "    border: none;"
                 "    border-radius: 8px;"
                 "    padding: 8px 15px;"
