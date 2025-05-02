@@ -38,7 +38,6 @@ MyVotesPage::MyVotesPage(QWidget *parent)
     dangerHoverBg = "#F8D7DA";
     dangerHoverFg = "#721C24";
     cardBgColor   = "#FFFFFF";
-
     auto *rootLayout = new QHBoxLayout(this);
     rootLayout->setContentsMargins(0, 0, 0, 0);
     rootLayout->setSpacing(0);

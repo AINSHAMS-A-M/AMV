@@ -17,6 +17,8 @@ public:
     explicit LoginPage(QWidget *parent = nullptr);
     ~LoginPage() override = default;
     void onLoginClicked();
+    QLineEdit  *userEdit;
+    QLineEdit  *passEdit;
 
 signals:
     void loginSuccessful();
@@ -25,8 +27,6 @@ signals:
 private:
     QWidget    *leftPanel;
     QWidget    *rightPanel;
-    QLineEdit  *userEdit;
-    QLineEdit  *passEdit;
     QPushButton *loginBtn;
     QLabel     *registerLabel;
 };

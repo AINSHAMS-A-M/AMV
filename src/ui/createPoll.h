@@ -24,6 +24,10 @@ class CreatePollPage : public QWidget
 public:
     explicit CreatePollPage(QWidget *parent = nullptr);
     ~CreatePollPage() override = default;
+    void resetOptions();
+    QLineEdit             *pollNameEdit;
+    QLineEdit             *pollDescEdit;
+    QLineEdit             *voterIdEdit;
 
 signals:
     void onHelpClicked();
@@ -40,14 +44,10 @@ public slots:
 
 private:
     void addOptionWidget();
-
     SidebarWidget *sidebar;
     QWidget               *content;
     QScrollArea           *optionsScrollArea;
     QList<QPushButton*>    sidebarButtons;
-    QLineEdit             *pollNameEdit;
-    QTextEdit             *pollDescEdit;
-    QLineEdit             *voterIdEdit;
     QWidget               *optionsContainer;
     QVBoxLayout           *optionsLayout;
     QVector<QWidget*>      optionWidgets;

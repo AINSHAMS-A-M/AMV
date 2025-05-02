@@ -6,9 +6,7 @@
 #include <QLabel>
 #include <QTableWidget>
 #include "_structs.hpp"
-#include "db.hpp"
 #include "sidebar.h"
-#include "utils.h"
 
 class MyPollsPage : public QWidget
 {
@@ -16,6 +14,7 @@ class MyPollsPage : public QWidget
 
 public:
     explicit MyPollsPage(QWidget *parent = nullptr);
+    void populatePollList(); // Fetches and displays user's polls
 
 signals:
     void onHelpClicked();
@@ -27,7 +26,6 @@ signals:
 
 private slots:
     // Poll list view slots
-    void populatePollList(); // Fetches and displays user's polls
     void onViewPollClicked(size_t pollId);
 
     // Poll details view slots

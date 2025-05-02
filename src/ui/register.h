@@ -17,6 +17,10 @@ public:
     explicit RegisterPage(QWidget *parent = nullptr);
     ~RegisterPage() override = default;
     void onRegisterClicked();
+    QLineEdit   *realNameEdit;
+    QLineEdit   *usernameEdit;
+    QLineEdit   *passwordEdit;
+    QLineEdit   *confirmEdit;
 
 signals:
     void loginLinkActivated();
@@ -26,10 +30,6 @@ signals:
 private:
     QWidget     *leftPanel;
     QWidget     *rightPanel;
-    QLineEdit   *realNameEdit;
-    QLineEdit   *usernameEdit;
-    QLineEdit   *passwordEdit;
-    QLineEdit   *confirmEdit;
     QPushButton *registerBtn;
     QLabel      *loginLabel;
 };

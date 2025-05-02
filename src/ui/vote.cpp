@@ -25,8 +25,7 @@ VotePage::VotePage(QWidget *parent)
     content(nullptr),
     stackedWidget(nullptr),
     voterIdPage(nullptr),
-    pollOptionsPage(nullptr),
-    pollIdInput(nullptr)
+    pollOptionsPage(nullptr)
 {
     const QString bgColor       = "#F5F6F8";
     const QString primaryColor  = "#007BFF";

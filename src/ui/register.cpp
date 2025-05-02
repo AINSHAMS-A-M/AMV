@@ -69,20 +69,28 @@ RegisterPage::RegisterPage(QWidget *parent)
     realNameEdit = new QLineEdit(rightPanel);
     realNameEdit->setPlaceholderText("Real name");
     realNameEdit->setStyleSheet(
+        "QLineEdit {"
         "padding: 10px;"
         "font-size: 16px;"
         "border: 1px solid #DADCE0;"
-        "border-radius: 6px;");
+        "border-radius: 6px; }"
+        "QLineEdit:focus {"
+        "    border: 2px solid #3498DB;"
+        "}");
     rightLayout->addWidget(realNameEdit);
 
     // Username field
     usernameEdit = new QLineEdit(rightPanel);
     usernameEdit->setPlaceholderText("Username");
     usernameEdit->setStyleSheet(
+        "QLineEdit {"
         "padding: 10px;"
         "font-size: 16px;"
         "border: 1px solid #DADCE0;"
-        "border-radius: 6px;");
+        "border-radius: 6px; }"
+        "QLineEdit:focus {"
+        "    border: 2px solid #3498DB;"
+        "}");
     rightLayout->addWidget(usernameEdit);
 
     // Password field
@@ -90,10 +98,14 @@ RegisterPage::RegisterPage(QWidget *parent)
     passwordEdit->setPlaceholderText("Password");
     passwordEdit->setEchoMode(QLineEdit::Password);
     passwordEdit->setStyleSheet(
+        "QLineEdit {"
         "padding: 10px;"
         "font-size: 16px;"
         "border: 1px solid #DADCE0;"
-        "border-radius: 6px;");
+        "border-radius: 6px; }"
+        "QLineEdit:focus {"
+        "    border: 2px solid #3498DB;"
+        "}");
     rightLayout->addWidget(passwordEdit);
 
     // Confirm password field
@@ -101,10 +113,14 @@ RegisterPage::RegisterPage(QWidget *parent)
     confirmEdit->setPlaceholderText("Confirm password");
     confirmEdit->setEchoMode(QLineEdit::Password);
     confirmEdit->setStyleSheet(
+        "QLineEdit {"
         "padding: 10px;"
         "font-size: 16px;"
         "border: 1px solid #DADCE0;"
-        "border-radius: 6px;");
+        "border-radius: 6px; }"
+        "QLineEdit:focus {"
+        "    border: 2px solid #3498DB;"
+        "}");
     rightLayout->addWidget(confirmEdit);
 
     usernameEdit->setObjectName("usernameEdit");

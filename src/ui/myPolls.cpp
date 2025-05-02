@@ -31,7 +31,7 @@ MyPollsPage::MyPollsPage(QWidget *parent)
     pollDetailsTitleLabel(nullptr),
     optionsTable(nullptr)
 {
-    const QString bgColor       = "#F5F6F8"; // Light grey
+    const QString bgColor       = "#F5F6F8";
 
     auto *rootLayout = new QHBoxLayout(this);
     rootLayout->setContentsMargins(0, 0, 0, 0);
@@ -69,7 +69,7 @@ void MyPollsPage::setupPollListView() {
     pageLayout->addWidget(titleLabel);
     pollListScrollArea = new QScrollArea(pollListView);
     pollListScrollArea->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    pollListScrollArea->setWidgetResizable(true); // Allow the widget inside to resize
+    pollListScrollArea->setWidgetResizable(true);
     pollListScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarPolicy::ScrollBarAlwaysOff);
     pollListScrollArea->setStyleSheet(R"(
         /* Container background */

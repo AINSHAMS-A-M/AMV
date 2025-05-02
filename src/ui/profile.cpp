@@ -26,20 +26,20 @@ ProfileEditPage::ProfileEditPage(QWidget *parent)
     newPasswordField(nullptr),
     confirmPasswordField(nullptr)
 {
-    const QString bgColor       = "#F5F6F8";
-    const QString cardColor     = "#FFFFFF";
-    const QString borderColor   = "#E0E0E0";
-    const QString primaryBtnColor = "#3498DB";
-    const QString primaryBtnHoverColor = "#2980B9";
-    const QString primaryBtnPressedColor = "#1F618D";
-    const QString labelColor    = "#566573";
-    const QString titleColor    = "#2C3E50";
+    bgColor       = "#F5F6F8";
+    cardColor     = "#FFFFFF";
+    borderColor   = "#E0E0E0";
+    primaryBtnColor = "#3498DB";
+    primaryBtnHoverColor = "#2980B9";
+    primaryBtnPressedColor = "#1F618D";
+    labelColor    = "#566573";
+    titleColor    = "#2C3E50";
 
     auto *rootLayout = new QHBoxLayout(this);
     rootLayout->setContentsMargins(0, 0, 0, 0);
     rootLayout->setSpacing(0);
 
-    sidebar = new SidebarWidget(this,"Profile");
+    sidebar = new SidebarWidget(this,"Edit Profile");
 
     // Main content widget
     content = new QWidget(this);
@@ -56,7 +56,7 @@ ProfileEditPage::ProfileEditPage(QWidget *parent)
     contentLayout->addWidget(titleLabel);
 
     // Create stacked widget for content cards
-    QStackedWidget *stackedWidget = new QStackedWidget(content);
+    stackedWidget = new QStackedWidget(content);
     contentLayout->addWidget(stackedWidget);
 
     // ===== FIRST CARD: PROFILE INFORMATION =====
@@ -101,6 +101,7 @@ ProfileEditPage::ProfileEditPage(QWidget *parent)
                 "}").arg(borderColor, titleColor, cardColor, primaryBtnColor)
         );
     this->usernameField->setMinimumHeight(40);
+    this->usernameField->setObjectName("userEdit");
     usernameLayout->addWidget(usernameLabel);
     usernameLayout->addWidget(this->usernameField);
     profileCardLayout->addWidget(usernameContainer);
@@ -128,6 +129,7 @@ ProfileEditPage::ProfileEditPage(QWidget *parent)
                 "}").arg(borderColor, titleColor, cardColor, primaryBtnColor)
         );
     this->realNameField->setMinimumHeight(40);
+    this->realNameField->setObjectName("realEdit");
     realNameLayout->addWidget(realNameLabel);
     realNameLayout->addWidget(this->realNameField);
     profileCardLayout->addWidget(realNameContainer);
@@ -194,6 +196,7 @@ ProfileEditPage::ProfileEditPage(QWidget *parent)
     oldPasswordLabel->setStyleSheet(QString("font-size: 14px; color: %1; font-weight: bold; background-color: #FFFFFF;").arg(labelColor));
     oldPasswordField = new QLineEdit(oldPasswordContainer);
     oldPasswordField->setEchoMode(QLineEdit::Password);
+    this->oldPasswordField->setObjectName("oldPassEdit");
     oldPasswordField->setStyleSheet(
         QString("QLineEdit {"
                 "    border: 1px solid %1;"
@@ -236,6 +239,7 @@ ProfileEditPage::ProfileEditPage(QWidget *parent)
                 "}").arg(borderColor, titleColor, cardColor, primaryBtnColor)
         );
     newPasswordField->setMinimumHeight(40);
+    this->newPasswordField->setObjectName("newPassEdit");
     newPasswordLayout->addWidget(newPasswordLabel);
     newPasswordLayout->addWidget(newPasswordField);
     passwordCardLayout->addWidget(newPasswordContainer);
@@ -264,6 +268,7 @@ ProfileEditPage::ProfileEditPage(QWidget *parent)
                 "}").arg(borderColor, titleColor, cardColor, primaryBtnColor)
         );
     confirmPasswordField->setMinimumHeight(40);
+    this->confirmPasswordField->setObjectName("confirmPassEdit");
     confirmPasswordLayout->addWidget(confirmPasswordLabel);
     confirmPasswordLayout->addWidget(confirmPasswordField);
     passwordCardLayout->addWidget(confirmPasswordContainer);
@@ -306,10 +311,10 @@ ProfileEditPage::ProfileEditPage(QWidget *parent)
     navLayout->setContentsMargins(0, 20, 0, 0);
     navLayout->setSpacing(10);
 
-    QPushButton *profileInfoBtn = new QPushButton("Profile Info", navContainer);
+    profileInfoBtn = new QPushButton("Profile Info", navContainer);
     profileInfoBtn->setStyleSheet(
         QString("QPushButton {"
-                "    background-color: %1;" // Active color
+                "    background-color: %1;"
                 "    color: white;"
                 "    border: none;"
                 "    border-radius: 8px;"
@@ -325,23 +330,23 @@ ProfileEditPage::ProfileEditPage(QWidget *parent)
         );
     profileInfoBtn->setCursor(Qt::PointingHandCursor);
 
-    QPushButton *changePasswordTabBtn = new QPushButton("Change Password", navContainer);
-    // Modified stylesheet for inactive state
+    changePasswordTabBtn = new QPushButton("Change Password", navContainer);
+
     changePasswordTabBtn->setStyleSheet(
         QString("QPushButton {"
-                "    background-color: transparent;" // Removed grey background
-                "    color: %1;" // Changed text color to labelColor
+                "    background-color: transparent;"
+                "    color: %1;"
                 "    border: none;"
                 "    border-radius: 8px;"
                 "    padding: 8px 15px;"
                 "    font-size: 14px;"
                 "}"
                 "QPushButton:hover {"
-                "    color: %2;" // Hover color can be slightly different
+                "    color: %2;"
                 "}"
                 "QPushButton:pressed {"
-                "    color: %3;" // Pressed color
-                "}").arg(labelColor, titleColor, primaryBtnColor) // Using titleColor and primaryBtnColor for hover/pressed text color
+                "    color: %3;"
+                "}").arg(labelColor, titleColor, primaryBtnColor)
         );
     changePasswordTabBtn->setCursor(Qt::PointingHandCursor);
 
@@ -352,46 +357,17 @@ ProfileEditPage::ProfileEditPage(QWidget *parent)
     contentLayout->insertWidget(1, navContainer);
 
     // Connect buttons to switch between stacked widget pages
-    connect(profileInfoBtn, &QPushButton::clicked, [=]() {
-        stackedWidget->setCurrentIndex(0);
-        // Style for the active tab
-        profileInfoBtn->setStyleSheet(
-            QString("QPushButton {"
-                    "    background-color: %1;"
-                    "    color: white;"
-                    "    border: none;"
-                    "    border-radius: 8px;"
-                    "    padding: 8px 15px;"
-                    "    font-size: 14px;"
-                    "}"
-                    "QPushButton:hover {"
-                    "    background-color: %2;"
-                    "}"
-                    "QPushButton:pressed {"
-                    "    background-color: %3;"
-                    "}").arg(primaryBtnColor, primaryBtnHoverColor, primaryBtnPressedColor)
-            );
-        // Style for the inactive tab (password tab)
-        changePasswordTabBtn->setStyleSheet(
-            QString("QPushButton {"
-                    "    background-color: transparent;" // Removed grey background
-                    "    color: %1;" // Changed text color to labelColor
-                    "    border: none;"
-                    "    border-radius: 8px;"
-                    "    padding: 8px 15px;"
-                    "    font-size: 14px;"
-                    "}"
-                    "QPushButton:hover {"
-                    "    color: %2;"
-                    "}"
-                    "QPushButton:pressed {"
-                    "    color: %3;"
-                    "}").arg(labelColor, titleColor, primaryBtnColor)
-            );
-    });
+    connect(profileInfoBtn, &QPushButton::clicked, this, &ProfileEditPage::onEditProfileClicked);
 
     connect(changePasswordTabBtn, &QPushButton::clicked, [=]() {
+        usernameField->clear();
+        realNameField->clear();
+        oldPasswordField->clear();
+        newPasswordField->clear();
+        confirmPasswordField->clear();
+        oldPasswordField->setFocus();
         stackedWidget->setCurrentIndex(1);
+
         // Style for the active tab
         changePasswordTabBtn->setStyleSheet(
             QString("QPushButton {"
@@ -409,11 +385,12 @@ ProfileEditPage::ProfileEditPage(QWidget *parent)
                     "    background-color: %3;"
                     "}").arg(primaryBtnColor, primaryBtnHoverColor, primaryBtnPressedColor)
             );
+
         // Style for the inactive tab (profile tab)
         profileInfoBtn->setStyleSheet(
             QString("QPushButton {"
-                    "    background-color: transparent;" // Removed grey background
-                    "    color: %1;" // Changed text color to labelColor
+                    "    background-color: transparent;"
+                    "    color: %1;"
                     "    border: none;"
                     "    border-radius: 8px;"
                     "    padding: 8px 15px;"
@@ -432,7 +409,7 @@ ProfileEditPage::ProfileEditPage(QWidget *parent)
     stackedWidget->setCurrentIndex(0);
     profileInfoBtn->setStyleSheet(
         QString("QPushButton {"
-                "    background-color: %1;" // Active color
+                "    background-color: %1;"
                 "    color: white;"
                 "    border: none;"
                 "    border-radius: 8px;"
@@ -448,8 +425,8 @@ ProfileEditPage::ProfileEditPage(QWidget *parent)
         );
     changePasswordTabBtn->setStyleSheet(
         QString("QPushButton {"
-                "    background-color: transparent;" // Removed grey background
-                "    color: %1;" // Changed text color to labelColor
+                "    background-color: transparent;"
+                "    color: %1;"
                 "    border: none;"
                 "    border-radius: 8px;"
                 "    padding: 8px 15px;"
@@ -484,7 +461,13 @@ void ProfileEditPage::onSaveProfileClicked()
 
     std::string new_username = this->usernameField->text().toStdString();
     std::string new_realname = this->realNameField->text().toStdString();
-    if (new_username.empty() && new_username.empty())
+    usernameField->clear();
+    realNameField->clear();
+    oldPasswordField->clear();
+    newPasswordField->clear();
+    confirmPasswordField->clear();
+    usernameField->setFocus();
+    if (new_username.empty() && new_realname.empty())
     {
         QMessageBox::warning(nullptr,"Warning","Nothing Changed!");
         return;
@@ -522,9 +505,16 @@ void ProfileEditPage::onSaveProfileClicked()
 
 void ProfileEditPage::onUpdatePasswordClicked()
 {
+
     std::string old_password = this->oldPasswordField->text().toStdString();
     std::string new_password = this->newPasswordField->text().toStdString();
     std::string confirm = this->confirmPasswordField->text().toStdString();
+    usernameField->clear();
+    realNameField->clear();
+    oldPasswordField->clear();
+    newPasswordField->clear();
+    confirmPasswordField->clear();
+    oldPasswordField->setFocus();
 
     if (old_password.empty() || new_password.empty() || confirm.empty())
     {
@@ -570,4 +560,49 @@ void ProfileEditPage::onUpdatePasswordClicked()
         QMessageBox::warning(nullptr,"Warning",QString::fromStdString(response));
     }
 
+}
+
+void ProfileEditPage::onEditProfileClicked()
+{
+    usernameField->clear();
+    realNameField->clear();
+    oldPasswordField->clear();
+    newPasswordField->clear();
+    confirmPasswordField->clear();
+    usernameField->setFocus();
+    stackedWidget->setCurrentIndex(0);
+    // Style for the active tab
+    profileInfoBtn->setStyleSheet(
+        QString("QPushButton {"
+                "    background-color: %1;"
+                "    color: white;"
+                "    border: none;"
+                "    border-radius: 8px;"
+                "    padding: 8px 15px;"
+                "    font-size: 14px;"
+                "}"
+                "QPushButton:hover {"
+                "    background-color: %2;"
+                "}"
+                "QPushButton:pressed {"
+                "    background-color: %3;"
+                "}").arg(primaryBtnColor, primaryBtnHoverColor, primaryBtnPressedColor)
+        );
+    // Style for the inactive tab (password tab)
+    changePasswordTabBtn->setStyleSheet(
+        QString("QPushButton {"
+                "    background-color: transparent;" // Removed grey background
+                "    color: %1;" // Changed text color to labelColor
+                "    border: none;"
+                "    border-radius: 8px;"
+                "    padding: 8px 15px;"
+                "    font-size: 14px;"
+                "}"
+                "QPushButton:hover {"
+                "    color: %2;"
+                "}"
+                "QPushButton:pressed {"
+                "    color: %3;"
+                "}").arg(labelColor, titleColor, primaryBtnColor)
+        );
 }

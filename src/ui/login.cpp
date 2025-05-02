@@ -71,10 +71,14 @@ LoginPage::LoginPage(QWidget *parent)
     userEdit = new QLineEdit(rightPanel);
     userEdit->setPlaceholderText("Username");
     userEdit->setStyleSheet(
+        "QLineEdit {"
         "padding: 10px;"
         "font-size: 16px;"
         "border: 1px solid #DADCE0;"
-        "border-radius: 6px;");
+        "border-radius: 6px; }"
+        "QLineEdit:focus {"
+        "    border: 2px solid #3498DB;"
+        "}");
     rightLayout->addWidget(userEdit);
 
     // Password field
@@ -82,10 +86,14 @@ LoginPage::LoginPage(QWidget *parent)
     passEdit->setPlaceholderText("Password");
     passEdit->setEchoMode(QLineEdit::Password);
     passEdit->setStyleSheet(
+        "QLineEdit {"
         "padding: 10px;"
         "font-size: 16px;"
         "border: 1px solid #DADCE0;"
-        "border-radius: 6px;");
+        "border-radius: 6px; }"
+        "QLineEdit:focus {"
+        "    border: 2px solid #3498DB;"
+        "}");
     rightLayout->addWidget(passEdit);
 
 

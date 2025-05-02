@@ -17,6 +17,7 @@ class VotePage : public QWidget
 
 public:
     explicit VotePage(QWidget *parent = nullptr);
+    QLineEdit *voterIdInput;
 
 signals:
     void onHelpClicked();
@@ -39,9 +40,7 @@ private:
     QWidget *voterIdPage;
     QWidget *pollOptionsPage;
 
-    // Form inputs
-    QLineEdit *voterIdInput;
-    QLineEdit *pollIdInput;
+
 
     // Poll display
     QLabel *pollTitleLabel;

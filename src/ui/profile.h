@@ -20,6 +20,15 @@ public:
     explicit ProfileEditPage(QWidget *parent = nullptr);
     ~ProfileEditPage() override = default;
 
+    // Profile form fields
+    QLineEdit *usernameField;
+    QLineEdit *realNameField;
+
+    // Password form fields
+    QLineEdit *oldPasswordField;
+    QLineEdit *newPasswordField;
+    QLineEdit *confirmPasswordField;
+
 signals:
     // Signals to indicate which sidebar menu item was clicked
     void onHelpClicked();
@@ -32,6 +41,7 @@ signals:
 public slots:
     void onSaveProfileClicked();
     void onUpdatePasswordClicked();
+    void onEditProfileClicked();
 
 private:
     SidebarWidget *sidebar;
@@ -39,16 +49,17 @@ private:
     QStackedWidget *stackedWidget;
     QList<QPushButton*> sidebarButtons;
 
-    // Profile form fields
-    QLineEdit *usernameField;
-    QLineEdit *realNameField;
-
-    // Password form fields
-    QLineEdit *oldPasswordField;
-    QLineEdit *newPasswordField;
-    QLineEdit *confirmPasswordField;
 
     // Tab navigation buttons
     QPushButton *profileInfoBtn;
     QPushButton *changePasswordTabBtn;
+
+    QString bgColor;
+    QString cardColor;
+    QString borderColor;
+    QString primaryBtnColor;
+    QString primaryBtnHoverColor;
+    QString primaryBtnPressedColor;
+    QString labelColor;
+    QString titleColor;
 };

@@ -42,7 +42,7 @@ SidebarWidget::SidebarWidget(QWidget *parent, std::string page)
 
 void SidebarWidget::setupMenuItems(std::string page)
 {
-    QStringList menuItems = {"Help", "Vote", "My Votes", "Create Poll", "My Polls", "Profile"};
+    QStringList menuItems = {"Help", "Vote", "My Votes", "Create Poll", "My Polls", "Edit Profile"};
     for (const QString &item : menuItems) {
         QPushButton *btn = new QPushButton(item, this);
         btn->setStyleSheet(
@@ -64,7 +64,7 @@ void SidebarWidget::setupMenuItems(std::string page)
             else if (item == "My Votes") NavigationManager::instance().navigate(NavigationManager::MyVotes);
             else if (item == "Create Poll") NavigationManager::instance().navigate(NavigationManager::CreatePoll);
             else if (item == "My Polls") NavigationManager::instance().navigate(NavigationManager::MyPolls);
-            else if (item == "Profile") NavigationManager::instance().navigate(NavigationManager::Profile);
+            else if (item == "Edit Profile") NavigationManager::instance().navigate(NavigationManager::Profile);
         });
 
         sbLayout->addWidget(btn);

@@ -80,10 +80,9 @@ CreatePollPage::CreatePollPage(QWidget *parent)
     pollNameEdit->setStyleSheet(inputStyle);
     formLayout->addRow("Poll Name:", pollNameEdit);
 
-    pollDescEdit = new QTextEdit();
+    pollDescEdit = new QLineEdit();
     pollDescEdit->setPlaceholderText("Enter poll description...");
     pollDescEdit->setStyleSheet(inputStyle);
-    pollDescEdit->setFixedHeight(100);
     formLayout->addRow("Description:", pollDescEdit);
 
     voterIdEdit = new QLineEdit();
@@ -184,6 +183,11 @@ CreatePollPage::CreatePollPage(QWidget *parent)
     rootLayout->addWidget(content);
     connect(pollNameEdit, &QLineEdit::returnPressed, [this]()
             {
+                pollDescEdit->setFocus();
+            });
+
+    connect(pollDescEdit, &QLineEdit::returnPressed, [this]()
+            {
                 voterIdEdit->setFocus();
             });
 }
@@ -263,10 +267,18 @@ void CreatePollPage::onAddOptionClicked()
 void CreatePollPage::onCreatePollBtnClicked()
 {
     auto pollName = pollNameEdit->text().toStdString();
-    auto pollDesc = pollDescEdit->toPlainText().toStdString();
+    auto pollDesc = pollDescEdit->text().toStdString();
     auto voterId  = voterIdEdit->text().toStdString();
     MeshVector<std::string> options;
 
+    for (auto &poll : polls)
+    {
+        if (poll.voter_id == voterId)
+        {
+            QMessageBox::warning(nullptr, "Warning", "A Poll with the same voter ID already exists!");
+            return;
+        }
+    }
     if (pollName.find('`') != std::string::npos || pollDesc.find('`') != std::string::npos || voterId.find('`') != std::string::npos || pollDesc.find('\n') != std::string::npos)
     {
         QMessageBox::warning(nullptr, "Warning", "Invalid character detected!");
@@ -308,5 +320,21 @@ void CreatePollPage::onCreatePollBtnClicked()
         };
 
     create_poll(newPoll);
+    pollNameEdit->clear();
+    pollDescEdit->clear();
+    voterIdEdit->clear();
+    resetOptions();
+    pollNameEdit->setFocus();
     QMessageBox::information(nullptr, "Success", "Poll created successfully!");
+}
+
+void CreatePollPage::resetOptions()
+{
+    // Clear all option widgets
+    for (QWidget *optWidget : optionWidgets)
+    {
+        optionsLayout->removeWidget(optWidget);
+        optWidget->deleteLater();
+    }
+    optionWidgets.clear();
 }

@@ -70,23 +70,18 @@ void MainWindow::onLoginClicked()
 void MainWindow::onRegisterLink()
 {
     stackedWidget->setCurrentWidget(registerPage);
-    QLineEdit* realEdit = registerPage->findChild<QLineEdit*>("realnameEdit");
-    if (realEdit) {
-        realEdit->setFocus();
-    }
+    registerPage->realNameEdit->setFocus();
 }
 
 void MainWindow::onLoginLink()
 {
     stackedWidget->setCurrentWidget(loginPage);
-    QLineEdit* userEdit = loginPage->findChild<QLineEdit*>("userEdit");
-    if (userEdit) {
-        userEdit->setFocus();
-    }
+    loginPage->userEdit->setFocus();
 }
 
 void MainWindow::onProfileClicked()
 {
+    profileEditPage->onEditProfileClicked();
     stackedWidget->setCurrentWidget(profileEditPage);
 }
 
@@ -97,12 +92,18 @@ void MainWindow::onHelpClicked()
 
 void MainWindow::onCreatePollClicked()
 {
+    createPollPage->resetOptions();
+    createPollPage->pollNameEdit->clear();
+    createPollPage->pollDescEdit->clear();
+    createPollPage->voterIdEdit->clear();
+    createPollPage->pollNameEdit->setFocus();
     stackedWidget->setCurrentWidget(createPollPage);
 }
 
 void MainWindow::onMyPollsClicked()
 {
     stackedWidget->setCurrentWidget(myPollsPage);
+    myPollsPage->populatePollList();
 }
 
 void MainWindow::onMyVotesClicked()
@@ -114,11 +115,8 @@ void MainWindow::onMyVotesClicked()
 void MainWindow::onVoteClicked()
 {
     stackedWidget->setCurrentWidget(votePage);
-    QLineEdit* voterInput = votePage->findChild<QLineEdit*>("voterInput");
-    if (voterInput) {
-        voterInput->clear();
-        voterInput->setFocus();
-    }
+    votePage->voterIdInput->clear();
+    votePage->voterIdInput->setFocus();
 }
 
 void MainWindow::closeEvent(QCloseEvent *event) {
