@@ -163,9 +163,7 @@ void MyVotesPage::createPollViewPage()
         );
 
     connect(backButton, &QPushButton::clicked, this, [this]() {
-        // Switch back to votes list
         stackedWidget->setCurrentWidget(votesListPage);
-        // Refresh the cards in case a vote was removed
         show_cards();
     });
 

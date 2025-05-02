@@ -103,12 +103,14 @@ void MainWindow::onCreatePollClicked()
 void MainWindow::onMyPollsClicked()
 {
     stackedWidget->setCurrentWidget(myPollsPage);
+    myPollsPage->contentStack->setCurrentWidget(myPollsPage->pollListView);
     myPollsPage->populatePollList();
 }
 
 void MainWindow::onMyVotesClicked()
 {
     stackedWidget->setCurrentWidget(myVotesPage);
+    myVotesPage->stackedWidget->setCurrentWidget(myVotesPage->votesListPage);
     myVotesPage->show_cards();
 }
 

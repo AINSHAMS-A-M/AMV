@@ -15,6 +15,9 @@ class MyPollsPage : public QWidget
 public:
     explicit MyPollsPage(QWidget *parent = nullptr);
     void populatePollList(); // Fetches and displays user's polls
+    void onBackToListClicked();
+    QWidget *pollListView;
+    QStackedWidget  *contentStack;
 
 signals:
     void onHelpClicked();
@@ -28,17 +31,12 @@ private slots:
     // Poll list view slots
     void onViewPollClicked(size_t pollId);
 
-    // Poll details view slots
-    void onBackToListClicked(); // Handles click on "Back" button
-
 private:
     // UI Components
     SidebarWidget *sidebar;
     QWidget         *content;
-    QStackedWidget  *contentStack;
 
     // Pages within the contentStack
-    QWidget         *pollListView;      // Page showing list of polls as cards
     QWidget         *pollDetailsView;   // Page showing details of a selected poll
 
     // Widgets within pollListView

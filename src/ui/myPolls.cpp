@@ -254,9 +254,8 @@ void MyPollsPage::populatePollList() {
 }
 
 void MyPollsPage::onBackToListClicked() {
-    contentStack->setCurrentWidget(pollListView); // Switch back to the list page
-    // Optionally clear the details view or reset scroll position on the list
-    optionsTable->clearContents(); // Clear table data
+    contentStack->setCurrentWidget(pollListView);
+    optionsTable->clearContents();
     optionsTable->setRowCount(0);
     pollDetailsTitleLabel->setText("Poll Title"); // Reset title
 }

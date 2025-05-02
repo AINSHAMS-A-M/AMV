@@ -15,8 +15,9 @@ class MyVotesPage : public QWidget {
 
 public:
     explicit MyVotesPage(QWidget *parent = nullptr);
-
+    QWidget *votesListPage;
     void show_cards();
+    QStackedWidget *stackedWidget;
 
 signals:
     // Sidebar actions
@@ -33,8 +34,7 @@ private:
     QWidget *content;
 
     // Stacked pages
-    QStackedWidget *stackedWidget;
-    QWidget *votesListPage;
+
     QWidget *pollViewPage;
     QVBoxLayout* pollViewLayout;
 
