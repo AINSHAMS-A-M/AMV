@@ -1,0 +1,81 @@
+#include "sidebar.h"
+#include <QVBoxLayout>
+#include <QLabel>
+#include <QPushButton>
+#include <QPixmap>
+#include <QHBoxLayout>
+#include "utils.h"
+#include "nav.h"
+#include "db.hpp"
+
+
+SidebarWidget::SidebarWidget(QWidget *parent, std::string page)
+    : QWidget(parent)
+{
+    const QString sidebarColor = "#2C3E50";
+    this->setFixedWidth(200);
+    this->setStyleSheet(QString("SidebarWidget { background-color: %1; }").arg(sidebarColor));
+    this->setAttribute(Qt::WA_StyledBackground);
+
+    sbLayout = new QVBoxLayout(this);
+    sbLayout->setSpacing(15);
+    sbLayout->setContentsMargins(20, 20, 20, 20);
+
+    // Logo
+    const int logoSize = 120;
+    QPixmap logoPixmap(":/logo.png");
+    QPixmap roundedLogo = createRoundedLogo(logoPixmap, logoSize);
+    if (!roundedLogo.isNull())
+    {
+        QLabel *logoLabel = new QLabel(this);
+        logoLabel->setPixmap(roundedLogo);
+        logoLabel->setFixedSize(logoSize, logoSize);
+        logoLabel->setAlignment(Qt::AlignCenter);
+        logoLabel->setStyleSheet("background-color: transparent;");
+        sbLayout->addWidget(logoLabel, 0, Qt::AlignHCenter);
+    }
+
+    setupMenuItems(page);
+    setupWelcomeLabel();
+    sbLayout->addStretch();
+}
+
+void SidebarWidget::setupMenuItems(std::string page)
+{
+    QStringList menuItems = {"Help", "Vote", "My Votes", "Create Poll", "My Polls", "Profile"};
+    for (const QString &item : menuItems) {
+        QPushButton *btn = new QPushButton(item, this);
+        btn->setStyleSheet(
+            "QPushButton { color: white; background: none; border: none; text-align: left; font-size: 18px; padding: 10px; border-radius: 4px; }"
+            "QPushButton:hover { background-color: rgba(255,255,255,0.1); }"
+            );
+        btn->setCursor(Qt::PointingHandCursor);
+
+        if (item == page) {
+            btn->setStyleSheet(
+                "QPushButton { color: #333333; background-color: rgba(255,255,255,0.2); border: none; text-align: left; font-size: 18px; padding: 10px; font-weight: bold; }"
+                "QPushButton:hover { background-color: rgba(255,255,255,0.3); }"
+                );
+        }
+
+        connect(btn, &QPushButton::clicked, [item]() {
+            if (item == "Help") NavigationManager::instance().navigate(NavigationManager::Help);
+            else if (item == "Vote") NavigationManager::instance().navigate(NavigationManager::Vote);
+            else if (item == "My Votes") NavigationManager::instance().navigate(NavigationManager::MyVotes);
+            else if (item == "Create Poll") NavigationManager::instance().navigate(NavigationManager::CreatePoll);
+            else if (item == "My Polls") NavigationManager::instance().navigate(NavigationManager::MyPolls);
+            else if (item == "Profile") NavigationManager::instance().navigate(NavigationManager::Profile);
+        });
+
+        sbLayout->addWidget(btn);
+    }
+}
+
+void SidebarWidget::setupWelcomeLabel()
+{
+    QLabel *welcomeLabel = new QLabel("Welcome\n" + QString::fromStdString(activeUser.name) + "!", this);
+    welcomeLabel->setStyleSheet("color: #EBECF0; font-size: 15px; padding: 5px 10px; font-style: italic; font-weight: bold;");
+    welcomeLabel->setWordWrap(true);
+    welcomeLabel->setAlignment(Qt::AlignLeft);
+    layout()->addWidget(welcomeLabel);
+}

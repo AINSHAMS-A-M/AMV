@@ -15,7 +15,6 @@
 #include "mainwindow.h"
 #include "services.hpp"
 #include "qmessagebox.h"
-#include "utils.h"
 
 ProfileEditPage::ProfileEditPage(QWidget *parent)
     : QWidget(parent),
@@ -27,9 +26,7 @@ ProfileEditPage::ProfileEditPage(QWidget *parent)
     newPasswordField(nullptr),
     confirmPasswordField(nullptr)
 {
-    const QString sidebarColor  = "#2C3E50";
     const QString bgColor       = "#F5F6F8";
-    const QString textColor     = "#FFFFFF";
     const QString cardColor     = "#FFFFFF";
     const QString borderColor   = "#E0E0E0";
     const QString primaryBtnColor = "#3498DB";
@@ -42,94 +39,7 @@ ProfileEditPage::ProfileEditPage(QWidget *parent)
     rootLayout->setContentsMargins(0, 0, 0, 0);
     rootLayout->setSpacing(0);
 
-    sidebar = new QWidget(this);
-    sidebar->setFixedWidth(200);
-    sidebar->setStyleSheet(QString("background-color: %1;").arg(sidebarColor));
-
-    auto *sbLayout = new QVBoxLayout(sidebar);
-    sbLayout->setSpacing(15);
-    sbLayout->setContentsMargins(20, 20, 20, 20);
-
-    const int logoSize = 120;
-    QPixmap logoPixmap(":/logo.png");
-    QPixmap roundedLogo = createRoundedLogo(logoPixmap, logoSize);
-
-    if (!roundedLogo.isNull()) {
-        QLabel *logoLabel = new QLabel(sidebar);
-        logoLabel->setPixmap(roundedLogo);
-        logoLabel->setFixedSize(logoSize, logoSize);
-        logoLabel->setAlignment(Qt::AlignCenter);
-        logoLabel->setStyleSheet("background-color: transparent;");
-        sbLayout->addWidget(logoLabel, 0, Qt::AlignHCenter);
-    } else {
-        QLabel *errorLabel = new QLabel("Logo Error", sidebar);
-        errorLabel->setAlignment(Qt::AlignCenter);
-        errorLabel->setStyleSheet(QString("color: %1;").arg(textColor));
-        sbLayout->addWidget(errorLabel, 0, Qt::AlignHCenter);
-    }
-
-    QStringList menuItems = {"Help", "Vote", "My Votes", "Create Poll", "My Polls", "Profile"};
-    for (const QString &item : menuItems) {
-        QPushButton *btn = new QPushButton(item, sidebar);
-        btn->setStyleSheet(QString(
-                               "QPushButton { color: %1; background: none; border: none; text-align: left; font-size: 18px; padding: 10px; }"
-                               "QPushButton:hover { background-color: rgba(255,255,255,0.1); }"
-                               ).arg(textColor));
-        btn->setCursor(Qt::PointingHandCursor);
-
-        if (item == "Profile") {
-            btn->setStyleSheet(
-                "QPushButton { color: #333333; background-color: rgba(255,255,255,0.2); border: none; text-align: left; font-size: 18px; padding: 10px; font-weight: bold; }"
-                "QPushButton:hover { background-color: rgba(255,255,255,0.3); }"
-                );
-        }
-
-        sbLayout->addWidget(btn);
-        // Connect signals
-        if (item == "Help")
-        {
-            connect(btn, &QPushButton::clicked, []() {
-                NavigationManager::instance().navigate(NavigationManager::Help);
-            });
-        }
-        else if (item == "Vote")
-        {
-            connect(btn, &QPushButton::clicked, []() {
-                NavigationManager::instance().navigate(NavigationManager::Vote);
-            });
-        }
-        else if (item == "My Votes")
-        {
-            connect(btn, &QPushButton::clicked, []() {
-                NavigationManager::instance().navigate(NavigationManager::MyVotes);
-            });
-        }
-        else if (item == "Create Poll")
-        {
-            connect(btn, &QPushButton::clicked, []() {
-                NavigationManager::instance().navigate(NavigationManager::CreatePoll);
-            });
-        }
-        else if (item == "My Polls")
-        {
-            connect(btn, &QPushButton::clicked, []() {
-                NavigationManager::instance().navigate(NavigationManager::MyPolls);
-            });
-        }
-        else if (item == "Profile")
-        {
-            connect(btn, &QPushButton::clicked, []() {
-                NavigationManager::instance().navigate(NavigationManager::Profile);
-            });
-        }
-    }
-    QLabel *welcomeLabel = new QLabel("Welcome \n" + QString::fromStdString(activeUser.name) + "!", sidebar);
-    welcomeLabel->setStyleSheet(QString("color: %1; font-size: 15px; padding: 5px 10px; font-style: italic; font-weight: bold;").arg("#EBECF0"));
-    welcomeLabel->setWordWrap(true);
-    welcomeLabel->setAlignment(Qt::AlignLeft);
-    sbLayout->addWidget(welcomeLabel);
-
-    sbLayout->addStretch();
+    sidebar = new SidebarWidget(this,"Profile");
 
     // Main content widget
     content = new QWidget(this);

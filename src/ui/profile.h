@@ -1,4 +1,5 @@
 #pragma once
+#include "sidebar.h"
 #include <QWidget> // Base class
 #include <QStringList> // Needed for menu items
 
@@ -33,7 +34,7 @@ public slots:
     void onUpdatePasswordClicked();
 
 private:
-    QWidget *sidebar;
+    SidebarWidget *sidebar;
     QWidget *content;
     QStackedWidget *stackedWidget;
     QList<QPushButton*> sidebarButtons;

@@ -19,7 +19,6 @@ SOURCES += main.cpp \
            $$files(src/services/*.cpp) \
            $$files(src/ui/*.cpp) \
 
-
 # Header files
 HEADERS += $$files(src/db/*.hpp) \
            $$files(src/services/*.hpp) \

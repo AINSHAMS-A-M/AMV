@@ -2,6 +2,7 @@
 #define VOTE_H
 
 #include "data_structures.hpp"
+#include "sidebar.h"
 #include <QWidget>
 #include <QLineEdit>
 #include <QLabel>
@@ -32,7 +33,7 @@ private slots:
 
 
 private:
-    QWidget *sidebar;
+    SidebarWidget *sidebar;
     QWidget *content;
     QStackedWidget *stackedWidget;
     QWidget *voterIdPage;

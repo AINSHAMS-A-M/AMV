@@ -14,7 +14,7 @@
 #include "db.hpp"
 #include "mainwindow.h"
 #include "services.hpp"
-#include "utils.h"
+#include "sidebar.h"
 
 MyPollsPage::MyPollsPage(QWidget *parent)
     : QWidget(parent),
@@ -31,102 +31,15 @@ MyPollsPage::MyPollsPage(QWidget *parent)
     pollDetailsTitleLabel(nullptr),
     optionsTable(nullptr)
 {
-    const QString sidebarColor  = "#2C3E50"; // Dark blue/grey
     const QString bgColor       = "#F5F6F8"; // Light grey
-    const QString primaryColor  = "#007BFF"; // Blue
-    const QString primaryHover  = "#339CFF"; // Lighter blue
-    const QString textColor     = "#FFFFFF"; // White (for sidebar text)
-    const QString cardBgColor   = "#FFFFFF"; // White (for poll cards)
-    const QString cardBorder    = "1px solid #DDDDDD"; // Light grey border
-    const QString cardRadius    = "8px";
-    // --- End Styling Constants ---
+
     auto *rootLayout = new QHBoxLayout(this);
     rootLayout->setContentsMargins(0, 0, 0, 0);
     rootLayout->setSpacing(0);
-    // --- Sidebar Setup (from user's original code) ---
-    sidebar = new QWidget(this);
-    sidebar->setFixedWidth(200);
-    sidebar->setStyleSheet(QString("background-color: %1;").arg(sidebarColor));
-    auto *sbLayout = new QVBoxLayout(sidebar);
-    sbLayout->setSpacing(15);
-    sbLayout->setContentsMargins(20, 20, 20, 20);
-    const int logoSize = 120;
-    QPixmap logoPixmap(":/logo.png");
-    QPixmap roundedLogo = createRoundedLogo(logoPixmap, logoSize);
-    if (!roundedLogo.isNull()) {
-        QLabel *logoLabel = new QLabel(sidebar);
-        logoLabel->setPixmap(roundedLogo);
-        logoLabel->setFixedSize(logoSize, logoSize);
-        logoLabel->setAlignment(Qt::AlignCenter);
-        logoLabel->setStyleSheet("background-color: transparent;");
-        sbLayout->addWidget(logoLabel, 0, Qt::AlignHCenter);
-    } else {
-        QLabel *errorLabel = new QLabel("Logo Error", sidebar);
-        errorLabel->setAlignment(Qt::AlignCenter);
-        errorLabel->setStyleSheet(QString("color: %1;").arg(textColor));
-        sbLayout->addWidget(errorLabel, 0, Qt::AlignHCenter);
-    }
-    QStringList menuItems = {"Help", "Vote", "My Votes", "Create Poll", "My Polls", "Profile"};
-    for (const QString &item : menuItems) {
-        QPushButton *btn = new QPushButton(item, sidebar);
-        btn->setStyleSheet(QString(
-                               "QPushButton { color: %1; background: none; border: none; text-align: left; font-size: 18px; padding: 10px; }"
-                               "QPushButton:hover { background-color: rgba(255,255,255,0.1); }"
-                               ).arg(textColor));
-        btn->setCursor(Qt::PointingHandCursor);
-        if (item == "My Polls") {
-            btn->setStyleSheet(
-                "QPushButton { color: #333333; background-color: rgba(255,255,255,0.2); border: none; text-align: left; font-size: 18px; padding: 10px; font-weight: bold; }"
-                "QPushButton:hover { background-color: rgba(255,255,255,0.3); }"
-                );
-        }
-        sbLayout->addWidget(btn);
-        // Connect signals
-        if (item == "Help")
-        {
-            connect(btn, &QPushButton::clicked, []() {
-                NavigationManager::instance().navigate(NavigationManager::Help);
-            });
-        }
-        else if (item == "Vote")
-        {
-            connect(btn, &QPushButton::clicked, []() {
-                NavigationManager::instance().navigate(NavigationManager::Vote);
-            });
-        }
-        else if (item == "My Votes")
-        {
-            connect(btn, &QPushButton::clicked, []() {
-                NavigationManager::instance().navigate(NavigationManager::MyVotes);
-            });
-        }
-        else if (item == "Create Poll")
-        {
-            connect(btn, &QPushButton::clicked, []() {
-                NavigationManager::instance().navigate(NavigationManager::CreatePoll);
-            });
-        }
-        else if (item == "My Polls")
-        {
-            connect(btn, &QPushButton::clicked, []() {
-                NavigationManager::instance().navigate(NavigationManager::MyPolls);
-            });
-        }
-        else if (item == "Profile")
-        {
-            connect(btn, &QPushButton::clicked, []() {
-                NavigationManager::instance().navigate(NavigationManager::Profile);
-            });
-        }
-    }
-    QLabel *welcomeLabel = new QLabel("Welcome \n" + QString::fromStdString(activeUser.name) + "!", sidebar);
-    welcomeLabel->setStyleSheet(QString("color: %1; font-size: 15px; padding: 5px 10px; font-style: italic; font-weight: bold;").arg("#EBECF0"));
-    welcomeLabel->setWordWrap(true);
-    welcomeLabel->setAlignment(Qt::AlignLeft);
-    sbLayout->addWidget(welcomeLabel);
-    sbLayout->addStretch();
-    // --- End Sidebar Setup ---
-    // --- Content Area Setup ---
+
+    sidebar = new SidebarWidget(this,"My Polls");
+
+
     content = new QWidget(this);
     content->setStyleSheet(QString("background-color: %1;").arg(bgColor));
     auto *contentLayout = new QVBoxLayout(content);

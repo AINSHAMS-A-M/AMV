@@ -8,6 +8,7 @@
 #include <QStackedWidget>
 #include <QString>
 #include "_structs.hpp"
+#include "sidebar.h"
 
 class MyVotesPage : public QWidget {
     Q_OBJECT
@@ -28,7 +29,7 @@ signals:
 
 private:
     // Sidebar and main content
-    QWidget *sidebar;
+   SidebarWidget *sidebar;
     QWidget *content;
 
     // Stacked pages

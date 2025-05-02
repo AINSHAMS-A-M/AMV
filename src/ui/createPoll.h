@@ -1,5 +1,6 @@
 #pragma once
 
+#include "sidebar.h"
 #include <QWidget>
 #include <QScrollArea>
 #include <QStringList>
@@ -40,7 +41,7 @@ public slots:
 private:
     void addOptionWidget();
 
-    QWidget               *sidebar;
+    SidebarWidget *sidebar;
     QWidget               *content;
     QScrollArea           *optionsScrollArea;
     QList<QPushButton*>    sidebarButtons;

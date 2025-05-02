@@ -1,6 +1,7 @@
 // help.h
 #pragma once
 
+#include "sidebar.h"
 #include <QWidget> // Base class
 #include <QStringList> // Needed for menu items
 
@@ -29,7 +30,7 @@ signals:
     void onMyPollsClicked();
     void onProfileClicked();
 private:
-    QWidget    *sidebar;
+    SidebarWidget *sidebar;
     QWidget    *content;
     QLabel     *titleLabel;
     QTextEdit  *helpTextEdit;

@@ -7,6 +7,7 @@
 #include <QTableWidget>
 #include "_structs.hpp"
 #include "db.hpp"
+#include "sidebar.h"
 #include "utils.h"
 
 class MyPollsPage : public QWidget
@@ -34,7 +35,7 @@ private slots:
 
 private:
     // UI Components
-    QWidget         *sidebar;
+    SidebarWidget *sidebar;
     QWidget         *content;
     QStackedWidget  *contentStack;
 
