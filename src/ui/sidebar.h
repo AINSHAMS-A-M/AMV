@@ -15,7 +15,9 @@ public:
 private:
     void setupMenuItems(std::string page);
     void setupWelcomeLabel();
+    void setupLogoutButton();
     QVBoxLayout* sbLayout;
 };
+
 
 #endif

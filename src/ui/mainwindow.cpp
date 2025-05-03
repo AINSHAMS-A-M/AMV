@@ -4,8 +4,10 @@
 #include "login.h"
 #include "QMenuBar"
 #include "QStatusBar"
+#include "qapplication.h"
 #include "register.h"
 #include "help.h"
+#include "sidebar.h"
 #include "createPoll.h"
 #include "myPolls.h"
 #include "myVotes.h"
@@ -18,6 +20,11 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
     stackedWidget (new QStackedWidget(this))
+{
+    setupUI();
+}
+
+void MainWindow::setupUI()
 {
     // Hide the grey bars in the top and bottom of the window
     menuBar()->hide();
@@ -52,7 +59,6 @@ MainWindow::MainWindow(QWidget *parent)
             this,          &MainWindow::onLoginLink);
 }
 
-
 void MainWindow::onLoginClicked()
 {
 
@@ -65,7 +71,54 @@ void MainWindow::onLoginClicked()
     stackedWidget->setCurrentWidget(helpPage);
 }
 
+void MainWindow::onLogoutClicked()
+{
 
+    // Delete all the page instances to force recreation
+    if (helpPage) {
+        delete helpPage;
+        helpPage = nullptr;
+    }
+    if (votePage) {
+        delete votePage;
+        votePage = nullptr;
+    }
+    if (createPollPage) {
+        delete createPollPage;
+        createPollPage = nullptr;
+    }
+    if (myPollsPage) {
+        delete myPollsPage;
+        myPollsPage = nullptr;
+    }
+    if (myVotesPage) {
+        delete myVotesPage;
+        myVotesPage = nullptr;
+    }
+    if (profileEditPage) {
+        delete profileEditPage;
+        profileEditPage = nullptr;
+    }
+
+    // Clear the stacked widget and re-add the login and register pages
+    while (stackedWidget->count() > 0) {
+        stackedWidget->removeWidget(stackedWidget->widget(0));
+    }
+
+    // Re-setup the UI with fresh login/register pages
+    if (loginPage) {
+        delete loginPage;
+        loginPage = nullptr;
+    }
+    if (registerPage) {
+        delete registerPage;
+        registerPage = nullptr;
+    }
+
+    // Set up the UI from scratch
+    setupUI();
+    loginPage->userEdit->setFocus();
+}
 
 void MainWindow::onRegisterLink()
 {
@@ -186,6 +239,7 @@ void MainWindow::handleNavigation(NavigationManager::Page page) {
     case NavigationManager::MyPolls:  onMyPollsClicked(); break;
     case NavigationManager::MyVotes:  onMyVotesClicked(); break;
     case NavigationManager::Profile:  onProfileClicked(); break;
+    case NavigationManager::Logout:  onLogoutClicked(); break;
     }
 }
 

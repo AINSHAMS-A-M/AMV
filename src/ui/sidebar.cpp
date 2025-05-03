@@ -4,6 +4,8 @@
 #include <QPushButton>
 #include <QPixmap>
 #include <QHBoxLayout>
+#include "QApplication"
+#include "QMainWindow"
 #include "utils.h"
 #include "nav.h"
 #include "db.hpp"
@@ -37,6 +39,8 @@ SidebarWidget::SidebarWidget(QWidget *parent, std::string page)
 
     setupMenuItems(page);
     setupWelcomeLabel();
+    setupLogoutButton();
+
     sbLayout->addStretch();
 }
 
@@ -78,4 +82,27 @@ void SidebarWidget::setupWelcomeLabel()
     welcomeLabel->setWordWrap(true);
     welcomeLabel->setAlignment(Qt::AlignLeft);
     layout()->addWidget(welcomeLabel);
+}
+
+
+void SidebarWidget::setupLogoutButton()
+{
+    QPushButton *logoutBtn = new QPushButton("Logout", this);
+    logoutBtn->setStyleSheet(
+        "QPushButton { color: white; background-color: #E74C3C; border: none; "
+        "text-align: center; font-size: 16px; padding: 8px 12px; border-radius: 4px; }"
+        "QPushButton:hover { background-color: #C0392B; }"
+        );
+    logoutBtn->setCursor(Qt::PointingHandCursor);
+
+    // Connect logout button to a slot that will handle the window reset
+    connect(logoutBtn, &QPushButton::clicked, this, []() {
+        // Clear the active user
+        activeUser = {};
+        // Emit signal for logout
+        NavigationManager::instance().navigate(NavigationManager::Logout);
+    });
+
+    // Add to the layout - note we add it after the welcome label but before the stretch
+    sbLayout->addWidget(logoutBtn);
 }

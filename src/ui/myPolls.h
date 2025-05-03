@@ -29,6 +29,7 @@ signals:
 
 private slots:
     void onViewPollClicked(size_t pollId);
+    void onDeletePollClicked(size_t pollId);
 
 private:
     SidebarWidget *sidebar;

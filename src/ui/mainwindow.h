@@ -29,7 +29,9 @@ protected:
     void closeEvent(QCloseEvent *event) override;
 
 private slots:
+    void setupUI();
     void onLoginClicked();
+    void onLogoutClicked();
     void onRegisterLink();
     void onLoginLink();
     void onHelpClicked();

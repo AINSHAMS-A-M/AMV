@@ -11,6 +11,7 @@
 #include <QHeaderView>
 #include <QStyledItemDelegate>
 #include <QDatetime>
+#include <QMessageBox>
 #include "db.hpp"
 #include "mainwindow.h"
 #include "services.hpp"
@@ -219,21 +220,65 @@ void MyPollsPage::populatePollList() {
         pollListLayout->addWidget(noPollsLabel);
     } else {
         for (const auto& id : myPolls) {
-            auto poll =  retrieve_poll_as_owner(activeUser.id,id);
+            auto poll = retrieve_poll_as_owner(activeUser.id, id);
 
             // Create a widget for the poll card
             QWidget *cardWidget = new QWidget(pollListContainerWidget);
-            QHBoxLayout *cardLayout = new QHBoxLayout(cardWidget);
-            cardLayout->setContentsMargins(15, 15, 15, 15);
-            cardLayout->setSpacing(15);
             cardWidget->setStyleSheet(QString(
                 "QWidget { background-color: #FFFFFF; border-radius: 8px; }"
-                )
-                                      );
+                ));
+
+            // Set up vertical layout for the entire card
+            QVBoxLayout *cardOuterLayout = new QVBoxLayout(cardWidget);
+            cardOuterLayout->setContentsMargins(15, 15, 15, 15);
+            cardOuterLayout->setSpacing(10);
+
+            // Title and description layout
+            QVBoxLayout *contentLayout = new QVBoxLayout();
+            contentLayout->setSpacing(5);
+
+            // Poll title
             QLabel *pollTitleLabel = new QLabel(QString::fromStdString(poll.pollInfo.name), cardWidget);
             pollTitleLabel->setStyleSheet("font-size: 18px; font-weight: bold; color: #333333;");
             pollTitleLabel->setWordWrap(true);
-            cardLayout->addWidget(pollTitleLabel, 1);
+            contentLayout->addWidget(pollTitleLabel);
+
+            // Poll description
+            QLabel *pollDescriptionLabel = new QLabel(QString::fromStdString(poll.pollInfo.desc), cardWidget);
+            pollDescriptionLabel->setStyleSheet("font-size: 14px; color: #666666;");
+            pollDescriptionLabel->setWordWrap(true);
+
+            // Only add height if there's content to display
+            if (!poll.pollInfo.desc.empty()) {
+                pollDescriptionLabel->setMinimumHeight(20);
+                // For very short descriptions, keep the card compact
+                if (poll.pollInfo.desc.length() < 30) {
+                    pollDescriptionLabel->setMaximumHeight(40);
+                }
+            } else {
+                pollDescriptionLabel->setMaximumHeight(0);
+            }
+
+            contentLayout->addWidget(pollDescriptionLabel);
+
+            // Buttons layout
+            QHBoxLayout *buttonsLayout = new QHBoxLayout();
+            buttonsLayout->setSpacing(10);
+
+            // Spacer to push buttons to the right
+            buttonsLayout->addStretch(1);
+
+            // Delete button
+            QPushButton *deleteButton = new QPushButton("Delete", cardWidget);
+            deleteButton->setStyleSheet(QString(
+                                            "QPushButton { color: %1; background-color: %2; border: none; padding: 8px 20px; border-radius: 5px; font-size: 16px; }"
+                                            "QPushButton:hover { background-color: %3; }"
+                                            ).arg("#FFFFFF", "#DC3545", "#E25563"));
+            deleteButton->setCursor(Qt::PointingHandCursor);
+            deleteButton->setFixedWidth(100);
+            buttonsLayout->addWidget(deleteButton);
+
+            // View button
             QPushButton *viewButton = new QPushButton("View", cardWidget);
             viewButton->setStyleSheet(QString(
                                           "QPushButton { color: %1; background-color: %2; border: none; padding: 8px 20px; border-radius: 5px; font-size: 16px; }"
@@ -241,10 +286,22 @@ void MyPollsPage::populatePollList() {
                                           ).arg("#FFFFFF", "#007BFF", "#339CFF"));
             viewButton->setCursor(Qt::PointingHandCursor);
             viewButton->setFixedWidth(100);
-            cardLayout->addWidget(viewButton);
+            buttonsLayout->addWidget(viewButton);
+
+            // Add the layouts to the main card layout
+            cardOuterLayout->addLayout(contentLayout, 1);
+            cardOuterLayout->addLayout(buttonsLayout);
+
+            // Add the card to the list
             pollListLayout->addWidget(cardWidget);
+
+            // Connect button signals
             connect(viewButton, &QPushButton::clicked, this, [this, id]() {
                 onViewPollClicked(id);
+            });
+
+            connect(deleteButton, &QPushButton::clicked, this, [this, id]() {
+                onDeletePollClicked(id);
             });
         }
     }
@@ -281,10 +338,30 @@ void MyPollsPage::displayPollDetails(const RetrievePollResultAdmin& poll) {
 
 void MyPollsPage::onViewPollClicked(size_t pollId) {
     // Fetch the details for this specific poll
-    auto pollDetails = retrieve_poll_as_owner(activeUser.id,pollId);
+    auto pollDetails = retrieve_poll_as_owner(activeUser.id, pollId);
     if (pollDetails.pollInfo.id == pollId) // Basic check
     {
         displayPollDetails(pollDetails); // Populate the detailed view
         contentStack->setCurrentWidget(pollDetailsView); // Switch to the detailed view page
+    }
+}
+
+void MyPollsPage::onDeletePollClicked(size_t pollId)
+{
+    // Confirmation dialog
+    QMessageBox confirmBox;
+    confirmBox.setWindowTitle("Confirm Delete");
+    confirmBox.setText("Are you sure you want to delete this poll?");
+    confirmBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    confirmBox.setDefaultButton(QMessageBox::No);
+    confirmBox.setIcon(QMessageBox::Question);
+
+    int result = confirmBox.exec();
+    if (result == QMessageBox::Yes)
+    {
+        // Call the delete poll service
+        delete_poll(pollId);
+        // Refresh the poll list
+        populatePollList();
     }
 }

@@ -80,7 +80,7 @@ void delete_user_vote(size_t user_id, size_t poll_id)
     if (checkData.first)
     {
         // Erase the user vote by userpoll id
-        userVotes.erase(userVotes.begin() + checkData.second);
+        userVotes.erase(checkData.second);
     }
     else
         // If !found throws an error (100% invalid function call).
@@ -301,12 +301,22 @@ void delete_poll(size_t pollID)
     }
 
     // erase all poll options related to the poll
-    for (long long i = 0; i < pollOptions.size(); i++)
+    for (size_t i = 0; i < pollOptions.size(); i++)
     {
         if (pollOptions[i].poll_id == pollID)
         {
             pollOptions.erase(i);
             // decrease index by one in order to not skip the next element
+            i--;
+        }
+    }
+
+    // erase all votes related to the poll
+    for (size_t i = 0; i < userVotes.size(); i++)
+    {
+        if (userVotes[i].poll_id == pollID)
+        {
+            userVotes.erase(i);
             i--;
         }
     }

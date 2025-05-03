@@ -2,14 +2,13 @@
 #include <string>
 #include <iostream>
 #include <sstream>
-#include <vector>
 #include "data_structures.hpp"
 #include "services.hpp"
 
 MeshVector<User> users;
 MeshVector<Poll> polls;
 MeshVector<PollOption> pollOptions;
-std::vector<UserVote> userVotes;
+MeshVector<UserVote> userVotes;
 User activeUser;
 
 /// @brief Loads data from CSV files and populates in-memory data structures.
