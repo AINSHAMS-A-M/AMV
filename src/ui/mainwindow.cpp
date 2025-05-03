@@ -68,6 +68,8 @@ void MainWindow::onLoginClicked()
             &NavigationManager::navigateTo,
             this, &MainWindow::handleNavigation);
 
+    connect(profileEditPage, &ProfileEditPage::changeWelcomeLabel, this, &MainWindow::changeLabelText);
+
     stackedWidget->setCurrentWidget(helpPage);
 }
 
@@ -228,6 +230,16 @@ void MainWindow::init_app()
         profileEditPage = new ProfileEditPage(this);
         stackedWidget->addWidget(profileEditPage); // index 7
     }
+}
+
+void MainWindow::changeLabelText()
+{
+    helpPage->sidebar->welcomeLabel->setText("Welcome\n" + QString::fromStdString(activeUser.name) + "!");
+    createPollPage->sidebar->welcomeLabel->setText("Welcome\n" + QString::fromStdString(activeUser.name) + "!");
+    myPollsPage->sidebar->welcomeLabel->setText("Welcome\n" + QString::fromStdString(activeUser.name) + "!");
+    myVotesPage->sidebar->welcomeLabel->setText("Welcome\n" + QString::fromStdString(activeUser.name) + "!");
+    profileEditPage->sidebar->welcomeLabel->setText("Welcome\n" + QString::fromStdString(activeUser.name) + "!");
+    votePage->sidebar->welcomeLabel->setText("Welcome\n" + QString::fromStdString(activeUser.name) + "!");
 }
 
 void MainWindow::handleNavigation(NavigationManager::Page page) {

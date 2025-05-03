@@ -28,7 +28,6 @@ VotePage::VotePage(QWidget *parent)
     pollOptionsPage(nullptr)
 {
     const QString bgColor       = "#F5F6F8";
-    const QString primaryColor  = "#007BFF";
     const QString borderColor   = "#D1D1D1";
     const QString primaryBtnColor = "#3498DB";
     const QString primaryBtnHoverColor = "#2980B9";
@@ -72,8 +71,8 @@ VotePage::VotePage(QWidget *parent)
     formWidget->setStyleSheet(QString(
                                   "QLabel { font-size: 16px; color: #333; margin-bottom: 5px; }" // Added margin-bottom to label
                                   "QLineEdit { font-size: 16px; padding: 12px; border: 1px solid %1; border-radius: 8px; min-width: 400px; }" // Increased padding and min-width
-                                  "QLineEdit:focus { border: 2px solid %2; }"
-                                  ).arg(borderColor, primaryColor));
+                                  "QLineEdit:focus { border: 2px solid #007BFF; }"
+                                  ).arg(borderColor));
 
     auto *formLayout = new QVBoxLayout(formWidget);
     formLayout->setSpacing(10);

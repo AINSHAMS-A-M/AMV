@@ -32,8 +32,6 @@ MyPollsPage::MyPollsPage(QWidget *parent)
     pollDetailsTitleLabel(nullptr),
     optionsTable(nullptr)
 {
-    const QString bgColor       = "#F5F6F8";
-
     auto *rootLayout = new QHBoxLayout(this);
     rootLayout->setContentsMargins(0, 0, 0, 0);
     rootLayout->setSpacing(0);
@@ -92,11 +90,9 @@ void MyPollsPage::setupPollListView() {
             min-height: 20px;
             border-radius: 6px;
         }
-        /* Hover state */
         QScrollBar::handle:vertical:hover {
             background: #AAAAAA;
         }
-        /* Remove the arrows and lines */
         QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
             height: 0px;
         }
@@ -125,13 +121,12 @@ void MyPollsPage::setupPollDetailsView() {
     headerLayout->setContentsMargins(0, 0, 0, 0);
     headerLayout->setSpacing(15);
 
-    backButton = new QPushButton("← Back", pollDetailsView);
-    backButton->setStyleSheet(QString(
-        "QPushButton { color: #FFFFFF; background-color: #007BFF; border: none; padding: 8px 15px; border-radius: 5px; font-size: 16px; }"
-        "QPushButton:hover { background-color: #339CFF; }"
-        ));
+    backButton = new QPushButton("← Back to My Polls", pollDetailsView);
     backButton->setCursor(Qt::PointingHandCursor);
-    backButton->setFixedWidth(100);
+    backButton->setStyleSheet(
+        "QPushButton { background: none; border: none; color: #007BFF; font-size: 16px; font-weight: bold; padding: 5px 0; text-align: left; }"
+        "QPushButton:hover { color: #0056b3; }"
+        );
     connect(backButton, &QPushButton::clicked, this, &MyPollsPage::onBackToListClicked);
     headerLayout->addWidget(backButton, 0, Qt::AlignLeft | Qt::AlignTop);
 
@@ -271,9 +266,10 @@ void MyPollsPage::populatePollList() {
             // Delete button
             QPushButton *deleteButton = new QPushButton("Delete", cardWidget);
             deleteButton->setStyleSheet(QString(
-                                            "QPushButton { color: %1; background-color: %2; border: none; padding: 8px 20px; border-radius: 5px; font-size: 16px; }"
-                                            "QPushButton:hover { background-color: %3; }"
-                                            ).arg("#FFFFFF", "#DC3545", "#E25563"));
+                                         "QPushButton { background-color: transparent; color: %1; padding: 8px 12px; border: 1px solid %1; border-radius: 8px; font-size: 13px; }"
+                                         "QPushButton:hover { background-color: %2; color: %3; border-color: %1; }"
+                                         "QPushButton:pressed { background-color: %1; color: white; }"
+                                         ).arg(dangerColor).arg(dangerHoverBg).arg(dangerHoverFg));
             deleteButton->setCursor(Qt::PointingHandCursor);
             deleteButton->setFixedWidth(100);
             buttonsLayout->addWidget(deleteButton);
@@ -281,9 +277,10 @@ void MyPollsPage::populatePollList() {
             // View button
             QPushButton *viewButton = new QPushButton("View", cardWidget);
             viewButton->setStyleSheet(QString(
-                                          "QPushButton { color: %1; background-color: %2; border: none; padding: 8px 20px; border-radius: 5px; font-size: 16px; }"
-                                          "QPushButton:hover { background-color: %3; }"
-                                          ).arg("#FFFFFF", "#007BFF", "#339CFF"));
+                                          "QPushButton { background-color: #3498DB; color: white; padding: 9px 13px; border: none; border-radius: 8px; font-weight: bold; font-size: 13px; }"
+                                          "QPushButton:hover { background-color: #2980B9; }"
+                                          "QPushButton:pressed { background-color: #0056b3; }"
+                                          ));
             viewButton->setCursor(Qt::PointingHandCursor);
             viewButton->setFixedWidth(100);
             buttonsLayout->addWidget(viewButton);

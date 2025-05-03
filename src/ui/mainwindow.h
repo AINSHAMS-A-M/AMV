@@ -24,6 +24,7 @@ public:
     ~MainWindow() override = default;
     void init_app();
     void handleNavigation(NavigationManager::Page page);
+    void changeLabelText();
 
 protected:
     void closeEvent(QCloseEvent *event) override;

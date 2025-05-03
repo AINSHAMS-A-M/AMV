@@ -18,6 +18,7 @@ public:
     void onBackToListClicked();
     QWidget *pollListView;
     QStackedWidget  *contentStack;
+    SidebarWidget *sidebar;
 
 signals:
     void onHelpClicked();
@@ -32,7 +33,6 @@ private slots:
     void onDeletePollClicked(size_t pollId);
 
 private:
-    SidebarWidget *sidebar;
     QWidget         *content;
     QWidget         *pollDetailsView;   
     QScrollArea     *pollListScrollArea;
@@ -42,6 +42,10 @@ private:
     QPushButton     *backButton;
     QLabel          *pollDetailsTitleLabel;
     QTableWidget    *optionsTable;
+    const QString bgColor       = "#F5F6F8";
+    const QString dangerColor   = "#DC3545";
+    const QString dangerHoverBg = "#F8D7DA";
+    const QString dangerHoverFg = "#721C24";
     void setupPollListView();
     void setupPollDetailsView();
     void displayPollDetails(const RetrievePollResultAdmin& poll);

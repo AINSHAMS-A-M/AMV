@@ -133,7 +133,7 @@ CreatePollPage::CreatePollPage(QWidget *parent)
     QPushButton *addOptionBtn = new QPushButton("Add Option");
     addOptionBtn->setStyleSheet(
         "QPushButton {"
-        "  background-color: #667EEA;"
+        "  background-color: #3498DB;"
         "  color: white;"
         "  padding: 14px 28px;"
         "  border-radius: 8px;"
@@ -142,10 +142,10 @@ CreatePollPage::CreatePollPage(QWidget *parent)
         "  border: none;"
         "}"
         "QPushButton:hover {"
-        "  background-color: #5A67D8;"
+        "  background-color: #2980B9;"
         "}"
         "QPushButton:pressed {"
-        "  background-color: #4C51BF;"
+        "  background-color: #1F618D;"
         "}"
         );
     connect(addOptionBtn, &QPushButton::clicked, this, &CreatePollPage::onAddOptionClicked);
@@ -155,7 +155,7 @@ CreatePollPage::CreatePollPage(QWidget *parent)
     QPushButton *createBtn = new QPushButton("Create Poll");
     createBtn->setStyleSheet(
         "QPushButton {"
-        "  background-color: #48BB78;"
+        "  background-color: #489978;"
         "  color: white;"
         "  padding: 16px 32px;"
         "  border-radius: 8px;"
@@ -218,23 +218,11 @@ void CreatePollPage::addOptionWidget()
         );
 
     QPushButton *removeBtn = new QPushButton("Remove");
-    removeBtn->setStyleSheet(
-        "QPushButton {"
-        "  background-color: #FC8181;"
-        "  color: #63171B;"
-        "  padding: 10px 18px;"
-        "  border-radius: 6px;"
-        "  font-size: 14px;"
-        "  font-weight: 500;"
-        "  border: none;"
-        "}"
-        "QPushButton:hover {"
-        "  background-color: #F56565;"
-        "}"
-        "QPushButton:pressed {"
-        "  background-color: #E53E3E;"
-        "}"
-        );
+    removeBtn->setStyleSheet(QString(
+        "QPushButton { background-color: transparent; color: %1; padding: 8px 12px; border: 1px solid %1; border-radius: 8px; font-size: 13px; }"
+        "QPushButton:hover { background-color: %2; color: %3; border-color: %1; }"
+        "QPushButton:pressed { background-color: %1; color: white; }"
+        ).arg(dangerColor).arg(dangerHoverBg).arg(dangerHoverFg));
 
     optLayout->addWidget(nameEdit, 1);
     optLayout->addWidget(removeBtn);

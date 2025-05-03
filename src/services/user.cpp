@@ -21,7 +21,7 @@ User get_user_by_id(const size_t &id)
 /// @brief logs the user into the system
 std::string log_in(std::string username, std::string password)
 {
-    for (int user = 0; user < users.size(); user++)
+    for (size_t user = 0; user < users.size(); user++)
     {
         if (users[user].username == username)
         {
@@ -88,14 +88,14 @@ User get_id_by_user(const std::string &username)
 /// @brief Edits the details of an existing user in the system.
 std::string edit_user(EditUser editUser)
 {
-    for (int user = 0; user < users.size(); user++)
+    for (size_t user = 0; user < users.size(); user++)
     {
         if (editUser.new_username == users[user].username && editUser.user_id != users[user].id)
         {
             return ("A user with the same username already exists!");
         }
     }
-    for (int user = 0; user < users.size(); user++)
+    for (size_t user = 0; user < users.size(); user++)
     {
         if (editUser.user_id == users[user].id)
         {
@@ -112,7 +112,7 @@ std::string edit_user(EditUser editUser)
 /// @brief Edits the password for an existing user in the system.
 std::string edit_user_password(EditUserPassword editUserPassword)
 {
-    for (int client = 0; client < users.size(); client++)
+    for (size_t client = 0; client < users.size(); client++)
     {
         if (editUserPassword.id == users[client].id)
         {

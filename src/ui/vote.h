@@ -19,6 +19,7 @@ public:
     QLineEdit *voterIdInput;
     void showVoterIdPage();
     QStackedWidget *stackedWidget;
+    SidebarWidget *sidebar;
 
 signals:
     void onHelpClicked();
@@ -35,7 +36,6 @@ private slots:
 
 
 private:
-    SidebarWidget *sidebar;
     QWidget *content;
     QWidget *voterIdPage;
     QWidget *pollOptionsPage;

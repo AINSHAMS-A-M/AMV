@@ -23,6 +23,7 @@ public:
     QLineEdit *oldPasswordField;
     QLineEdit *newPasswordField;
     QLineEdit *confirmPasswordField;
+    SidebarWidget *sidebar;
 
 signals:
     void onHelpClicked();
@@ -31,6 +32,7 @@ signals:
     void onCreatePollClicked();
     void onMyPollsClicked();
     void onProfileClicked();
+    void changeWelcomeLabel();
 
 public slots:
     void onSaveProfileClicked();
@@ -38,7 +40,6 @@ public slots:
     void onEditProfileClicked();
 
 private:
-    SidebarWidget *sidebar;
     QWidget *content;
     QStackedWidget *stackedWidget;
     QList<QPushButton*> sidebarButtons;

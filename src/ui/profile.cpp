@@ -1,4 +1,5 @@
 #include "profile.h"
+#include "help.h"
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QLabel>
@@ -513,7 +514,7 @@ void ProfileEditPage::onSaveProfileClicked()
     if (response == "done")
     {
         QMessageBox::information(nullptr,"Success","Information Updated Successfully!");
-        sidebar->welcomeLabel->setText("Welcome\n" + QString::fromStdString(activeUser.name) + "!");
+        emit changeWelcomeLabel();
     }
 
     else QMessageBox::warning(nullptr,"Warning", QString::fromStdString(response));

@@ -18,6 +18,7 @@ class HelpPage : public QWidget
 public:
     explicit HelpPage(QWidget *parent = nullptr);
     ~HelpPage() override = default;
+    SidebarWidget *sidebar;
 
 signals:
     void onHelpClicked();
@@ -28,7 +29,7 @@ signals:
     void onProfileClicked();
 
 private:
-    SidebarWidget *sidebar;
+
     QWidget    *content;
     QLabel     *titleLabel;
     QTextEdit  *helpTextEdit;

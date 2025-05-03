@@ -18,6 +18,7 @@ public:
     QWidget *votesListPage;
     void show_cards();
     QStackedWidget *stackedWidget;
+    SidebarWidget *sidebar;
 
 signals:
     void onHelpClicked();
@@ -28,7 +29,6 @@ signals:
     void onProfileClicked();
 
 private:
-   SidebarWidget *sidebar;
     QWidget *content;
     QWidget *pollViewPage;
     QVBoxLayout* pollViewLayout;

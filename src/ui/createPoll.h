@@ -28,6 +28,7 @@ public:
     QLineEdit             *pollNameEdit;
     QLineEdit             *pollDescEdit;
     QLineEdit             *voterIdEdit;
+    SidebarWidget *sidebar;
 
 signals:
     void onHelpClicked();
@@ -44,7 +45,10 @@ public slots:
 
 private:
     void addOptionWidget();
-    SidebarWidget *sidebar;
+    const QString bgColor       = "#F5F6F8";
+    const QString dangerColor   = "#DC3545";
+    const QString dangerHoverBg = "#F8D7DA";
+    const QString dangerHoverFg = "#721C24";
     QWidget               *content;
     QScrollArea           *optionsScrollArea;
     QList<QPushButton*>    sidebarButtons;

@@ -133,7 +133,7 @@ RegisterPage::RegisterPage(QWidget *parent)
     registerBtn->setFixedHeight(40);
     registerBtn->setStyleSheet(
         "QPushButton {"
-        "    background-color: #007BFF;"
+        "    background-color: #3498DB;"
         "    color: #FFFFFF;"
         "    font-size: 18px;"
         "    border: none;"
@@ -141,7 +141,7 @@ RegisterPage::RegisterPage(QWidget *parent)
         "    padding: 6px 12px;"
         "}"
         "QPushButton:hover {"
-        "    background-color: #339CFF;"
+        "    background-color: #2980B9;"
         "    font-weight: bold;"
         "    padding: 7px 14px;"
         "}");

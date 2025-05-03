@@ -284,11 +284,11 @@ void MyVotesPage::onViewVotePollClicked(const size_t& identifier, RetrievePollDT
     QPushButton* removeVoteBtn = new QPushButton("Remove My Vote", pollViewPage);
     removeVoteBtn->setCursor(Qt::PointingHandCursor);
     removeVoteBtn->setStyleSheet(QString(
-                                     "QPushButton { background-color: %1; color: white; padding: 10px 20px; border: none; "
+                                     "QPushButton { background-color: #E74C3C; color: white; padding: 10px 20px; border: none; "
                                      "border-radius: 8px; font-weight: bold; font-size: 14px; margin-top: 20px; }"
-                                     "QPushButton:hover { background-color: #C82333; }"
+                                     "QPushButton:hover { background-color: #C0392B; }"
                                      "QPushButton:pressed { background-color: #BD2130; }"
-                                     ).arg(dangerColor));
+                                     ));
 
     // Connect remove button
     connect(removeVoteBtn, &QPushButton::clicked, this, [this, identifier]() {
@@ -416,8 +416,8 @@ void MyVotesPage::show_cards()
             QPushButton *viewBtn = new QPushButton("View Poll", buttonContainer);
             viewBtn->setCursor(Qt::PointingHandCursor);
             viewBtn->setStyleSheet(QString(
-                                       "QPushButton { background-color: %1; color: white; padding: 10px 18px; border: none; border-radius: 8px; font-weight: bold; font-size: 14px; }"
-                                       "QPushButton:hover { background-color: %2; }"
+                                       "QPushButton { background-color: #3498DB; color: white; padding: 10px 18px; border: none; border-radius: 8px; font-weight: bold; font-size: 14px; }"
+                                       "QPushButton:hover { background-color: #2980B9; }"
                                        "QPushButton:pressed { background-color: #0056b3; }"
                                        ).arg(primaryColor,primaryHover));
             viewBtn->setFixedWidth(120);
