@@ -264,8 +264,8 @@ void RegisterPage::onRegisterClicked()
     }
     else if (password == confirm)
     {
-        std::regex email_pattern(R"(^\w+(?:[+.-%_-]\w+)@\w+\.[a-zA-Z]+$)");
-        std::regex phone_pattern(R"(^0(10|11|12|15)[0-9]{8}$)");
+        std::regex email_pattern(R"(^\w+(?:[+.\-%_]\w+)*@\w+\.[A-Za-z]+$)");
+        std::regex phone_pattern(R"(^0(?:10|11|12|15)[0-9]{8}$)");
 
         bool capital = 0, small = 0, number = 0, special = 0;
         for (auto ch : password)
