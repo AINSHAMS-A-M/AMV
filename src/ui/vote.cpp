@@ -232,7 +232,21 @@ void VotePage::validateVoterCredentials()
         voterIdInput->setFocus();
         return;
     }
+
+    Poll cur_poll;
     pollId = (size_t)stoll(pollIdToLoad);
+    for (auto poll: polls) {
+        if (poll.id == pollId){
+            cur_poll = poll;
+        }
+    }
+
+    
+    if(cur_poll.is_finished) {
+        QMessageBox::warning(this, "Error", "You can't vote as the poll has already ended.");
+        return;
+    }
+
     loadPollOptions();
 
     stackedWidget->setCurrentWidget(pollOptionsPage);

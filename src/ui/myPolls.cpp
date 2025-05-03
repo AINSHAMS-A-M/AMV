@@ -215,7 +215,7 @@ void MyPollsPage::populatePollList() {
         pollListLayout->addWidget(noPollsLabel);
     } else {
         for (const auto& id : myPolls) {
-            auto poll = retrieve_poll_as_owner(activeUser.id, id);
+            auto poll = retrieve_poll_results(activeUser.id, id);
 
             // Create a widget for the poll card
             QWidget *cardWidget = new QWidget(pollListContainerWidget);
@@ -335,7 +335,7 @@ void MyPollsPage::displayPollDetails(const RetrievePollResultAdmin& poll) {
 
 void MyPollsPage::onViewPollClicked(size_t pollId) {
     // Fetch the details for this specific poll
-    auto pollDetails = retrieve_poll_as_owner(activeUser.id, pollId);
+    auto pollDetails = retrieve_poll_results(activeUser.id, pollId);
     if (pollDetails.pollInfo.id == pollId) // Basic check
     {
         displayPollDetails(pollDetails); // Populate the detailed view

@@ -150,7 +150,7 @@ RetrievePollDTO retrieve_public_poll(size_t poll_id)
 /// @param user_id The ID of the poll owner.
 /// @param poll_id The ID of the poll to retrieve.
 /// @return Full poll details including all options, metadata, and configuration settings.
-RetrievePollResultAdmin retrieve_poll_as_owner(const size_t user_id, const size_t poll_id)
+RetrievePollResultAdmin retrieve_poll_results(const size_t user_id, const size_t poll_id)
 {
     RetrievePollResultAdmin result;
     result.success = false;
