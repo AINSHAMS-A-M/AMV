@@ -79,6 +79,49 @@ RegisterPage::RegisterPage(QWidget *parent)
         "}");
     rightLayout->addWidget(realNameEdit);
 
+    // Real name field
+    phoneNumberEdit = new QLineEdit(rightPanel);
+    phoneNumberEdit->setPlaceholderText("Phone Number");
+    phoneNumberEdit->setStyleSheet(
+        "QLineEdit {"
+        "padding: 10px;"
+        "font-size: 16px;"
+        "border: 1px solid #DADCE0;"
+        "border-radius: 6px; }"
+        "QLineEdit:focus {"
+        "    border: 2px solid #3498DB;"
+        "}");
+    rightLayout->addWidget(phoneNumberEdit);
+
+    // Email field
+    emailEdit = new QLineEdit(rightPanel);
+    emailEdit->setPlaceholderText("Email");
+    emailEdit->setStyleSheet(
+        "QLineEdit {"
+        "padding: 10px;"
+        "font-size: 16px;"
+        "border: 1px solid #DADCE0;"
+        "border-radius: 6px; }"
+        "QLineEdit:focus {"
+        "    border: 2px solid #3498DB;"
+        "}");
+    rightLayout->addWidget(emailEdit);
+
+
+    // Address field
+    addressEdit = new QLineEdit(rightPanel);
+    addressEdit->setPlaceholderText("Address");
+    addressEdit->setStyleSheet(
+        "QLineEdit {"
+        "padding: 10px;"
+        "font-size: 16px;"
+        "border: 1px solid #DADCE0;"
+        "border-radius: 6px; }"
+        "QLineEdit:focus {"
+        "    border: 2px solid #3498DB;"
+        "}");
+    rightLayout->addWidget(addressEdit);
+
     // Username field
     usernameEdit = new QLineEdit(rightPanel);
     usernameEdit->setPlaceholderText("Username");
@@ -198,11 +241,22 @@ void RegisterPage::onRegisterClicked()
     auto confirm = confirmEdit->text().toStdString();
     auto realname = realNameEdit->text().toStdString();
 
-    if (username == "" || realname == "" || password == "" || confirm == "")
+    auto email = emailEdit->text().toStdString();
+    auto phone = phoneNumberEdit->text().toStdString();
+    auto address = addressEdit->text().toStdString();
+
+
+    if (username == "" || realname == "" || password == "" || confirm == "" || phone == "" || address == "" || email == "")
     {
         QMessageBox::warning(this,"Warning","Fields cannot be empty!");
     }
-    else if (username.find('`') != std::string::npos|| realname.find('`') != std::string::npos)
+    else if (
+        username.find('`') != std::string::npos || 
+        realname.find('`') != std::string::npos ||
+        phone.find('`') != std::string::npos ||
+        address.find('`') != std::string::npos ||
+        email.find('`') != std::string::npos
+    )
     {
         QMessageBox::warning(this,"Warning","Invalid Character! don't type \"`\" ");
     }
@@ -221,13 +275,15 @@ void RegisterPage::onRegisterClicked()
         {
             size_t new_id = users.size();
 
-            CreateUser newUser =
-                {
-                    new_id,
-                    realname,
-                    hash_password(password,new_id),
-                    username
-                };
+            CreateUser newUser = {
+                new_id,
+                realname,
+                hash_password(password,new_id),
+                username,
+                email,
+                phone,
+                address,
+            };
             auto response = create_user(newUser);
             if (response == "Em")
             {
@@ -244,6 +300,9 @@ void RegisterPage::onRegisterClicked()
                 passwordEdit->clear();
                 confirmEdit->clear();
                 realNameEdit->clear();
+                addressEdit->clear();
+                emailEdit->clear();
+                phoneNumberEdit->clear();
             }
         }
         else

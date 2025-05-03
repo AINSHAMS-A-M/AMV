@@ -21,6 +21,9 @@ public:
     QLineEdit   *usernameEdit;
     QLineEdit   *passwordEdit;
     QLineEdit   *confirmEdit;
+    QLineEdit   *addressEdit;
+    QLineEdit   *emailEdit;
+    QLineEdit   *phoneNumberEdit;
 
 signals:
     void loginLinkActivated();
