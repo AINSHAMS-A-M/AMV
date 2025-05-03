@@ -154,8 +154,7 @@ void LoginPage::onLoginClicked()
     auto username = userEdit->text().toStdString();
     auto password = passEdit->text().toStdString();
 
-    //std::string response =  log_in(username,password);
-    std::string response = "true";
+    std::string response =  log_in(username,password);
     if (response == "true")
     {
         activeUser = get_id_by_user(username);

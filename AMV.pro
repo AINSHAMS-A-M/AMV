@@ -33,4 +33,7 @@ unix:!android {
 }
 
 RESOURCES += \
+    imgs/app_icon.qrc \
     imgs/resources.qrc
+
+RC_FILE = app_icon.rc

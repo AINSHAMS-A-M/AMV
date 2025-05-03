@@ -4,6 +4,10 @@
 #include <sstream>
 #include "data_structures.hpp"
 #include "services.hpp"
+#include <QApplication>
+#include <QDir>
+#include <QString>
+#include <QDatetime>
 
 MeshVector<User> users;
 MeshVector<Poll> polls;
@@ -14,19 +18,10 @@ User activeUser;
 /// @brief Loads data from CSV files and populates in-memory data structures.
 void load_data()
 {
-    std::string path = __FILE__;
-    size_t db_pos = path.find("db");
-    std::string CWD = ".";
-    if (db_pos != std::string::npos)
-    {
-        // Check if "db" is followed by a path separator or is at the end
-        if (db_pos + 2 >= path.length() || path[db_pos + 2] == '/' || path[db_pos + 2] == '\\')
-        {
-            CWD = path.substr(0, db_pos);
-        }
-    }
+    QString qDataDir = QApplication::applicationDirPath() + "/data";
+    QDir().mkpath(qDataDir);
 
-    std::string data_dir = CWD + "/data/"; // Construct data directory path
+    std::string data_dir = qDataDir.toStdString() + '/';
 
     // --- Load users ---
     std::fstream csv_in;
@@ -184,19 +179,10 @@ void load_data()
 /// @brief Saves current data to CSV files for persistent storage.
 void save_data()
 {
-    std::string path = __FILE__;
-    size_t db_pos = path.find("db");
-    std::string CWD = ".";
+    QString qDataDir = QApplication::applicationDirPath() + "/data";
+    QDir().mkpath(qDataDir);
 
-    if (db_pos != std::string::npos)
-    {
-        if (db_pos + 2 >= path.length() || path[db_pos + 2] == '/' || path[db_pos + 2] == '\\')
-        {
-            CWD = path.substr(0, db_pos);
-        }
-    }
-
-    std::string data_dir = CWD + "/data/";
+    std::string data_dir = qDataDir.toStdString() + '/';
 
     // --- Save users ---
     std::fstream csv_out;
