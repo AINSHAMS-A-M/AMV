@@ -47,8 +47,25 @@ std::pair<bool, size_t> check_user_vote(size_t user_id, size_t poll_id)
 }
 
 /// @brief Makes a user vote in the poll.
-void create_user_vote(size_t user_id, size_t poll_id, size_t poll_option_id)
+std::string create_user_vote(size_t user_id, size_t poll_id, size_t poll_option_id)
 {
+    Poll cur_poll;
+    for (auto poll: polls) {
+        if (poll.id == poll_id){
+            cur_poll = poll;
+            break;
+        }
+     }
+
+    if (cur_poll.owner_id == user_id) {
+        return "You can't vote in your own vote."
+    }
+
+    if (cur_poll.is_finished) {
+     return "You can't vote in a finished poll."
+    }
+
+
     // Create a new UserVote & fill it with formal parameters.
     UserVote UserChoiceData;
     size_t newid;

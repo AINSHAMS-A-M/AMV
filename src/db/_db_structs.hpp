@@ -10,6 +10,10 @@ struct User
     // the actual name
     std::string name;
 
+    std::string email;
+    std::string address;
+    std::string phone_number;
+    
     // used for login
     std::string username;
     std::string hashed_password;
@@ -33,6 +37,8 @@ struct Poll
     std::string voter_id;
     size_t owner_id;
     QDateTime created_at;
+
+    bool is_finished;
 };
 
 struct PollOption

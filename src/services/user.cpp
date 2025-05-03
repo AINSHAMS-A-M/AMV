@@ -66,6 +66,9 @@ std::string create_user(CreateUser createUser)
     newUser.username = createUser.username;
     newUser.name = createUser.name;
     newUser.hashed_password = createUser.hashed_password;
+    newUser.email = createUser.email;
+    newUser.address = createUser.address;
+    newUser.phone_number = createUser.phone_number;
 
     users.push_back(newUser);
     return "Success";

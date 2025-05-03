@@ -9,6 +9,9 @@ struct CreateUser
     std::string name;
     std::string hashed_password;
     std::string username;
+    std::string email;
+    std::string phone_number;
+    std::string address;
 };
 
 struct EditUser

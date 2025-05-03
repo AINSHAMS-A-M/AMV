@@ -53,6 +53,12 @@ void load_data()
             if (std::getline(ss, segment, '`')) current_user.username = segment; else throw std::runtime_error("Missing user username");
             // Read hashed_password (can contain spaces)
             if (std::getline(ss, segment, '`')) current_user.hashed_password = segment; else throw std::runtime_error("Missing user hashed_password");
+            // Read email (can contain spaces)
+            if (std::getline(ss, segment, '`')) current_user.email = segment; else throw std::runtime_error("Missing user hashed_password");
+            // Read address (can contain spaces)
+            if (std::getline(ss, segment, '`')) current_user.address = segment; else throw std::runtime_error("Missing user address");
+            // Read phone_numver (can contain spaces)
+            if (std::getline(ss, segment, '`')) current_user.phone_number = segment; else throw std::runtime_error("Missing user phone_number");
 
             users.push_back(current_user);
         } catch (const std::exception& e) {
@@ -92,6 +98,10 @@ void load_data()
             if (std::getline(ss, segment, '`')) current_poll.voter_id = segment; else throw std::runtime_error("Missing poll voter_id");
             // Read owner_id
             if (std::getline(ss, segment, '`')) current_poll.owner_id = std::stoi(segment); else throw std::runtime_error("Missing poll owner_id");
+
+            // Read created_at (can contain spaces)
+            if (std::getline(ss, segment, '`')) current_poll.is_finished = (std::stoi(segment)==1); else throw std::runtime_error("Missing poll created_at");
+
             // Read created_at (can contain spaces)
             if (std::getline(ss, segment, '`')) current_poll.created_at = QDateTime::fromString(QString::fromStdString(segment),"yyyy-MM-dd"); else throw std::runtime_error("Missing poll created_at");
 
@@ -202,7 +212,10 @@ void save_data()
         csv_out << current_user.id << '`'
                 << current_user.name << '`'
                 << current_user.username << '`'
-                << current_user.hashed_password << '\n';
+                << current_user.hashed_password << '`';
+                << current_user.email << '`';
+                << current_user.address << '`';
+                << current_user.phone_number << '\n';
     }
     // Check for errors after writing loop
     if (csv_out.fail()) {
@@ -227,6 +240,7 @@ void save_data()
                 << current_poll.desc << '`'
                 << current_poll.voter_id << '`'
                 << current_poll.owner_id << '`'
+                << current_poll.is_finished ? "1" : "0" << '`'
                 << current_poll.created_at.toString("yyyy-MM-dd").toStdString() << '\n';
     }
     if (csv_out.fail()) {
