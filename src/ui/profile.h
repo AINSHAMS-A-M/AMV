@@ -49,6 +49,7 @@ private:
     QList<QPushButton*> sidebarButtons;
     QPushButton *profileInfoBtn;
     QPushButton *changePasswordTabBtn;
+    QLabel *profileTitle;
     QString bgColor;
     QString cardColor;
     QString borderColor;

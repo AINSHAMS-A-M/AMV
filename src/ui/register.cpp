@@ -166,10 +166,6 @@ RegisterPage::RegisterPage(QWidget *parent)
         "}");
     rightLayout->addWidget(confirmEdit);
 
-    usernameEdit->setObjectName("usernameEdit");
-    passwordEdit->setObjectName("passwordEdit");
-    confirmEdit->setObjectName("confirmEdit");
-    realNameEdit->setObjectName("realnameEdit");
 
     // Register button
     registerBtn = new QPushButton("Register", rightPanel);
@@ -215,10 +211,25 @@ RegisterPage::RegisterPage(QWidget *parent)
         realNameEdit->clear();
         usernameEdit->clear();
         passwordEdit->clear();
+        emailEdit->clear();
+        addressEdit->clear();
+        phoneNumberEdit->clear();
         confirmEdit->clear();
     });
 
     connect(realNameEdit, &QLineEdit::returnPressed, [this]() {
+        phoneNumberEdit->setFocus();
+    });
+
+    connect(phoneNumberEdit, &QLineEdit::returnPressed, [this]() {
+        emailEdit->setFocus();
+    });
+
+    connect(emailEdit, &QLineEdit::returnPressed, [this]() {
+        addressEdit->setFocus();
+    });
+
+    connect(addressEdit, &QLineEdit::returnPressed, [this]() {
         usernameEdit->setFocus();
     });
 
@@ -240,7 +251,6 @@ void RegisterPage::onRegisterClicked()
     auto password = passwordEdit->text().toStdString();
     auto confirm = confirmEdit->text().toStdString();
     auto realname = realNameEdit->text().toStdString();
-
     auto email = emailEdit->text().toStdString();
     auto phone = phoneNumberEdit->text().toStdString();
     auto address = addressEdit->text().toStdString();
