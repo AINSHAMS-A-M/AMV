@@ -107,6 +107,87 @@ ProfileEditPage::ProfileEditPage(QWidget *parent)
     usernameLayout->addWidget(this->usernameField);
     profileCardLayout->addWidget(usernameContainer);
 
+    QWidget *emailContainer = new QWidget(profileCard);
+    QVBoxLayout *emailLayout = new QVBoxLayout(emailContainer);
+    usernameLayout->setContentsMargins(0, 0, 0, 0);
+    usernameLayout->setSpacing(0);
+
+    QLabel *emailLabel = new QLabel("Email", emailContainer);
+    emailLayout->setStyleSheet(QString("font-size: 14px; color: %1; font-weight: bold; background-color: #FFFFFF;").arg(labelColor));
+    this->emailField = new QLineEdit(emailContainer);
+    this->emailField->setStyleSheet(
+        QString("QLineEdit {"
+                "    border: 1px solid %1;"
+                "    border-radius: 4px;"
+                "    padding: 10px;"
+                "    font-size: 14px;"
+                "    color: %2;"
+                "    background-color: %3;"
+                "}"
+                "QLineEdit:focus {"
+                "    border: 2px solid %4;"
+                "}").arg(borderColor, titleColor, cardColor, primaryBtnColor)
+        );
+    this->emailField->setMinimumHeight(40);
+    this->emailField->setObjectName("userEdit");
+    emailLayout->addWidget(emailLabel);
+    emailLayout->addWidget(this->emailField);
+    profileCardLayout->addWidget(emailContainer);
+
+    QWidget *addressContainer = new QWidget(profileCard);
+    QVBoxLayout *addressLayout = new QVBoxLayout(addressContainer);
+    addressLayout->setContentsMargins(0, 0, 0, 0);
+    addressLayout->setSpacing(0);
+
+    QLabel *addressLabel = new QLabel("Address", addressContainer);
+    addressLabel->setStyleSheet(QString("font-size: 14px; color: %1; font-weight: bold; background-color: #FFFFFF;").arg(labelColor));
+    this->addressField = new QLineEdit(addressContainer);
+    this->addressField->setStyleSheet(
+        QString("QLineEdit {"
+                "    border: 1px solid %1;"
+                "    border-radius: 4px;"
+                "    padding: 10px;"
+                "    font-size: 14px;"
+                "    color: %2;"
+                "    background-color: %3;"
+                "}"
+                "QLineEdit:focus {"
+                "    border: 2px solid %4;"
+                "}").arg(borderColor, titleColor, cardColor, primaryBtnColor)
+        );
+    this->addressField->setMinimumHeight(40);
+    this->addressField->setObjectName("userEdit");
+    addressLayout->addWidget(addressLabel);
+    addressLayout->addWidget(this->addressField);
+    profileCardLayout->addWidget(addressContainer);
+
+    QWidget *phoneContainer = new QWidget(profileCard);
+    QVBoxLayout *phoneLayout = new QVBoxLayout(phoneLayout);
+    phoneLayout->setContentsMargins(0, 0, 0, 0);
+    phoneLayout->setSpacing(0);
+
+    QLabel *phoneLabel = new QLabel("Phone", phoneLayout);
+    phoneLabel->setStyleSheet(QString("font-size: 14px; color: %1; font-weight: bold; background-color: #FFFFFF;").arg(labelColor));
+    this->phoneField = new QLineEdit(phoneLayout);
+    this->phoneField->setStyleSheet(
+        QString("QLineEdit {"
+                "    border: 1px solid %1;"
+                "    border-radius: 4px;"
+                "    padding: 10px;"
+                "    font-size: 14px;"
+                "    color: %2;"
+                "    background-color: %3;"
+                "}"
+                "QLineEdit:focus {"
+                "    border: 2px solid %4;"
+                "}").arg(borderColor, titleColor, cardColor, primaryBtnColor)
+        );
+    this->phoneField->setMinimumHeight(40);
+    this->phoneField->setObjectName("userEdit");
+    phoneLayout->addWidget(phoneLabel);
+    phoneLayout->addWidget(this->phoneField);
+    profileCardLayout->addWidget(phoneContainer);
+
     // Real name field
     QWidget *realNameContainer = new QWidget(profileCard);
     QVBoxLayout *realNameLayout = new QVBoxLayout(realNameContainer);
@@ -457,17 +538,19 @@ void ProfileEditPage::onSaveProfileClicked()
     EditUser edited = {
         activeUser.id,
         activeUser.username,
-        activeUser.name
+        activeUser.name,
+        activeUser.email,
+        activeUser.name,
+        activeUser.phone_number,
+        activeUser.address
     };
 
     std::string new_username = this->usernameField->text().toStdString();
     std::string new_realname = this->realNameField->text().toStdString();
-    usernameField->clear();
-    realNameField->clear();
-    oldPasswordField->clear();
-    newPasswordField->clear();
-    confirmPasswordField->clear();
-    usernameField->setFocus();
+    std::string address = this->addressField->text().toStdString();
+    std::string email = this->emailField->text().toStdString();
+    std::string phone = this->phoneField->text().toStdString();
+
     if (new_username.empty() && new_realname.empty())
     {
         QMessageBox::warning(nullptr,"Warning","Nothing Changed!");
@@ -502,7 +585,7 @@ void ProfileEditPage::onSaveProfileClicked()
     {
         for (auto ch : new_realname)
         {
-            if (ch == ',')
+            if (ch == '`')
             {
                 QMessageBox::warning(nullptr,"Warning","Invalid Character detected \",\"");
                 return;
@@ -510,6 +593,58 @@ void ProfileEditPage::onSaveProfileClicked()
         }
         edited.new_real_name = new_realname;
     }
+
+    if (!address.empty())
+    {
+        for (auto ch : address)
+        {
+            if (ch == '`')
+            {
+                QMessageBox::warning(nullptr,"Warning","Invalid Character detected \",\"");
+                return;
+            }
+        }
+        edited.address = address;
+    }
+
+    if (!phone.empty())
+    {
+        for (auto ch : phone)
+        {
+            if (ch == '`')
+            {
+                QMessageBox::warning(nullptr,"Warning","Invalid Character detected in Phone \",\"");
+                return;
+            }
+        }
+        edited.phone = phone;
+    }
+
+    if (!email.empty())
+    {
+        for (auto ch : email)
+        {
+            if (ch == '`')
+            {
+                QMessageBox::warning(nullptr,"Warning","Invalid Character detected in Email \",\"");
+                return;
+            }
+        }
+        edited.email = email;
+    }
+
+
+    
+    usernameField->clear();
+    realNameField->clear();
+    emailField->clear();
+    addressField->clear();
+    phoneField->clear();
+    oldPasswordField->clear();
+    newPasswordField->clear();
+    confirmPasswordField->clear();
+    usernameField->setFocus();
+
     auto response = edit_user(edited);
     if (response == "done")
     {

@@ -19,6 +19,9 @@ struct EditUser
     size_t user_id;
     std::string new_username;
     std::string new_real_name;
+    std::string email;
+    std::string phone_number;
+    std::string address;
 };
 
 struct EditUserPassword

@@ -98,17 +98,23 @@ std::string edit_user(EditUser editUser)
             return ("A user with the same username already exists!");
         }
     }
-    for (size_t user = 0; user < users.size(); user++)
+
+    for (auto &user: users)
     {
-        if (editUser.user_id == users[user].id)
+        if (user.id == activeUser.id)
         {
-            users[user].username = editUser.new_username;
-            users[user].name = editUser.new_real_name;
-            activeUser.username = editUser.new_username;
-            activeUser.name = editUser.new_real_name;
+            user.username = editUser.new_username;
+            user.name = editUser.new_real_name;
+            user.email = editUser.email;
+            user.phone_number = editUser.phone_number;
+            user.address = editUser.address;
+
+            activeUser = user;
             return "done";
         }
     }
+
+    
     return ("Can't find user!");
 }
 
