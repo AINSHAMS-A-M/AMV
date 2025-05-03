@@ -23,6 +23,10 @@ public:
     QLineEdit *oldPasswordField;
     QLineEdit *newPasswordField;
     QLineEdit *confirmPasswordField;
+    QLineEdit *emailField;
+    QLineEdit *addressField;
+    QLineEdit *phoneField;
+
     SidebarWidget *sidebar;
 
 signals:
