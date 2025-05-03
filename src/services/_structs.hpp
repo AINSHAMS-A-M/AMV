@@ -61,6 +61,7 @@ struct RetrievePollResultAdmin
     MeshVector<Result> results;
     bool success;
     std::string error_msg;
+    size_t idx;
 };
 
 struct RetrievePollDTO

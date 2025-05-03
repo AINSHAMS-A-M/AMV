@@ -6,7 +6,11 @@
 /// This function initializes and stores a new poll with its associated options and metadata.
 Poll create_poll(CreatePoll createPoll)
 {
-    size_t poll_id = polls.size();
+    size_t poll_id;
+    if (polls.size() != 0)
+        poll_id = polls[polls.size()-1].id+1;
+    else poll_id = 0;
+
     Poll new_poll =
         {
             poll_id,
@@ -35,7 +39,7 @@ Poll create_poll(CreatePoll createPoll)
 }
 
 // Check if the user has voted or not
-std::pair<bool, size_t> check_user_vote(size_t user_id, size_t poll_id)
+std::pair<bool, long long> check_user_vote(size_t user_id, size_t poll_id)
 {
 
     for (size_t i = 0; i < userVotes.size(); i++)
@@ -157,16 +161,18 @@ RetrievePollResultAdmin retrieve_poll_results(const size_t user_id, const size_t
     RetrievePollResultAdmin result;
     result.success = false;
     result.error_msg = "";
+    size_t idx;
 
     // 1) find the poll
     Poll foundPoll;
     bool pollFound = false;
-    for (const auto &p : polls)
+    for (size_t i = 0; i < polls.size(); i++)
     {
-        if (p.id == poll_id)
+        if (polls[i].id == poll_id)
         {
-            foundPoll = p;
+            foundPoll = polls[i];
             pollFound = true;
+            idx = i;
             break;
         }
     }
@@ -204,7 +210,7 @@ RetrievePollResultAdmin retrieve_poll_results(const size_t user_id, const size_t
         if (up.poll_id == poll_id)
         {
             // find the matching option in tally
-            for (long long i = 0; i < tally.size(); i++)
+            for (size_t i = 0; i < tally.size(); i++)
             {
                 if (tally[i].option_id == up.poll_option_id)
                 {
@@ -220,6 +226,7 @@ RetrievePollResultAdmin retrieve_poll_results(const size_t user_id, const size_t
     result.success = true;
 
     result.pollInfo = foundPoll;
+    result.idx = idx;
 
     return result;
 }
@@ -339,4 +346,21 @@ void delete_poll(size_t pollID)
             i--;
         }
     }
+}
+
+bool endPoll(size_t id)
+{
+    for (size_t i = 0; i < polls.size(); i++)
+    {
+        if (polls[i].id == id)
+        {
+            if (polls[i].is_finished) return false;
+            else
+            {
+                polls[i].is_finished = true;
+                return true;
+            }
+        }
+    }
+    return false;
 }
