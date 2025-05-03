@@ -241,6 +241,10 @@ void VotePage::validateVoterCredentials()
         }
     }
 
+    if (cur_poll.owner_id == activeUser.id) {
+        QMessageBox::warning(this, "Error", "You can't vote in your own poll.");
+        return;
+    }
     
     if(cur_poll.is_finished) {
         QMessageBox::warning(this, "Error", "You can't vote as the poll has already ended.");
@@ -325,15 +329,6 @@ void VotePage::submitVote()
 
     size_t selectedOptionId = optionsGroup->id(selectedOption);
 
-
-    for (auto poll: polls) {
-        if (poll.id == pollId) {
-            if (activeUser.id == poll.owner_id) {
-                QMessageBox::warning(this, "Error", "You can't vote in your own poll.");
-                return;
-            }
-        }
-    }
 
     create_user_vote(activeUser.id,pollId,selectedOptionId);
     QMessageBox::information(this, "Success", "Your vote has been recorded successfully!");
