@@ -170,6 +170,7 @@ void MainWindow::onMyVotesClicked()
 void MainWindow::onVoteClicked()
 {
     stackedWidget->setCurrentWidget(votePage);
+    votePage->showVoterIdPage();
     votePage->voterIdInput->clear();
     votePage->voterIdInput->setFocus();
 }

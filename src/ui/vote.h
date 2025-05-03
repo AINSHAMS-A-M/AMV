@@ -17,6 +17,8 @@ class VotePage : public QWidget
 public:
     explicit VotePage(QWidget *parent = nullptr);
     QLineEdit *voterIdInput;
+    void showVoterIdPage();
+    QStackedWidget *stackedWidget;
 
 signals:
     void onHelpClicked();
@@ -29,13 +31,12 @@ signals:
 private slots:
     void validateVoterCredentials();
     void submitVote();
-    void showVoterIdPage();
+
 
 
 private:
     SidebarWidget *sidebar;
     QWidget *content;
-    QStackedWidget *stackedWidget;
     QWidget *voterIdPage;
     QWidget *pollOptionsPage;
     QLabel *pollTitleLabel;

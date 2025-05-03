@@ -101,6 +101,8 @@ std::string edit_user(EditUser editUser)
         {
             users[user].username = editUser.new_username;
             users[user].name = editUser.new_real_name;
+            activeUser.username = editUser.new_username;
+            activeUser.name = editUser.new_real_name;
             return "done";
         }
     }

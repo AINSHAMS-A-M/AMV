@@ -21,9 +21,9 @@
 
 VotePage::VotePage(QWidget *parent)
     : QWidget(parent),
+    stackedWidget(nullptr),
     sidebar(nullptr),
     content(nullptr),
-    stackedWidget(nullptr),
     voterIdPage(nullptr),
     pollOptionsPage(nullptr)
 {
@@ -55,6 +55,7 @@ VotePage::VotePage(QWidget *parent)
     stackedWidget = new QStackedWidget(content);
 
     // --- Create voter ID page ---
+
     voterIdPage = new QWidget(stackedWidget);
     auto *voterIdLayout = new QVBoxLayout(voterIdPage);
     voterIdLayout->setContentsMargins(50, 50, 50, 50);
@@ -106,7 +107,6 @@ VotePage::VotePage(QWidget *parent)
     voterIdLayout->addWidget(submitBtn, 0, Qt::AlignHCenter);
 
     voterIdLayout->addStretch(1);
-
 
     // --- Create poll options page ---
     pollOptionsPage = new QWidget(stackedWidget);

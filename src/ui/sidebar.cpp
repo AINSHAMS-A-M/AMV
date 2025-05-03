@@ -77,7 +77,7 @@ void SidebarWidget::setupMenuItems(std::string page)
 
 void SidebarWidget::setupWelcomeLabel()
 {
-    QLabel *welcomeLabel = new QLabel("Welcome\n" + QString::fromStdString(activeUser.name) + "!", this);
+    welcomeLabel = new QLabel("Welcome\n" + QString::fromStdString(activeUser.name) + "!", this);
     welcomeLabel->setStyleSheet("color: #EBECF0; font-size: 15px; padding: 5px 10px; font-style: italic; font-weight: bold;");
     welcomeLabel->setWordWrap(true);
     welcomeLabel->setAlignment(Qt::AlignLeft);

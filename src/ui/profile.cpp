@@ -473,6 +473,18 @@ void ProfileEditPage::onSaveProfileClicked()
         return;
     }
 
+    if (new_username == activeUser.username)
+    {
+        QMessageBox::warning(nullptr,"Warning","New username can't be the same as old!");
+        return;
+    }
+
+    if (new_realname == activeUser.name)
+    {
+        QMessageBox::warning(nullptr,"Warning","New real name can't be the same as old!");
+        return;
+    }
+
     if (!new_username.empty())
     {
         for (auto ch : new_username)
@@ -499,7 +511,11 @@ void ProfileEditPage::onSaveProfileClicked()
     }
     auto response = edit_user(edited);
     if (response == "done")
+    {
         QMessageBox::information(nullptr,"Success","Information Updated Successfully!");
+        sidebar->welcomeLabel->setText("Welcome\n" + QString::fromStdString(activeUser.name) + "!");
+    }
+
     else QMessageBox::warning(nullptr,"Warning", QString::fromStdString(response));
 }
 
@@ -524,6 +540,11 @@ void ProfileEditPage::onUpdatePasswordClicked()
     else if (new_password != confirm)
     {
         QMessageBox::warning(nullptr,"Warning","Passwords don't match!");
+        return;
+    }
+    else if (hash_password(new_password,activeUser.id) == activeUser.hashed_password)
+    {
+        QMessageBox::warning(nullptr,"Warning","New password can't be the same as old one!");
         return;
     }
 
