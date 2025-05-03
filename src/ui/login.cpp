@@ -94,10 +94,6 @@ LoginPage::LoginPage(QWidget *parent)
         "}");
     rightLayout->addWidget(passEdit);
 
-
-    userEdit->setObjectName("userEdit");
-    passEdit->setObjectName("passEdit");
-
     // Login button
     loginBtn = new QPushButton("Login", rightPanel);
     loginBtn->setFixedHeight(40);
@@ -154,7 +150,7 @@ void LoginPage::onLoginClicked()
     auto username = userEdit->text().toStdString();
     auto password = passEdit->text().toStdString();
 
-    std::string response =  log_in(username,password);
+    std::string response =  "true" /*log_in(username,password)*/;
     if (response == "true")
     {
         activeUser = get_id_by_user(username);

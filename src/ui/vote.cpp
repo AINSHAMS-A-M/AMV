@@ -82,7 +82,6 @@ VotePage::VotePage(QWidget *parent)
     QLabel *voterIdLabel = new QLabel("Enter your voter ID (Get it from the poll's owner):", formWidget);
     voterIdInput = new QLineEdit(formWidget);
     voterIdInput->setPlaceholderText("Voter ID");
-    voterIdInput->setObjectName("voterInput");
     voterIdInput->setAlignment(Qt::AlignCenter);
     connect(voterIdInput, &QLineEdit::returnPressed, this, &VotePage::validateVoterCredentials);
 

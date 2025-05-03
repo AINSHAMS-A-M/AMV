@@ -14,6 +14,8 @@
 #include "_structs.hpp"
 #include "db.hpp"
 #include "mainwindow.h"
+#include "QScrollArea"
+#include "QScrollBar"
 #include "services.hpp"
 #include "qmessagebox.h"
 
@@ -24,6 +26,9 @@ ProfileEditPage::ProfileEditPage(QWidget *parent)
     oldPasswordField(nullptr),
     newPasswordField(nullptr),
     confirmPasswordField(nullptr),
+    emailField(nullptr),
+    addressField(nullptr),
+    phoneField(nullptr),
     sidebar(nullptr),
     content(nullptr)
 {
@@ -48,11 +53,11 @@ ProfileEditPage::ProfileEditPage(QWidget *parent)
 
     // Main content layout
     auto *contentLayout = new QVBoxLayout(content);
-    contentLayout->setContentsMargins(40, 40, 40, 40);
+    contentLayout->setContentsMargins(25, 25, 25, 25);
     contentLayout->setSpacing(30);
 
     // Page title
-    QLabel *titleLabel = new QLabel("Edit Profile", content);
+    QLabel *titleLabel = new QLabel("Profile", content);
     titleLabel->setStyleSheet(QString("font-size: 28px; font-weight: bold; color: %1;").arg(titleColor));
     contentLayout->addWidget(titleLabel);
 
@@ -60,8 +65,41 @@ ProfileEditPage::ProfileEditPage(QWidget *parent)
     stackedWidget = new QStackedWidget(content);
     contentLayout->addWidget(stackedWidget);
 
-    // ===== FIRST CARD: PROFILE INFORMATION =====
-    QWidget *profileCard = new QWidget(stackedWidget);
+    // Somewhere before creating your card, retrieve the active user data:
+    struct UserData {
+        QString username;
+        QString email;
+        QString address;
+        QString phone;
+        QString realName;
+    };
+
+    // ===== FIRST CARD: PROFILE INFORMATION WITH SCROLL AREA =====
+    QScrollArea *scrollArea = new QScrollArea(stackedWidget);
+    scrollArea->setWidgetResizable(true);
+    scrollArea->setFrameShape(QFrame::NoFrame);
+    // Style the scrollbar
+    scrollArea->verticalScrollBar()->setStyleSheet(R"(
+    QScrollBar:vertical {
+        background: transparent;
+        width: 8px;
+        margin: 0px 0px 0px 0px;
+    }
+    QScrollBar::handle:vertical {
+        background: rgba(0,0,0,0.2);
+        min-height: 20px;
+        border-radius: 4px;
+    }
+    QScrollBar::handle:vertical:hover {
+        background: rgba(0,0,0,0.3);
+    }
+    QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+        height: 0px;
+    }
+)");
+
+    // Your card
+    QWidget *profileCard = new QWidget;
     profileCard->setObjectName("card");
     profileCard->setStyleSheet(
         QString("QWidget#card {"
@@ -75,148 +113,67 @@ ProfileEditPage::ProfileEditPage(QWidget *parent)
     profileCardLayout->setContentsMargins(40, 20, 40, 50);
     profileCardLayout->setSpacing(20);
 
-    QLabel *profileTitle = new QLabel("Change Personal Information", profileCard);
-    profileTitle->setStyleSheet(QString("font-size: 20px; font-weight: bold; color: %1; background-color: #FFFFFF;").arg(titleColor));
+    // Title
+    profileTitle = new QLabel(
+        QString("View / Change Personal Information\n(current: %1)")
+            .arg(activeUser.username),
+        profileCard
+        );
+    profileTitle->setStyleSheet(
+        QString("font-size: 20px; font-weight: bold; color: %1; background-color: #FFFFFF;")
+            .arg(titleColor)
+        );
     profileCardLayout->addWidget(profileTitle);
 
-    // Username field
-    QWidget *usernameContainer = new QWidget(profileCard);
-    QVBoxLayout *usernameLayout = new QVBoxLayout(usernameContainer);
-    usernameLayout->setContentsMargins(0, 0, 0, 0);
-    usernameLayout->setSpacing(0);
+    // Helper lambda to create each field container
+    auto makeField = [&](const QString &labelText, const QString &currentValue, QLineEdit *&outField){
+        QWidget *container = new QWidget(profileCard);
+        QVBoxLayout *lay = new QVBoxLayout(container);
+        lay->setContentsMargins(0,0,0,0);
+        lay->setSpacing(0);
 
-    QLabel *usernameLabel = new QLabel("Username", usernameContainer);
-    usernameLabel->setStyleSheet(QString("font-size: 14px; color: %1; font-weight: bold; background-color: #FFFFFF;").arg(labelColor));
-    this->usernameField = new QLineEdit(usernameContainer);
-    this->usernameField->setStyleSheet(
-        QString("QLineEdit {"
-                "    border: 1px solid %1;"
-                "    border-radius: 4px;"
-                "    padding: 10px;"
-                "    font-size: 14px;"
-                "    color: %2;"
-                "    background-color: %3;"
-                "}"
-                "QLineEdit:focus {"
-                "    border: 2px solid %4;"
-                "}").arg(borderColor, titleColor, cardColor, primaryBtnColor)
-        );
-    this->usernameField->setMinimumHeight(40);
-    this->usernameField->setObjectName("userEdit");
-    usernameLayout->addWidget(usernameLabel);
-    usernameLayout->addWidget(this->usernameField);
-    profileCardLayout->addWidget(usernameContainer);
 
-    QWidget *emailContainer = new QWidget(profileCard);
-    QVBoxLayout *emailLayout = new QVBoxLayout(emailContainer);
-    usernameLayout->setContentsMargins(0, 0, 0, 0);
-    usernameLayout->setSpacing(0);
+        outField = new QLineEdit(container);
+        outField->setText(currentValue);
+        outField->setStyleSheet(
+            QString("QLineEdit {"
+                    "    border: 1px solid %1;"
+                    "    border-radius: 4px;"
+                    "    padding: 2px;"
+                    "    font-size: 14px;"
+                    "    color: %2;"
+                    "    background-color: %3;"
+                    "}"
+                    "QLineEdit:focus {"
+                    "    border: 2px solid %4;"
+                    "}")
+                .arg(borderColor, titleColor, cardColor, primaryBtnColor)
+            );
+        outField->setMinimumHeight(25);
 
-    QLabel *emailLabel = new QLabel("Email", emailContainer);
-    emailLayout->setStyleSheet(QString("font-size: 14px; color: %1; font-weight: bold; background-color: #FFFFFF;").arg(labelColor));
-    this->emailField = new QLineEdit(emailContainer);
-    this->emailField->setStyleSheet(
-        QString("QLineEdit {"
-                "    border: 1px solid %1;"
-                "    border-radius: 4px;"
-                "    padding: 10px;"
-                "    font-size: 14px;"
-                "    color: %2;"
-                "    background-color: %3;"
-                "}"
-                "QLineEdit:focus {"
-                "    border: 2px solid %4;"
-                "}").arg(borderColor, titleColor, cardColor, primaryBtnColor)
-        );
-    this->emailField->setMinimumHeight(40);
-    this->emailField->setObjectName("userEdit");
-    emailLayout->addWidget(emailLabel);
-    emailLayout->addWidget(this->emailField);
-    profileCardLayout->addWidget(emailContainer);
 
-    QWidget *addressContainer = new QWidget(profileCard);
-    QVBoxLayout *addressLayout = new QVBoxLayout(addressContainer);
-    addressLayout->setContentsMargins(0, 0, 0, 0);
-    addressLayout->setSpacing(0);
+        QLabel *lbl = new QLabel(
+            QString("%1").arg(labelText),
+            container
+            );
+        lbl->setStyleSheet(
+            QString("font-size: 14px; color: %1; font-weight: bold; background-color: #FFFFFF;")
+                .arg(labelColor)
+            );
 
-    QLabel *addressLabel = new QLabel("Address", addressContainer);
-    addressLabel->setStyleSheet(QString("font-size: 14px; color: %1; font-weight: bold; background-color: #FFFFFF;").arg(labelColor));
-    this->addressField = new QLineEdit(addressContainer);
-    this->addressField->setStyleSheet(
-        QString("QLineEdit {"
-                "    border: 1px solid %1;"
-                "    border-radius: 4px;"
-                "    padding: 10px;"
-                "    font-size: 14px;"
-                "    color: %2;"
-                "    background-color: %3;"
-                "}"
-                "QLineEdit:focus {"
-                "    border: 2px solid %4;"
-                "}").arg(borderColor, titleColor, cardColor, primaryBtnColor)
-        );
-    this->addressField->setMinimumHeight(40);
-    this->addressField->setObjectName("userEdit");
-    addressLayout->addWidget(addressLabel);
-    addressLayout->addWidget(this->addressField);
-    profileCardLayout->addWidget(addressContainer);
+        lay->addWidget(lbl);
+        lay->addWidget(outField);
+        profileCardLayout->addWidget(container);
+    };
 
-    QWidget *phoneContainer = new QWidget(profileCard);
-    QVBoxLayout *phoneLayout = new QVBoxLayout(phoneLayout);
-    phoneLayout->setContentsMargins(0, 0, 0, 0);
-    phoneLayout->setSpacing(0);
+    // Create each field pre-filled
+    makeField("Username",  QString::fromStdString(activeUser.username),  this->usernameField);
+    makeField("Email",     QString::fromStdString(activeUser.email),     this->emailField);
+    makeField("Address",   QString::fromStdString(activeUser.address),   this->addressField);
+    makeField("Phone",     QString::fromStdString(activeUser.phone_number),     this->phoneField);
+    makeField("Real Name", QString::fromStdString(activeUser.name),  this->realNameField);
 
-    QLabel *phoneLabel = new QLabel("Phone", phoneLayout);
-    phoneLabel->setStyleSheet(QString("font-size: 14px; color: %1; font-weight: bold; background-color: #FFFFFF;").arg(labelColor));
-    this->phoneField = new QLineEdit(phoneLayout);
-    this->phoneField->setStyleSheet(
-        QString("QLineEdit {"
-                "    border: 1px solid %1;"
-                "    border-radius: 4px;"
-                "    padding: 10px;"
-                "    font-size: 14px;"
-                "    color: %2;"
-                "    background-color: %3;"
-                "}"
-                "QLineEdit:focus {"
-                "    border: 2px solid %4;"
-                "}").arg(borderColor, titleColor, cardColor, primaryBtnColor)
-        );
-    this->phoneField->setMinimumHeight(40);
-    this->phoneField->setObjectName("userEdit");
-    phoneLayout->addWidget(phoneLabel);
-    phoneLayout->addWidget(this->phoneField);
-    profileCardLayout->addWidget(phoneContainer);
-
-    // Real name field
-    QWidget *realNameContainer = new QWidget(profileCard);
-    QVBoxLayout *realNameLayout = new QVBoxLayout(realNameContainer);
-    realNameLayout->setContentsMargins(0, 0, 0, 0);
-    realNameLayout->setSpacing(0);
-
-    QLabel *realNameLabel = new QLabel("Real Name", realNameContainer);
-    realNameLabel->setStyleSheet(QString("font-size: 14px; color: %1; font-weight: bold; background-color: #FFFFFF;").arg(labelColor));
-    this->realNameField = new QLineEdit(realNameContainer);
-    this->realNameField->setStyleSheet(
-        QString("QLineEdit {"
-                "    border: 1px solid %1;"
-                "    border-radius: 4px;"
-                "    padding: 10px;"
-                "    font-size: 14px;"
-                "    color: %2;"
-                "    background-color: %3;"
-                "}"
-                "QLineEdit:focus {"
-                "    border: 2px solid %4;"
-                "}").arg(borderColor, titleColor, cardColor, primaryBtnColor)
-        );
-    this->realNameField->setMinimumHeight(40);
-    this->realNameField->setObjectName("realEdit");
-    realNameLayout->addWidget(realNameLabel);
-    realNameLayout->addWidget(this->realNameField);
-    profileCardLayout->addWidget(realNameContainer);
-
-    // Save profile button
+    // Save button
     QPushButton *saveProfileBtn = new QPushButton("Save Profile", profileCard);
     saveProfileBtn->setStyleSheet(
         QString("QPushButton {"
@@ -233,20 +190,21 @@ ProfileEditPage::ProfileEditPage(QWidget *parent)
                 "}"
                 "QPushButton:pressed {"
                 "    background-color: %3;"
-                "}").arg(primaryBtnColor, primaryBtnHoverColor, primaryBtnPressedColor)
+                "}")
+            .arg(primaryBtnColor, primaryBtnHoverColor, primaryBtnPressedColor)
         );
     saveProfileBtn->setCursor(Qt::PointingHandCursor);
     saveProfileBtn->setMinimumHeight(45);
     saveProfileBtn->setMaximumWidth(150);
+    QHBoxLayout *btnLay = new QHBoxLayout;
+    btnLay->addWidget(saveProfileBtn);
+    btnLay->addStretch();
+    profileCardLayout->addLayout(btnLay);
 
-    // Add button to layout with alignment
-    QHBoxLayout *profileBtnLayout = new QHBoxLayout();
-    profileBtnLayout->addWidget(saveProfileBtn);
-    profileBtnLayout->addStretch();
-    profileCardLayout->addLayout(profileBtnLayout);
+    // Put the card into the scroll area and then into the stacked widget
+    scrollArea->setWidget(profileCard);
+    stackedWidget->addWidget(scrollArea);
 
-    // Add the card to the stacked widget
-    stackedWidget->addWidget(profileCard);
 
     // ===== SECOND CARD: PASSWORD CHANGE =====
     QWidget *passwordCard = new QWidget(stackedWidget);
@@ -278,12 +236,11 @@ ProfileEditPage::ProfileEditPage(QWidget *parent)
     oldPasswordLabel->setStyleSheet(QString("font-size: 14px; color: %1; font-weight: bold; background-color: #FFFFFF;").arg(labelColor));
     oldPasswordField = new QLineEdit(oldPasswordContainer);
     oldPasswordField->setEchoMode(QLineEdit::Password);
-    this->oldPasswordField->setObjectName("oldPassEdit");
     oldPasswordField->setStyleSheet(
         QString("QLineEdit {"
                 "    border: 1px solid %1;"
                 "    border-radius: 4px;"
-                "    padding: 10px;"
+                "    padding: 2px;"
                 "    font-size: 14px;"
                 "    color: %2;"
                 "    background-color: %3;"
@@ -311,7 +268,7 @@ ProfileEditPage::ProfileEditPage(QWidget *parent)
         QString("QLineEdit {"
                 "    border: 1px solid %1;"
                 "    border-radius: 4px;"
-                "    padding: 10px;"
+                "    padding: 2px;"
                 "    font-size: 14px;"
                 "    color: %2;"
                 "    background-color: %3;"
@@ -321,7 +278,6 @@ ProfileEditPage::ProfileEditPage(QWidget *parent)
                 "}").arg(borderColor, titleColor, cardColor, primaryBtnColor)
         );
     newPasswordField->setMinimumHeight(40);
-    this->newPasswordField->setObjectName("newPassEdit");
     newPasswordLayout->addWidget(newPasswordLabel);
     newPasswordLayout->addWidget(newPasswordField);
     passwordCardLayout->addWidget(newPasswordContainer);
@@ -340,7 +296,7 @@ ProfileEditPage::ProfileEditPage(QWidget *parent)
         QString("QLineEdit {"
                 "    border: 1px solid %1;"
                 "    border-radius: 4px;"
-                "    padding: 10px;"
+                "    padding: 2px;"
                 "    font-size: 14px;"
                 "    color: %2;"
                 "    background-color: %3;"
@@ -350,7 +306,6 @@ ProfileEditPage::ProfileEditPage(QWidget *parent)
                 "}").arg(borderColor, titleColor, cardColor, primaryBtnColor)
         );
     confirmPasswordField->setMinimumHeight(40);
-    this->confirmPasswordField->setObjectName("confirmPassEdit");
     confirmPasswordLayout->addWidget(confirmPasswordLabel);
     confirmPasswordLayout->addWidget(confirmPasswordField);
     passwordCardLayout->addWidget(confirmPasswordContainer);
@@ -442,8 +397,12 @@ ProfileEditPage::ProfileEditPage(QWidget *parent)
     connect(profileInfoBtn, &QPushButton::clicked, this, &ProfileEditPage::onEditProfileClicked);
 
     connect(changePasswordTabBtn, &QPushButton::clicked, [=]() {
-        usernameField->clear();
-        realNameField->clear();
+
+        usernameField->setText(QString::fromStdString(activeUser.username));
+        emailField->setText(QString::fromStdString(activeUser.email));
+        addressField->setText(QString::fromStdString(activeUser.address));
+        phoneField->setText(QString::fromStdString(activeUser.phone_number));
+        realNameField->setText(QString::fromStdString(activeUser.name));
         oldPasswordField->clear();
         newPasswordField->clear();
         confirmPasswordField->clear();
@@ -540,7 +499,6 @@ void ProfileEditPage::onSaveProfileClicked()
         activeUser.username,
         activeUser.name,
         activeUser.email,
-        activeUser.name,
         activeUser.phone_number,
         activeUser.address
     };
@@ -551,21 +509,13 @@ void ProfileEditPage::onSaveProfileClicked()
     std::string email = this->emailField->text().toStdString();
     std::string phone = this->phoneField->text().toStdString();
 
-    if (new_username.empty() && new_realname.empty())
+    if ((new_username.empty() || new_username == activeUser.username) &&
+        (new_realname.empty() || new_realname == activeUser.name) &&
+        (address.empty() || address == activeUser.address) &&
+        (email.empty() || email == activeUser.email) &&
+        (phone.empty() || phone == activeUser.phone_number))
     {
         QMessageBox::warning(nullptr,"Warning","Nothing Changed!");
-        return;
-    }
-
-    if (new_username == activeUser.username)
-    {
-        QMessageBox::warning(nullptr,"Warning","New username can't be the same as old!");
-        return;
-    }
-
-    if (new_realname == activeUser.name)
-    {
-        QMessageBox::warning(nullptr,"Warning","New real name can't be the same as old!");
         return;
     }
 
@@ -617,7 +567,7 @@ void ProfileEditPage::onSaveProfileClicked()
                 return;
             }
         }
-        edited.phone = phone;
+        edited.phone_number = phone;
     }
 
     if (!email.empty())
@@ -634,17 +584,6 @@ void ProfileEditPage::onSaveProfileClicked()
     }
 
 
-    
-    usernameField->clear();
-    realNameField->clear();
-    emailField->clear();
-    addressField->clear();
-    phoneField->clear();
-    oldPasswordField->clear();
-    newPasswordField->clear();
-    confirmPasswordField->clear();
-    usernameField->setFocus();
-
     auto response = edit_user(edited);
     if (response == "done")
     {
@@ -653,6 +592,19 @@ void ProfileEditPage::onSaveProfileClicked()
     }
 
     else QMessageBox::warning(nullptr,"Warning", QString::fromStdString(response));
+
+    usernameField->setText(QString::fromStdString(activeUser.username));
+    emailField->setText(QString::fromStdString(activeUser.email));
+    addressField->setText(QString::fromStdString(activeUser.address));
+    phoneField->setText(QString::fromStdString(activeUser.phone_number));
+    realNameField->setText(QString::fromStdString(activeUser.name));
+    profileTitle->setText(QString("View / Change Personal Information\n(current: %1)")
+                              .arg(activeUser.username));
+
+    oldPasswordField->clear();
+    newPasswordField->clear();
+    confirmPasswordField->clear();
+    usernameField->setFocus();
 }
 
 void ProfileEditPage::onUpdatePasswordClicked()
@@ -661,8 +613,13 @@ void ProfileEditPage::onUpdatePasswordClicked()
     std::string old_password = this->oldPasswordField->text().toStdString();
     std::string new_password = this->newPasswordField->text().toStdString();
     std::string confirm = this->confirmPasswordField->text().toStdString();
-    usernameField->clear();
-    realNameField->clear();
+
+    usernameField->setText(QString::fromStdString(activeUser.username));
+    emailField->setText(QString::fromStdString(activeUser.email));
+    addressField->setText(QString::fromStdString(activeUser.address));
+    phoneField->setText(QString::fromStdString(activeUser.phone_number));
+    realNameField->setText(QString::fromStdString(activeUser.name));
+
     oldPasswordField->clear();
     newPasswordField->clear();
     confirmPasswordField->clear();
@@ -721,8 +678,6 @@ void ProfileEditPage::onUpdatePasswordClicked()
 
 void ProfileEditPage::onEditProfileClicked()
 {
-    usernameField->clear();
-    realNameField->clear();
     oldPasswordField->clear();
     newPasswordField->clear();
     confirmPasswordField->clear();

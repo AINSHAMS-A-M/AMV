@@ -43,7 +43,12 @@ std::string log_in(std::string username, std::string password)
 std::string create_user(CreateUser createUser)
 {
 
-    if (createUser.name.empty() || createUser.hashed_password.empty() || createUser.username.empty())
+    if (createUser.name.empty() ||
+        createUser.hashed_password.empty() ||
+        createUser.username.empty() ||
+        createUser.address.empty() ||
+        createUser.phone_number.empty() ||
+        createUser.email.empty())
     {
         return "Em";
     }
