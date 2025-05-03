@@ -653,7 +653,7 @@ void MyPollsPage::setupCustomizeOptionsView() {
         "QPushButton:pressed { background-color: #1E8449; }"
         ));
     saveOptionsButton->setCursor(Qt::PointingHandCursor);
-    // Connect later when adding save logic
+    connect(saveOptionsButton, &QPushButton::clicked, this, &MyPollsPage::onSaveOptionsClicked);
     buttonLayout->addWidget(saveOptionsButton);
 
     customizeOptionsLayout->addLayout(buttonLayout);
@@ -685,13 +685,6 @@ void MyPollsPage::setupCustomizeOptionsView() {
             // Connect delete button to remove the row
             connect(deleteBtn, &QPushButton::clicked, this, [this, row]() {
                 editableOptionsTable->removeRow(row);
-                // Note: This lambda captures 'row' by value. If rows are removed above,
-                // this might delete the wrong row index. A more robust solution
-                // would involve finding the sender's parent widget (the button)
-                // and then finding its containing row. For simplicity here,
-                // we'll use this basic row capture, assuming infrequent deletions.
-                // A better approach is to regenerate connections or use a mapped signal.
-                // For demonstration, this simple lambda is used.
             });
             editableOptionsTable->resizeRowsToContents(); // Adjust row height
         }
@@ -709,48 +702,39 @@ void MyPollsPage::displayEditDescription() {
 }
 
 void MyPollsPage::displayCustomizeOptions() {
-    // customizeOptionsTitleLabel->setText(QString("Customize Options for \"%1\"").arg(QString::fromStdString(poll.pollInfo.name)));
-
+    auto curPoll = retrieve_public_poll(currentPollId_);
+    customizeOptionsTitleLabel->setText(QString("Customize Options for \"%1\"").arg(QString::fromStdString(curPoll.name)));
+    auto poll = retrieve_public_poll(currentPollId_);
     // Populate the editable options table
     editableOptionsTable->clearContents();
-    // editableOptionsTable->setRowCount(poll.results.size()); // Start with existing options
-    // for (size_t i = 0; i < poll.results.size(); ++i) {
-    //     const auto& option = poll.results[i];
-    //     QTableWidgetItem *textItem = new QTableWidgetItem(QString::fromStdString(option.option_name));
-    //     textItem->setFlags(textItem->flags() | Qt::ItemIsEditable); // Make option text editable here
-    //     editableOptionsTable->setItem(i, 0, textItem);
+    editableOptionsTable->setRowCount(poll.options.size()); // Start with existing options
+    for (size_t i = 0; i < poll.options.size(); i++) {
+        const auto& option = poll.options[i];
+        QTableWidgetItem *textItem = new QTableWidgetItem(QString::fromStdString(option.name));
+        textItem->setFlags(textItem->flags() | Qt::ItemIsEditable); // Make option text editable here
+        editableOptionsTable->setItem(i, 0, textItem);
 
-    //     // Add a delete button for each existing row
-    //     QPushButton *deleteBtn = new QPushButton("Delete");
-    //     deleteBtn->setStyleSheet(QString(
-    //         "QPushButton { background-color: transparent; color: #E74C3C; padding: 3px 6px; border: 1px solid #E74C3C; border-radius: 4px; font-size: 12px; }"
-    //         "QPushButton:hover { background-color: #FADBD8; color: #C0392B; border-color: #C0392B; }"
-    //         "QPushButton:pressed { background-color: #E74C3C; color: white; }"
-    //         ));
-    //     deleteBtn->setCursor(Qt::PointingHandCursor);
-    //     editableOptionsTable->setCellWidget(i, 1, deleteBtn);
+        // Add a delete button for each existing row
+        QPushButton *deleteBtn = new QPushButton("Delete");
+        deleteBtn->setStyleSheet(QString(
+            "QPushButton { background-color: transparent; color: #E74C3C; padding: 3px 6px; border: 1px solid #E74C3C; border-radius: 4px; font-size: 12px; }"
+            "QPushButton:hover { background-color: #FADBD8; color: #C0392B; border-color: #C0392B; }"
+            "QPushButton:pressed { background-color: #E74C3C; color: white; }"
+            ));
+        deleteBtn->setCursor(Qt::PointingHandCursor);
+        editableOptionsTable->setCellWidget(i, 1, deleteBtn);
 
-    //     // Connect delete button signal
-    //     connect(deleteBtn, &QPushButton::clicked, this, [this, i]() {
-    //         // This lambda needs to correctly identify the row to remove.
-    //         // Using the captured 'i' is problematic if rows above it are removed first.
-    //         // A more robust way is to find the button's parent (the cell widget)
-    //         // and then get its row index from the table.
-    //         QWidget* button = qobject_cast<QWidget*>(sender());
-    //         if (button) {
-    //             int row = editableOptionsTable->indexAt(button->pos()).row();
-    //             if (row != -1) { // Ensure a valid row was found
-    //                 editableOptionsTable->removeRow(row);
-    //             }
-    //         }
-    //         editableOptionsTable->resizeRowsToContents(); // Adjust row height
-    //     });
-    // }
+        // Connect delete button signal
+        connect(deleteBtn, &QPushButton::clicked, this, [this, i]() {
+            editableOptionsTable->removeRow(i);  // Use captured row index `i`
+            editableOptionsTable->resizeRowsToContents();
+        });
+    }
 
     editableOptionsTable->resizeColumnsToContents();
-    editableOptionsTable->resizeRowsToContents(); // Adjust row height
+    editableOptionsTable->resizeRowsToContents();
     editableOptionsTable->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
-    editableOptionsTable->setColumnWidth(1, 80); // Fixed width for the Actions column
+    editableOptionsTable->setColumnWidth(1, 80);
 }
 
 
@@ -814,40 +798,27 @@ void MyPollsPage::onSaveDescriptionClicked() {
 }
 
 void MyPollsPage::onSaveOptionsClicked() {
-    std::vector<std::string> updatedOptions;
-    for (int row = 0; row < editableOptionsTable->rowCount(); ++row) {
+    MeshVector<std::string> updatedOptions;
+    for (int row = 0; row < editableOptionsTable->rowCount(); row++)
+    {
         QTableWidgetItem* item = editableOptionsTable->item(row, 0);
-        if (item && !item->text().isEmpty()) {
+        if (item && !item->text().isEmpty())
+        {
             updatedOptions.push_back(item->text().toStdString());
         }
     }
 
-    if (updatedOptions.size() < 2) {
+    if (updatedOptions.size() < 2)
+    {
         QMessageBox::warning(this, "Invalid Options", "A poll must have at least two options.");
         return;
     }
 
+    change_poll_options(currentPollId_ , updatedOptions);
+    QMessageBox::information(this, "Success", "Poll options updated.");
+    populatePollList();
+    onBackToListClicked();
 
-    // TODO: Call backend service to update the poll options
-    // This is more complex than just description. You'll need a backend function
-    // that can handle adding, removing, and updating option text for a given poll ID.
-    // The implementation of update_poll_options(currentPollId_, updatedOptions)
-    // needs careful consideration regarding existing votes if any were allowed.
-    // Example service call (you need to implement this backend function)
-    // bool success = update_poll_options(currentPollId_, updatedOptions);
-
-    // Placeholder success/failure logic
-    bool success = true; // Assume success for now
-
-    if (success) {
-        QMessageBox::information(this, "Success", "Poll options updated.");
-        // Refresh the poll list to reflect the change (though option changes might not be visible in the card)
-        populatePollList();
-        // Go back to the list view
-        onBackToListClicked();
-    } else {
-        QMessageBox::warning(this, "Error", "Failed to update poll options.");
-    }
 }
 
 void MyPollsPage::onCancelEditDescriptionClicked() {

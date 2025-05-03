@@ -292,11 +292,12 @@ void CreatePollPage::onCreatePollBtnClicked()
         }
     }
 
-    if (pollName.empty() || voterId.empty() || !options.size())
+    if (pollName.empty() || voterId.empty() || options.size() < 2)
     {
-        QMessageBox::warning(nullptr, "Warning", "Please provide a title, description, voter ID, and add some options!");
+        QMessageBox::warning(nullptr, "Warning", "Please provide a title, description, voter ID, and add at least 2 options!");
         return;
     }
+
 
     CreatePoll newPoll
         {

@@ -64,7 +64,7 @@ std::string create_user_vote(size_t user_id, size_t poll_id, size_t poll_option_
      }
 
     if (cur_poll.owner_id == user_id) {
-         return "You can't vote in your own vote.";
+         return "You can't vote in your own poll.";
     }
 
     if (cur_poll.is_finished) {
@@ -94,6 +94,7 @@ std::string create_user_vote(size_t user_id, size_t poll_id, size_t poll_option_
 
     // Push the uservote to the UserPolls.
     userVotes.push_back(UserChoiceData);
+    return "done";
 }
 
 void delete_user_vote(size_t user_id, size_t poll_id)
@@ -108,6 +109,38 @@ void delete_user_vote(size_t user_id, size_t poll_id)
     else
         // If !found throws an error (100% invalid function call).
         throw std::invalid_argument("User Vote is not Found");
+}
+
+void change_poll_options(size_t pollId,MeshVector<std::string> &newOptions)
+{
+    for (size_t i = 0; i < pollOptions.size(); i++)
+    {
+        if (pollOptions[i].poll_id == pollId)
+        {
+            pollOptions.erase(i);
+        }
+    }
+
+    size_t poll_option_id;
+    if (pollOptions.size() == 0)
+    {
+        poll_option_id = 0;
+    }
+    else
+    {
+        poll_option_id = pollOptions[pollOptions.size()-1].id + 1;
+    }
+
+    for (auto &option : newOptions)
+    {
+        PollOption new_option =
+            {
+             poll_option_id,
+             pollId,
+             option};
+        pollOptions.push_back(new_option);
+        poll_option_id++;
+    }
 }
 
 /// @brief Retrieves a public poll for general viewing.
@@ -285,17 +318,6 @@ std::string getPollId(std::string &voterId)
         }
     }
     return "f";
-}
-
-size_t getPollOptionId(size_t pollId)
-{
-    for (auto &option : pollOptions)
-    {
-        if (option.poll_id == pollId)
-        {
-            return option.id;
-        }
-    }
 }
 
 MeshVector<size_t> show_created_polls(size_t user_id)

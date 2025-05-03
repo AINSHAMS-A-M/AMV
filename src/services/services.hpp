@@ -35,10 +35,10 @@ std::string log_in(std::string username, std::string password);
 
 std::string getPollId(std::string &voterId);
 
-size_t getPollOptionId(size_t pollId);
-
 User get_user_by_id(const size_t &id);
 
 MeshVector<size_t> show_created_polls(size_t user_id);
 
 bool endPoll(size_t id);
+
+void change_poll_options(size_t pollId,MeshVector<std::string> &newOptions);

@@ -283,12 +283,6 @@ void VotePage::loadPollOptions()
     pollTitleLabel->setText(QString::fromStdString(pollTitle));
     pollDescLabel->setText(QString::fromStdString(pollDesc));
 
-    // Get poll options
-    for (auto &option : pollData.options)
-    {
-        options.push_back(option.name);
-    }
-
     // Remove the stretch temporarily before adding options
     if(optionsLayout->count() > 0) {
         QLayoutItem* stretchItem = optionsLayout->itemAt(optionsLayout->count() - 1);
@@ -298,11 +292,9 @@ void VotePage::loadPollOptions()
         }
     }
 
-
     // Add options as radio buttons
-    size_t optionId = getPollOptionId(pollId);
-    for (const auto &option : options) {
-        QRadioButton *radioBtn = new QRadioButton(QString::fromStdString(option), optionsContainer);
+    for (const auto &option : pollData.options) {
+        QRadioButton *radioBtn = new QRadioButton(QString::fromStdString(option.name), optionsContainer);
         radioBtn->setStyleSheet(
             "QRadioButton { font-size: 16px; padding: 12px 15px; background-color: white; border: 1px solid #DDD; "
             "border-radius: 8px; margin: 5px 0px; }"
@@ -311,7 +303,7 @@ void VotePage::loadPollOptions()
             "QRadioButton:checked { background-color: #E1F5FE; border: 2px solid #007BFF; font-weight: bold; }"
             );
         radioBtn->setCursor(Qt::PointingHandCursor);
-        optionsGroup->addButton(radioBtn, optionId++);
+        optionsGroup->addButton(radioBtn, option.id);
         optionsLayout->addWidget(radioBtn);
     }
 
@@ -329,11 +321,20 @@ void VotePage::submitVote()
     size_t selectedOptionId = optionsGroup->id(selectedOption);
 
 
-    create_user_vote(activeUser.id,pollId,selectedOptionId);
-    QMessageBox::information(this, "Success", "Your vote has been recorded successfully!");
-    // Reset and go back to voter ID page
-    voterIdInput->clear();
-    showVoterIdPage(); // Go back to the start page
+    auto response = create_user_vote(activeUser.id,pollId,selectedOptionId);
+    if (response == "done")
+    {
+        QMessageBox::information(this, "Success", "Your vote has been recorded successfully!");
+        // Reset and go back to voter ID page
+        voterIdInput->clear();
+        showVoterIdPage(); // Go back to the start page
+    }
+    else
+    {
+        QMessageBox::warning(nullptr,"Warning",QString::fromStdString(response));
+        return;
+    }
+
 
 }
 
