@@ -13,8 +13,6 @@ std::string edit_user_password(EditUserPassword editUserPassword);
 
 Poll create_poll(CreatePoll createPoll);
 
-void fixIds(size_t);
-
 void delete_poll(size_t);
 
 std::pair<bool, long long> check_user_vote(size_t user_id, size_t poll_id);

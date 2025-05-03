@@ -6,6 +6,7 @@
 #include <QLabel>
 #include <QTableWidget>
 #include "_structs.hpp"
+#include "qtextedit.h"
 #include "sidebar.h"
 
 class MyPollsPage : public QWidget
@@ -31,6 +32,12 @@ signals:
 private slots:
     void onViewPollClicked(size_t pollId);
     void onDeletePollClicked(size_t pollId);
+    void onEditDescriptionClicked(size_t pollId);
+    void onCustomizeOptionsClicked(size_t pollId);
+    void onSaveDescriptionClicked();
+    void onSaveOptionsClicked();
+    void onCancelEditDescriptionClicked();
+    void onCancelCustomizeOptionsClicked();
 
 private:
     QWidget         *content;
@@ -42,6 +49,19 @@ private:
     QPushButton     *backButton;
     QLabel          *pollDetailsTitleLabel;
     QTableWidget    *optionsTable;
+    QWidget *editDescriptionView;
+    QWidget *customizeOptionsView;
+    QVBoxLayout *editDescriptionLayout;
+    QLabel *editDescriptionTitleLabel;
+    QLineEdit *descriptionTextEdit;
+    QPushButton *saveDescriptionButton;
+    QPushButton *cancelEditDescriptionButton;
+    QVBoxLayout *customizeOptionsLayout;
+    QLabel *customizeOptionsTitleLabel;
+    QTableWidget *editableOptionsTable;
+    QPushButton *addOptionButton;
+    QPushButton *saveOptionsButton;
+    QPushButton *cancelCustomizeOptionsButton;
     const QString bgColor       = "#F5F6F8";
     const QString dangerColor   = "#DC3545";
     const QString dangerHoverBg = "#F8D7DA";
@@ -49,4 +69,10 @@ private:
     void setupPollListView();
     void setupPollDetailsView();
     void displayPollDetails(const RetrievePollResultAdmin& poll);
+    void setupEditDescriptionView();
+    void setupCustomizeOptionsView();
+    void displayEditDescription();
+    void displayCustomizeOptions();
+
+    size_t currentPollId_ = 0;
 };
