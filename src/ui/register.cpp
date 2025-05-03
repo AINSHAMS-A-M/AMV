@@ -3,6 +3,7 @@
 #include "db.hpp"
 #include "services.hpp"
 #include "utils.h"
+#include <regex>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QLineEdit>
@@ -36,13 +37,16 @@ RegisterPage::RegisterPage(QWidget *parent)
     const int logoSize = 200;
     QPixmap logoPixmap(":/logo.png");
     QPixmap roundedLogo = createRoundedLogo(logoPixmap, logoSize);
-    if (!roundedLogo.isNull()) {
+    if (!roundedLogo.isNull())
+    {
         QLabel *logoLabel = new QLabel(leftPanel);
         logoLabel->setPixmap(roundedLogo);
         logoLabel->setFixedSize(logoSize, logoSize);
         logoLabel->setStyleSheet("background-color: transparent;");
         leftLayout->addWidget(logoLabel);
-    } else {
+    }
+    else
+    {
         QLabel *errorLabel = new QLabel("Logo Failed to Load", leftPanel);
         errorLabel->setAlignment(Qt::AlignCenter);
         leftLayout->addWidget(errorLabel);
@@ -106,7 +110,6 @@ RegisterPage::RegisterPage(QWidget *parent)
         "    border: 2px solid #3498DB;"
         "}");
     rightLayout->addWidget(emailEdit);
-
 
     // Address field
     addressEdit = new QLineEdit(rightPanel);
@@ -209,30 +212,25 @@ RegisterPage::RegisterPage(QWidget *parent)
     // Connect signals
     connect(registerBtn, &QPushButton::clicked, this, &RegisterPage::onRegisterClicked);
 
-
-    connect(loginLabel, &QLabel::linkActivated, [this]() {
+    connect(loginLabel, &QLabel::linkActivated, [this]()
+            {
         emit loginLinkActivated();
         realNameEdit->clear();
         usernameEdit->clear();
         passwordEdit->clear();
-        confirmEdit->clear();
-    });
+        confirmEdit->clear(); });
 
-    connect(realNameEdit, &QLineEdit::returnPressed, [this]() {
-        usernameEdit->setFocus();
-    });
+    connect(realNameEdit, &QLineEdit::returnPressed, [this]()
+            { usernameEdit->setFocus(); });
 
-    connect(usernameEdit, &QLineEdit::returnPressed, [this]() {
-        passwordEdit->setFocus();
-    });
+    connect(usernameEdit, &QLineEdit::returnPressed, [this]()
+            { passwordEdit->setFocus(); });
 
-    connect(passwordEdit, &QLineEdit::returnPressed, [this]() {
-        confirmEdit->setFocus();
-    });
+    connect(passwordEdit, &QLineEdit::returnPressed, [this]()
+            { confirmEdit->setFocus(); });
 
     connect(confirmEdit, &QLineEdit::returnPressed, this, &RegisterPage::onRegisterClicked);
 }
-
 
 void RegisterPage::onRegisterClicked()
 {
@@ -245,40 +243,45 @@ void RegisterPage::onRegisterClicked()
     auto phone = phoneNumberEdit->text().toStdString();
     auto address = addressEdit->text().toStdString();
 
-
     if (username == "" || realname == "" || password == "" || confirm == "" || phone == "" || address == "" || email == "")
     {
-        QMessageBox::warning(this,"Warning","Fields cannot be empty!");
+        QMessageBox::warning(this, "Warning", "Fields cannot be empty!");
     }
     else if (
-        username.find('`') != std::string::npos || 
+        username.find('`') != std::string::npos ||
         realname.find('`') != std::string::npos ||
         phone.find('`') != std::string::npos ||
         address.find('`') != std::string::npos ||
-        email.find('`') != std::string::npos
-    )
+        email.find('`') != std::string::npos)
     {
-        QMessageBox::warning(this,"Warning","Invalid Character! don't type \"`\" ");
+        QMessageBox::warning(this, "Warning", "Invalid Character! don't type \"`\" ");
     }
     else if (password == confirm)
     {
+        std::regex email_pattern(R"(^\w+(?:[+.-%_-]\w+)@\w+\.[a-zA-Z]+$)");
+        std::regex phone_pattern(R"(^0(10|11|12|15)[0-9]{8}$)");
+
         bool capital = 0, small = 0, number = 0, special = 0;
         for (auto ch : password)
         {
-            if (ch >= 'a' && ch <= 'z') small = 1;
-            else if (ch >= 'A' && ch <= 'Z') capital = 1;
-            else if (ch >= '0' && ch <= '9') number = 1;
-            else special = 1;
+            if (ch >= 'a' && ch <= 'z')
+                small = 1;
+            else if (ch >= 'A' && ch <= 'Z')
+                capital = 1;
+            else if (ch >= '0' && ch <= '9')
+                number = 1;
+            else
+                special = 1;
         }
 
-        if (capital && small && number && special && password.size() >= 8)
+        if (capital && small && number && special && password.size() >= 8 && std::regex_match(email, email_pattern) && std::regex_match(phone, phone_pattern))
         {
             size_t new_id = users.size();
 
             CreateUser newUser = {
                 new_id,
                 realname,
-                hash_password(password,new_id),
+                hash_password(password, new_id),
                 username,
                 email,
                 phone,
@@ -287,11 +290,11 @@ void RegisterPage::onRegisterClicked()
             auto response = create_user(newUser);
             if (response == "Em")
             {
-                QMessageBox::warning(this,"Warning","Fields cannot be empty!");
+                QMessageBox::warning(this, "Warning", "Fields cannot be empty!");
             }
             else if (response == "Already Exist")
             {
-                QMessageBox::warning(this,"Warning","User already exists! Please login");
+                QMessageBox::warning(this, "Warning", "User already exists! Please login");
             }
             else if (response == "Success")
             {
@@ -307,16 +310,14 @@ void RegisterPage::onRegisterClicked()
         }
         else
         {
-            QMessageBox::warning(this,"Warning","Invalid password, Please note that the "
+            QMessageBox::warning(this, "Warning", "Invalid password or email or phone number , Please note that the "
                                                   "password must contain at least: a capital letter,"
                                                   "a small letter, a number, and a special character"
                                                   "(!,@,#,$,%,^,&,/,\\,,) and must at least be 8 characters!");
         }
-
-
     }
     else
     {
-        QMessageBox::warning(this,"Warning","Passwords don't match!!");
+        QMessageBox::warning(this, "Warning", "Passwords don't match!!");
     }
 }
