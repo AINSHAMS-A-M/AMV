@@ -212,9 +212,9 @@ void save_data()
         csv_out << current_user.id << '`'
                 << current_user.name << '`'
                 << current_user.username << '`'
-                << current_user.hashed_password << '`';
-                << current_user.email << '`';
-                << current_user.address << '`';
+                << current_user.hashed_password << '`'
+                << current_user.email << '`'
+                << current_user.address << '`'
                 << current_user.phone_number << '\n';
     }
     // Check for errors after writing loop
@@ -240,7 +240,7 @@ void save_data()
                 << current_poll.desc << '`'
                 << current_poll.voter_id << '`'
                 << current_poll.owner_id << '`'
-                << current_poll.is_finished ? "1" : "0" << '`'
+                << (current_poll.is_finished ? "1" : "0") << '`'
                 << current_poll.created_at.toString("yyyy-MM-dd").toStdString() << '\n';
     }
     if (csv_out.fail()) {

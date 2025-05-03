@@ -19,7 +19,7 @@ void delete_poll(size_t);
 
 std::pair<bool, size_t> check_user_vote(size_t user_id, size_t poll_id);
 
-void create_user_vote(size_t user_id, size_t poll_id, size_t poll_option_id);
+std::string create_user_vote(size_t user_id, size_t poll_id, size_t poll_option_id);
 
 void delete_user_vote(size_t user_id, size_t poll_id);
 

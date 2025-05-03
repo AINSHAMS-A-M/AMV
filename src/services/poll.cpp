@@ -14,7 +14,9 @@ Poll create_poll(CreatePoll createPoll)
             createPoll.poll_desc,
             createPoll.voter_id,
             createPoll.owner_id,
-            QDateTime::currentDateTime()};
+            QDateTime::currentDateTime(),
+            false,
+        };
     polls.push_back(new_poll);
 
     size_t poll_option_id = pollOptions.size();
@@ -58,11 +60,11 @@ std::string create_user_vote(size_t user_id, size_t poll_id, size_t poll_option_
      }
 
     if (cur_poll.owner_id == user_id) {
-        return "You can't vote in your own vote."
+         return "You can't vote in your own vote.";
     }
 
     if (cur_poll.is_finished) {
-     return "You can't vote in a finished poll."
+        return "You can't vote in a finished poll.";
     }
 
 
