@@ -12,6 +12,7 @@
 #include <QStyledItemDelegate>
 #include <QDatetime>
 #include <QMessageBox>
+#include <iostream>
 #include "db.hpp"
 #include "mainwindow.h"
 #include "services.hpp"
@@ -238,6 +239,28 @@ void MyPollsPage::populatePollList() {
             pollTitleLabel->setWordWrap(true);
             contentLayout->addWidget(pollTitleLabel);
 
+            QLabel *stateBadge = new QLabel(cardWidget);
+            if (poll.pollInfo.is_finished) {
+                stateBadge->setText("Finished");
+                stateBadge->setStyleSheet(
+                    "font-size: 12px;"
+                    "color: white;"
+                    "background-color: #7F8C8D;"
+                    "border-radius: 4px;"
+                    "padding: 2px 6px;"
+                    );
+            } else {
+                stateBadge->setText("Ongoing");
+                stateBadge->setStyleSheet(
+                    "font-size: 12px;"
+                    "color: white;"
+                    "background-color: #27AE60;"
+                    "border-radius: 4px;"
+                    "padding: 2px 6px;"
+                    );
+            }
+            contentLayout->addWidget(stateBadge);
+
             // Poll description
             QLabel *pollDescriptionLabel = new QLabel(QString::fromStdString(poll.pollInfo.desc), cardWidget);
             pollDescriptionLabel->setStyleSheet("font-size: 14px; color: #666666;");
@@ -263,13 +286,59 @@ void MyPollsPage::populatePollList() {
             // Spacer to push buttons to the right
             buttonsLayout->addStretch(1);
 
+            QPushButton *endElectionButton = new QPushButton("End Election", cardWidget);
+            endElectionButton->setStyleSheet(QString(
+                                                 "QPushButton { background-color: transparent; color: %1; padding: 8px 12px; border: 1px solid %1; border-radius: 8px; font-size: 13px; }"
+                                                 "QPushButton:hover { background-color: %2; color: %3; border-color: %1; }"
+                                                 "QPushButton:pressed { background-color: %1; color: white; }"
+                                                 ).arg(dangerColor, dangerHoverBg, dangerHoverFg));
+            endElectionButton->setCursor(Qt::PointingHandCursor);
+            endElectionButton->setFixedWidth(120);
+
+            // add it to the same buttonsLayout
+            buttonsLayout->addWidget(endElectionButton);
+
+            // connect its click to a new slot
+            connect(endElectionButton, &QPushButton::clicked, this, [ this, id]() {
+                auto reply = QMessageBox::question(
+                    this,
+                    "Confirm End Election",
+                    QString("Are you sure you want to end this poll?"),
+                    QMessageBox::Yes | QMessageBox::No,
+                    QMessageBox::No
+                    );
+                if (reply == QMessageBox::Yes)
+                {
+                    if (endPoll(id))
+                    {
+                        populatePollList();
+                        QMessageBox::information(
+                            this,
+                            "Election Ended",
+                            QString("Poll has been successfully ended!")
+                            );
+                    }
+                    else
+                    {
+                        QMessageBox::warning(
+                            this,
+                            "Warning",
+                            QString("Poll is already ended!")
+                            );
+                    }
+
+                }
+
+
+            });
+
             // Delete button
             QPushButton *deleteButton = new QPushButton("Delete", cardWidget);
             deleteButton->setStyleSheet(QString(
-                                         "QPushButton { background-color: transparent; color: %1; padding: 8px 12px; border: 1px solid %1; border-radius: 8px; font-size: 13px; }"
-                                         "QPushButton:hover { background-color: %2; color: %3; border-color: %1; }"
-                                         "QPushButton:pressed { background-color: %1; color: white; }"
-                                         ).arg(dangerColor).arg(dangerHoverBg).arg(dangerHoverFg));
+                                            "QPushButton { background-color: transparent; color: %1; padding: 8px 12px; border: 1px solid %1; border-radius: 8px; font-size: 13px; }"
+                                            "QPushButton:hover { background-color: %2; color: %3; border-color: %1; }"
+                                            "QPushButton:pressed { background-color: %1; color: white; }"
+                                            ).arg(dangerColor, dangerHoverBg, dangerHoverFg));
             deleteButton->setCursor(Qt::PointingHandCursor);
             deleteButton->setFixedWidth(100);
             buttonsLayout->addWidget(deleteButton);
@@ -277,10 +346,10 @@ void MyPollsPage::populatePollList() {
             // View button
             QPushButton *viewButton = new QPushButton("View", cardWidget);
             viewButton->setStyleSheet(QString(
-                                          "QPushButton { background-color: #3498DB; color: white; padding: 9px 13px; border: none; border-radius: 8px; font-weight: bold; font-size: 13px; }"
-                                          "QPushButton:hover { background-color: #2980B9; }"
-                                          "QPushButton:pressed { background-color: #0056b3; }"
-                                          ));
+                "QPushButton { background-color: #3498DB; color: white; padding: 9px 13px; border: none; border-radius: 8px; font-weight: bold; font-size: 13px; }"
+                "QPushButton:hover { background-color: #2980B9; }"
+                "QPushButton:pressed { background-color: #0056b3; }"
+                ));
             viewButton->setCursor(Qt::PointingHandCursor);
             viewButton->setFixedWidth(100);
             buttonsLayout->addWidget(viewButton);

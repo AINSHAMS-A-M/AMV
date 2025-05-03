@@ -17,7 +17,7 @@ void fixIds(size_t);
 
 void delete_poll(size_t);
 
-std::pair<bool, size_t> check_user_vote(size_t user_id, size_t poll_id);
+std::pair<bool, long long> check_user_vote(size_t user_id, size_t poll_id);
 
 std::string create_user_vote(size_t user_id, size_t poll_id, size_t poll_option_id);
 
@@ -42,3 +42,5 @@ size_t getPollOptionId(size_t pollId);
 User get_user_by_id(const size_t &id);
 
 MeshVector<size_t> show_created_polls(size_t user_id);
+
+bool endPoll(size_t id);

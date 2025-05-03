@@ -6,6 +6,7 @@
 #include <QHBoxLayout>
 #include "QApplication"
 #include "QMainWindow"
+#include "QMessageBox"
 #include "utils.h"
 #include "nav.h"
 #include "db.hpp"
@@ -96,11 +97,22 @@ void SidebarWidget::setupLogoutButton()
     logoutBtn->setCursor(Qt::PointingHandCursor);
 
     // Connect logout button to a slot that will handle the window reset
-    connect(logoutBtn, &QPushButton::clicked, this, []() {
-        // Clear the active user
-        activeUser = {};
-        // Emit signal for logout
-        NavigationManager::instance().navigate(NavigationManager::Logout);
+    connect(logoutBtn, &QPushButton::clicked, this, [this]() {
+        auto reply = QMessageBox::question(
+            this,
+            "Log out",
+            QString("Are you sure you want to log out?"),
+            QMessageBox::Yes | QMessageBox::No,
+            QMessageBox::No
+            );
+        if (reply)
+        {
+            // Clear the active user
+            activeUser = {};
+            // Emit signal for logout
+            NavigationManager::instance().navigate(NavigationManager::Logout);
+        }
+
     });
 
     // Add to the layout - note we add it after the welcome label but before the stretch
