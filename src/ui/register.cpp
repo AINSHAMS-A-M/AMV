@@ -264,23 +264,24 @@ void RegisterPage::onRegisterClicked()
     }
     else if (password == confirm)
     {
-        std::regex email_pattern(R"(^\w+(?:[+.-%_-]\w+)@\w+\.[a-zA-Z]+$)");
+        std::regex email_pattern(R"(^\w+(?:[-+.%_]\w+)@\w+(?:\.[a-zA-Z]+)+$)");
         std::regex phone_pattern(R"(^0(10|11|12|15)[0-9]{8}$)");
+        std::regex password_pattern(R"(^(?=.*[!@#$%^&])(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[a-zA-Z0-9!@#$%^&]{8,}$)");
+        // old password validation logic
+        // bool capital = 0,small = 0, number = 0, special = 0;
+        // for (auto ch : password)
+        // {
+        //     if (ch >= 'a' && ch <= 'z')
+        //         small = 1;
+        //     else if (ch >= 'A' && ch <= 'Z')
+        //         capital = 1;
+        //     else if (ch >= '0' && ch <= '9')
+        //         number = 1;
+        //     else
+        //         special = 1;
+        // }capital && small && number && special && password.size() >= 8
 
-        bool capital = 0, small = 0, number = 0, special = 0;
-        for (auto ch : password)
-        {
-            if (ch >= 'a' && ch <= 'z')
-                small = 1;
-            else if (ch >= 'A' && ch <= 'Z')
-                capital = 1;
-            else if (ch >= '0' && ch <= '9')
-                number = 1;
-            else
-                special = 1;
-        }
-
-        if (capital && small && number && special && password.size() >= 8 && std::regex_match(email, email_pattern) && std::regex_match(phone, phone_pattern))
+        if (std::regex_match(password, password_pattern) && std::regex_match(email, email_pattern) && std::regex_match(phone, phone_pattern))
         {
             size_t new_id = users.size();
 
