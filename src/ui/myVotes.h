@@ -8,6 +8,7 @@
 #include <QStackedWidget>
 #include <QString>
 #include "_structs.hpp"
+#include "_db_structs.hpp"
 #include "sidebar.h"
 
 class MyVotesPage : public QWidget {
@@ -44,11 +45,13 @@ private:
     QString dangerHoverBg;
     QString dangerHoverFg;
     QString cardBgColor;
+    void setupPollDetailsView();
+    void displayPollResults(const size_t& pollId, RetrievePollDTO &selectedPoll);
     void createSidebar();
     void createVotesListPage();
     void createPollViewPage();
     void onRemoveVoteClicked(const size_t &identifier);
-    void onViewVotePollClicked(const size_t &identifier, RetrievePollDTO &selectedPoll);
+    void onViewVotePollClicked(const size_t& id, RetrievePollResultAdmin &selectedPoll);
 };
 
 #endif

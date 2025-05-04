@@ -14,6 +14,7 @@
 #include <QFrame>
 #include <QMessageBox>
 #include <QStackedWidget>
+#include <iostream>
 #include "db.hpp"
 #include "_structs.hpp"
 #include "mainwindow.h"
@@ -193,9 +194,11 @@ void MyVotesPage::onRemoveVoteClicked(const size_t& identifier)
     }
 }
 
-void MyVotesPage::onViewVotePollClicked(const size_t& identifier, RetrievePollDTO &selectedPoll)
+
+
+void MyVotesPage::onViewVotePollClicked(const size_t& id, RetrievePollResultAdmin &selectedPoll)
 {
-    // Clear existing content in poll view
+    // Clear existing content in poll view (except back button)
     QLayoutItem *item;
     while ((item = pollViewLayout->takeAt(1)) != nullptr) {
         if (item->widget()) {
@@ -205,13 +208,13 @@ void MyVotesPage::onViewVotePollClicked(const size_t& identifier, RetrievePollDT
     }
 
     // Poll title
-    QLabel* pollTitle = new QLabel(QString::fromStdString(selectedPoll.name), pollViewPage);
+    QLabel* pollTitle = new QLabel(QString::fromStdString(selectedPoll.pollInfo.name), pollViewPage);
     pollTitle->setStyleSheet("font-size: 28px; font-weight: bold; color: #2C3E50; margin-top: 10px;");
     pollTitle->setWordWrap(true);
     pollViewLayout->addWidget(pollTitle);
 
     // Poll description
-    QLabel* pollDescription = new QLabel(QString::fromStdString(selectedPoll.desc), pollViewPage);
+    QLabel* pollDescription = new QLabel(QString::fromStdString(selectedPoll.pollInfo.desc), pollViewPage);
     pollDescription->setStyleSheet("font-size: 16px; color: #5D6D7E; margin-bottom: 15px;");
     pollDescription->setWordWrap(true);
     pollViewLayout->addWidget(pollDescription);
@@ -221,19 +224,17 @@ void MyVotesPage::onViewVotePollClicked(const size_t& identifier, RetrievePollDT
     optionsTitle->setStyleSheet("font-size: 20px; font-weight: bold; color: #2C3E50; margin-bottom: 15px;");
     pollViewLayout->addWidget(optionsTitle);
 
-    // Create scroll area for options
+    // Scroll area for options
     QScrollArea* scrollArea = new QScrollArea(pollViewPage);
     scrollArea->setWidgetResizable(true);
     scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     scrollArea->setFrameShape(QFrame::NoFrame);
-
     QWidget* scrollContentWidget = new QWidget();
     QVBoxLayout* scrollLayout = new QVBoxLayout(scrollContentWidget);
     scrollLayout->setContentsMargins(10, 10, 10, 10);
     scrollLayout->setSpacing(10);
 
-    // Style scroll bar
     scrollArea->verticalScrollBar()->setStyleSheet(
         "QScrollBar:vertical {"
         "    border: none;"
@@ -248,55 +249,61 @@ void MyVotesPage::onViewVotePollClicked(const size_t& identifier, RetrievePollDT
         "    background: #909090;"
         "}"
         );
-
     scrollArea->setWidget(scrollContentWidget);
+    pollViewLayout->addWidget(scrollArea);
 
-    // Get the option that the user voted for
+    bool pollHasEnded = selectedPoll.pollInfo.is_finished;
+
     size_t userVotedOptionId = 0;
     auto votes = retrieve_polls(activeUser.id);
     for (auto &vote : votes) {
-        if (vote.poll.id == identifier) {
+        if (vote.poll.id == id) {
             userVotedOptionId = vote.option.id;
             break;
         }
     }
 
-    // Display all options with the user's choice outlined
-    for (const auto& option : selectedPoll.options) {
-        QLabel* optionLabel = new QLabel(QString::fromStdString(option.name), pollViewPage);
+    // Display all options with conditional formatting
+    for (const auto& option : selectedPoll.results) {
+        QString labelText = QString::fromStdString(option.option_name);
+
+        if (pollHasEnded) {
+            // Find vote count for this option
+            labelText += QString(" — %1 vote(s)").arg(option.option_votes_count);
+        }
+
+        QLabel* optionLabel = new QLabel(labelText, pollViewPage);
         optionLabel->setWordWrap(true);
         optionLabel->setStyleSheet(
-            option.id == userVotedOptionId ?
+            (option.option_id == userVotedOptionId) ?
                 "background-color: #E3F2FD; border: 2px solid #007BFF; border-radius: 8px; padding: 10px;" :
                 "background-color: #FFFFFF; border: 1px solid #D0D0D0; border-radius: 8px; padding: 10px;"
             );
-
         QFont font = optionLabel->font();
         font.setPointSize(14);
         optionLabel->setFont(font);
-
         scrollLayout->addWidget(optionLabel);
     }
 
-    pollViewLayout->addWidget(scrollArea);
-
     // Add a remove vote button at the bottom
-    QPushButton* removeVoteBtn = new QPushButton("Remove My Vote", pollViewPage);
-    removeVoteBtn->setCursor(Qt::PointingHandCursor);
-    removeVoteBtn->setStyleSheet(QString(
-                                     "QPushButton { background-color: #E74C3C; color: white; padding: 10px 20px; border: none; "
-                                     "border-radius: 8px; font-weight: bold; font-size: 14px; margin-top: 20px; }"
-                                     "QPushButton:hover { background-color: #C0392B; }"
-                                     "QPushButton:pressed { background-color: #BD2130; }"
-                                     ));
+    if (!pollHasEnded)
+    {
+        QPushButton* removeVoteBtn = new QPushButton("Remove My Vote", pollViewPage);
+        removeVoteBtn->setCursor(Qt::PointingHandCursor);
+        removeVoteBtn->setStyleSheet(QString(
+            "QPushButton { background-color: #E74C3C; color: white; padding: 10px 20px; border: none; "
+            "border-radius: 8px; font-weight: bold; font-size: 14px; margin-top: 20px; }"
+            "QPushButton:hover { background-color: #C0392B; }"
+            "QPushButton:pressed { background-color: #BD2130; }"
+            ));
+        connect(removeVoteBtn, &QPushButton::clicked, this, [this, id]() {
+            onRemoveVoteClicked(id);
+        });
+        pollViewLayout->addWidget(removeVoteBtn);
+        pollViewLayout->addStretch();
+    }
 
-    // Connect remove button
-    connect(removeVoteBtn, &QPushButton::clicked, this, [this, identifier]() {
-        onRemoveVoteClicked(identifier);
-    });
 
-    pollViewLayout->addWidget(removeVoteBtn);
-    pollViewLayout->addStretch();
 
     // Switch to poll view
     stackedWidget->setCurrentWidget(pollViewPage);
@@ -419,7 +426,7 @@ void MyVotesPage::show_cards()
                                        "QPushButton { background-color: #3498DB; color: white; padding: 10px 18px; border: none; border-radius: 8px; font-weight: bold; font-size: 14px; }"
                                        "QPushButton:hover { background-color: #2980B9; }"
                                        "QPushButton:pressed { background-color: #0056b3; }"
-                                       ).arg(primaryColor,primaryHover));
+                                       ));
             viewBtn->setFixedWidth(120);
 
             // Store poll ID for the view button
@@ -428,34 +435,46 @@ void MyVotesPage::show_cards()
             // Connect button using a direct method to retrieve poll data at click time
             connect(viewBtn, &QPushButton::clicked, this, [this, pollId]() {
                 // Fetch the poll data at the time of clicking to ensure it's fresh
-                RetrievePollDTO pollData = retrieve_public_poll(pollId);
+                auto pollData = retrieve_poll_results(activeUser.id,pollId);
                 onViewVotePollClicked(pollId, pollData);
             });
 
             // Remove Vote Button
-            QPushButton *removeBtn = new QPushButton("Remove", buttonContainer);
-            removeBtn->setCursor(Qt::PointingHandCursor);
-            removeBtn->setStyleSheet(QString(
-                                         "QPushButton { background-color: transparent; color: %1; padding: 8px 12px; border: 1px solid %1; border-radius: 8px; font-size: 13px; }"
-                                         "QPushButton:hover { background-color: %2; color: %3; border-color: %1; }"
-                                         "QPushButton:pressed { background-color: %1; color: white; }"
-                                         ).arg(dangerColor).arg(dangerHoverBg).arg(dangerHoverFg));
-            removeBtn->setFixedWidth(120);
+            if (!retrieve_public_poll(pollId).is_finished)
+            {
+                QPushButton *removeBtn = new QPushButton("Remove", buttonContainer);
+                removeBtn->setCursor(Qt::PointingHandCursor);
+                removeBtn->setStyleSheet(QString(
+                                             "QPushButton { background-color: transparent; color: %1; padding: 8px 12px; border: 1px solid %1; border-radius: 8px; font-size: 13px; }"
+                                             "QPushButton:hover { background-color: %2; color: %3; border-color: %1; }"
+                                             "QPushButton:pressed { background-color: %1; color: white; }"
+                                             ).arg(dangerColor).arg(dangerHoverBg).arg(dangerHoverFg));
+                removeBtn->setFixedWidth(120);
 
-            // Connect remove button
-            connect(removeBtn, &QPushButton::clicked, this, [this, pollId]() {
-                onRemoveVoteClicked(pollId);
-            });
+                // Connect remove button
+                connect(removeBtn, &QPushButton::clicked, this, [this, pollId]() {
+                    onRemoveVoteClicked(pollId);
+                });
 
-            buttonLayout->addWidget(viewBtn);
-            buttonLayout->addWidget(removeBtn);
-            buttonLayout->addStretch();
+                buttonLayout->addWidget(viewBtn);
+                buttonLayout->addWidget(removeBtn);
+                buttonLayout->addStretch();
 
-            bodyLayout->addWidget(buttonContainer);
+                bodyLayout->addWidget(buttonContainer);
 
-            cardLayout->addWidget(cardBody);
+                cardLayout->addWidget(cardBody);
 
-            scrollLayout->addWidget(voteCard);
+                scrollLayout->addWidget(voteCard);
+            }
+            else
+            {
+                buttonLayout->addWidget(viewBtn);
+                buttonLayout->addStretch();
+                bodyLayout->addWidget(buttonContainer);
+                cardLayout->addWidget(cardBody);
+                scrollLayout->addWidget(voteCard);
+            }
+
         } // End of vote card loop
     }
 

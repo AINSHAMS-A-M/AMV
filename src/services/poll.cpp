@@ -23,7 +23,16 @@ Poll create_poll(CreatePoll createPoll)
         };
     polls.push_back(new_poll);
 
-    size_t poll_option_id = pollOptions.size();
+    size_t poll_option_id;
+    if (pollOptions.size() == 0)
+    {
+        poll_option_id = 0;
+    }
+    else
+    {
+        poll_option_id = pollOptions[pollOptions.size()-1].id+1;
+    }
+
     for (auto &option : createPoll.options)
     {
         PollOption new_option =
@@ -172,6 +181,7 @@ RetrievePollDTO retrieve_public_poll(size_t poll_id)
     publicPoll.name = foundPoll.name;
     publicPoll.creation_date = foundPoll.created_at;
     publicPoll.desc = foundPoll.desc;
+    publicPoll.is_finished = foundPoll.is_finished;
 
     // Add options to the public poll (without revealing any user-specific data)
     for (const auto &option : pollOptions)
@@ -215,14 +225,7 @@ RetrievePollResultAdmin retrieve_poll_results(const size_t user_id, const size_t
         return result;
     }
 
-    // 2) check ownership
-    if (foundPoll.owner_id != user_id)
-    {
-        result.error_msg = "This user_id is not the admin_id of the poll";
-        return result;
-    }
-
-    // 3) prepare a zeroed Result entry for every option
+    // 2) prepare a zeroed Result entry for every option
     MeshVector<RetrievePollResultAdmin::Result> tally;
     for (const auto &opt : pollOptions)
     {
@@ -237,7 +240,7 @@ RetrievePollResultAdmin retrieve_poll_results(const size_t user_id, const size_t
         }
     }
 
-    // 4) scan userVotes to count votes
+    // 3) scan userVotes to count votes
     for (const auto &up : userVotes)
     {
         if (up.poll_id == poll_id)
@@ -254,7 +257,7 @@ RetrievePollResultAdmin retrieve_poll_results(const size_t user_id, const size_t
         }
     }
 
-    // 5) done!
+    // 4) done!
     result.results = tally;
     result.success = true;
 

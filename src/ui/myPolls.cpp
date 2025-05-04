@@ -556,7 +556,6 @@ void MyPollsPage::setupEditDescriptionView() {
 
 
 
-// UPDATED: setupCustomizeOptionsView method to include integrated add option UI
 void MyPollsPage::setupCustomizeOptionsView() {
     customizeOptionsView = new QWidget(contentStack);
     customizeOptionsLayout = new QVBoxLayout(customizeOptionsView);

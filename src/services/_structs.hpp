@@ -71,6 +71,7 @@ struct RetrievePollDTO
     std::string desc;
     QDateTime creation_date;
     MeshVector<PollOption> options; // Holds options for the public poll
+    bool is_finished;
 };
 
 struct PollRead

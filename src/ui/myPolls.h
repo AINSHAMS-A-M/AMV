@@ -20,6 +20,7 @@ public:
     QWidget *pollListView;
     QStackedWidget  *contentStack;
     SidebarWidget *sidebar;
+    void setupPollDetailsView();
 
 signals:
     void onHelpClicked();
@@ -67,7 +68,6 @@ private:
     const QString dangerHoverBg = "#F8D7DA";
     const QString dangerHoverFg = "#721C24";
     void setupPollListView();
-    void setupPollDetailsView();
     void displayPollDetails(const RetrievePollResultAdmin& poll);
     void setupEditDescriptionView();
     void setupCustomizeOptionsView();
