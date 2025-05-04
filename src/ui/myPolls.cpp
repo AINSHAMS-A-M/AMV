@@ -556,47 +556,118 @@ void MyPollsPage::setupEditDescriptionView() {
 
 
 
+// UPDATED: setupCustomizeOptionsView method to include integrated add option UI
 void MyPollsPage::setupCustomizeOptionsView() {
     customizeOptionsView = new QWidget(contentStack);
     customizeOptionsLayout = new QVBoxLayout(customizeOptionsView);
-    customizeOptionsLayout->setContentsMargins(0, 0, 0, 0);
+    customizeOptionsLayout->setContentsMargins(0, 100, 0, 50);
     customizeOptionsLayout->setSpacing(15);
 
     customizeOptionsTitleLabel = new QLabel("Customize Poll Options", customizeOptionsView);
     customizeOptionsTitleLabel->setStyleSheet("font-size: 24px; font-weight: bold; color: #333333;");
     customizeOptionsLayout->addWidget(customizeOptionsTitleLabel);
 
+    // Description text
+    QLabel *descriptionLabel = new QLabel("Add, edit, or remove options for your poll below.", customizeOptionsView);
+    descriptionLabel->setStyleSheet("font-size: 16px; color: #666666; margin-bottom: 10px;");
+    customizeOptionsLayout->addWidget(descriptionLabel);
+
+    // Create inline option input area with modern styling
+    QWidget *addOptionWidget = new QWidget(customizeOptionsView);
+    addOptionWidget->setObjectName("addOptionWidget");
+    addOptionWidget->setStyleSheet(
+        "#addOptionWidget {"
+        "  padding: 0px;"  // Removed all background and border
+        "  margin-bottom: 15px;"
+        "}"
+        );
+
+    QHBoxLayout *addOptionLayout = new QHBoxLayout(addOptionWidget);
+    addOptionLayout->setContentsMargins(0, 0, 0, 0);  // Tighter margins
+    addOptionLayout->setSpacing(12);
+
+    // Input field for new option
+    QLineEdit *newOptionInput = new QLineEdit(addOptionWidget);
+    newOptionInput->setPlaceholderText("Enter new option text...");
+    newOptionInput->setStyleSheet(
+        "QLineEdit {"
+        "  border: 1px solid #D1D5DB;"
+        "  border-radius: 6px;"
+        "  padding: 10px 12px;"
+        "  font-size: 15px;"
+        "  background-color: white;"
+        "  margin: 0px;"
+        "}"
+        "QLineEdit:focus {"
+        "  border: 2px solid #3498DB;"
+        "  outline: none;"
+        "}"
+        );
+
+    // Add option button with improved styling
+    QPushButton *addOptionButton = new QPushButton("Add Option", addOptionWidget);
+    addOptionButton->setStyleSheet(
+        "QPushButton {"
+        "  background-color: #2ECC71;"
+        "  color: white;"
+        "  padding: 10px 20px;"
+        "  border-radius: 6px;"
+        "  font-weight: bold;"
+        "  font-size: 14px;"
+        "  border: none;"
+        "}"
+        "QPushButton:hover {"
+        "  background-color: #27AE60;"
+        "}"
+        "QPushButton:pressed {"
+        "  background-color: #1D8348;"
+        "}"
+        );
+    addOptionButton->setCursor(Qt::PointingHandCursor);
+    addOptionLayout->addWidget(newOptionInput);
+    addOptionLayout->addWidget(addOptionButton);
+
+
+    // Add the option input widget to main layout
+    customizeOptionsLayout->addWidget(addOptionWidget);
+
+    // Table for existing options
     editableOptionsTable = new QTableWidget(customizeOptionsView);
     editableOptionsTable->setColumnCount(2); // Option Text, Actions (Delete)
     editableOptionsTable->setHorizontalHeaderLabels({"Option Text", "Actions"});
     editableOptionsTable->horizontalHeader()->setStyleSheet(QString(
         "QHeaderView::section {"
-        "background-color: #F0F0F0;"
-        "color: #333333;"
-        "padding: 8px;"
-        "border: 1px solid #DDDDDD;"
-        "font-size: 16px;"
-        "font-weight: bold;"
+        "  background-color: #F0F0F0;"
+        "  color: #333333;"
+        "  padding: 12px 8px;"
+        "  border: 1px solid #DDDDDD;"
+        "  font-size: 15px;"
+        "  font-weight: bold;"
         "}"
         ));
     editableOptionsTable->verticalHeader()->setVisible(false);
-    // editableOptionsTable->setEditTriggers(QAbstractItemView::DoubleClicked | QAbstractItemView::AnyKeyPressed); // Allow editing text
+    editableOptionsTable->setSelectionMode(QAbstractItemView::NoSelection);
+    editableOptionsTable->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
+    editableOptionsTable->horizontalHeader()->setSectionResizeMode(1, QHeaderView::ResizeToContents);
     editableOptionsTable->setSelectionBehavior(QAbstractItemView::SelectRows);
-    editableOptionsTable->setSelectionMode(QAbstractItemView::NoSelection); // Select entire row, but not for selection mode
     editableOptionsTable->setStyleSheet(QString(R"(
         QTableWidget {
             background-color: #FFFFFF;
             border: 1px solid #DDDDDD;
-            border-radius: 6px;
-            font-size: 16px;
+            border-radius: 8px;
+            font-size: 15px;
             gridline-color: #EEEEEE;
         }
         QTableWidget::item {
-            padding: 8px;
+            padding: 12px 8px;
             border-bottom: 1px solid #F0F0F0;
         }
+        QTableWidget::item:selected {
+            background-color: #E3F2FD;
+            color: #333333;
+        }
         QTableWidget:focus { outline: 0px; }
-         QScrollBar:vertical {
+        QScrollBar:vertical {
             background: #F5F6F8;
             width: 10px;
             margin: 0px;
@@ -618,39 +689,58 @@ void MyPollsPage::setupCustomizeOptionsView() {
     )"));
     editableOptionsTable->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
     editableOptionsTable->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Fixed);
-    editableOptionsTable->setColumnWidth(1, 80); // Width for delete button column
+    editableOptionsTable->setColumnWidth(1, 100); // Width for delete button column
 
     customizeOptionsLayout->addWidget(editableOptionsTable);
 
-    addOptionButton = new QPushButton("+ Add Option", customizeOptionsView);
-    addOptionButton->setStyleSheet(QString(
-        "QPushButton { background-color: transparent; color: #3498DB; padding: 8px 12px; border: 1px solid #3498DB; border-radius: 8px; font-size: 14px; font-weight: bold; }"
-        "QPushButton:hover { background-color: #ECF0F1; color: #2980B9; border-color: #2980B9; }"
-        "QPushButton:pressed { background-color: #AED6F1; color: white; }"
-        ));
-    addOptionButton->setCursor(Qt::PointingHandCursor);
-    // Connect later when adding logic to add rows
-
+    // Action buttons layout
     auto *buttonLayout = new QHBoxLayout();
-    buttonLayout->addStretch(); // Push buttons to the right
-    buttonLayout->addWidget(addOptionButton); // Add "Add Option" button here
+    buttonLayout->setSpacing(12);
+    buttonLayout->addStretch(1); // Push buttons to the right
 
+    // Cancel button
     cancelCustomizeOptionsButton = new QPushButton("Cancel", customizeOptionsView);
     cancelCustomizeOptionsButton->setStyleSheet(QString(
-        "QPushButton { background-color: transparent; color: #7F8C8D; padding: 8px 12px; border: 1px solid #7F8C8D; border-radius: 8px; font-size: 14px; }"
-        "QPushButton:hover { background-color: #ECF0F1; color: #34495E; border-color: #34495E; }"
-        "QPushButton:pressed { background-color: #BDC3C7; color: white; }"
+        "QPushButton {"
+        "  background-color: transparent;"
+        "  color: #E74C3C;"
+        "  padding: 12px 20px;"
+        "  border: 1px solid #E74C3C;"
+        "  border-radius: 6px;"
+        "  font-size: 14px;"
+        "}"
+        "QPushButton:hover {"
+        "  background-color: #FADBD8;"
+        "  color: #C0392B;"
+        "  border-color: #C0392B;"
+        "}"
+        "QPushButton:pressed {"
+        "  background-color: #E74C3C;"
+        "  color: white;"
+        "}"
         ));
     cancelCustomizeOptionsButton->setCursor(Qt::PointingHandCursor);
     connect(cancelCustomizeOptionsButton, &QPushButton::clicked, this, &MyPollsPage::onCancelCustomizeOptionsClicked);
     buttonLayout->addWidget(cancelCustomizeOptionsButton);
 
-
-    saveOptionsButton = new QPushButton("Save Options", customizeOptionsView);
+    // Save button
+    saveOptionsButton = new QPushButton("Save Changes", customizeOptionsView);
     saveOptionsButton->setStyleSheet(QString(
-        "QPushButton { background-color: #2ECC71; color: white; padding: 8px 12px; border: none; border-radius: 8px; font-weight: bold; font-size: 14px; }"
-        "QPushButton:hover { background-color: #27AE60; }"
-        "QPushButton:pressed { background-color: #1E8449; }"
+        "QPushButton {"
+        "  background-color: #3498DB;"
+        "  color: white;"
+        "  padding: 12px 24px;"
+        "  border-radius: 6px;"
+        "  font-size: 14px;"
+        "  font-weight: bold;"
+        "  border: none;"
+        "}"
+        "QPushButton:hover {"
+        "  background-color: #2980B9;"
+        "}"
+        "QPushButton:pressed {"
+        "  background-color: #1C6EA4;"
+        "}"
         ));
     saveOptionsButton->setCursor(Qt::PointingHandCursor);
     connect(saveOptionsButton, &QPushButton::clicked, this, &MyPollsPage::onSaveOptionsClicked);
@@ -661,19 +751,21 @@ void MyPollsPage::setupCustomizeOptionsView() {
 
     contentStack->addWidget(customizeOptionsView);
 
-    // Connect add option button signal AFTER the table and button are created
-    connect(addOptionButton, &QPushButton::clicked, this, [this]() {
-        bool ok;
-        QString text = QInputDialog::getText(this, tr("Add New Option"),
-                                             tr("Option text:"), QLineEdit::Normal,
-                                             "", &ok);
-        if (ok && !text.isEmpty()) {
+    // Connect add option button to add new row
+    connect(addOptionButton, &QPushButton::clicked, this, [this, newOptionInput]() {
+        QString text = newOptionInput->text().trimmed();
+        if (!text.isEmpty()) {
             int row = editableOptionsTable->rowCount();
             editableOptionsTable->insertRow(row);
-            editableOptionsTable->setItem(row, 0, new QTableWidgetItem(text));
 
-            // Add a delete button for the new row
-            QPushButton *deleteBtn = new QPushButton("Delete");
+            // Create styled item for the option text
+            QTableWidgetItem *textItem = new QTableWidgetItem(text);
+            textItem->setFlags(textItem->flags() | Qt::ItemIsEditable);
+            editableOptionsTable->setItem(row, 0, textItem);
+
+            // Create styled delete button for the row
+            QPushButton *deleteBtn = new QPushButton(editableOptionsTable);
+            deleteBtn->setText("Delete");
             deleteBtn->setStyleSheet(QString(
                 "QPushButton { background-color: transparent; color: #E74C3C; padding: 3px 6px; border: 1px solid #E74C3C; border-radius: 4px; font-size: 12px; }"
                 "QPushButton:hover { background-color: #FADBD8; color: #C0392B; border-color: #C0392B; }"
@@ -687,8 +779,21 @@ void MyPollsPage::setupCustomizeOptionsView() {
                 editableOptionsTable->removeRow(row);
             });
             editableOptionsTable->resizeRowsToContents(); // Adjust row height
+
+            // Clear input field after adding
+            newOptionInput->clear();
+            newOptionInput->setFocus();
+
+            // Adjust row height and ensure the new row is visible
+            editableOptionsTable->resizeRowsToContents();
+            editableOptionsTable->scrollToItem(textItem);
+
+            textItem->setBackground(QColor(232, 245, 233)); // Light green
         }
     });
+
+    // Also allow adding option with Enter key
+    connect(newOptionInput, &QLineEdit::returnPressed, addOptionButton, &QPushButton::click);
 }
 
 
