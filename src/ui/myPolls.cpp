@@ -951,7 +951,6 @@ void MyPollsPage::onCancelCustomizeOptionsClicked() {
 
 
 void MyPollsPage::onSeeVotersClicked(size_t pollId) {
-    // Fetch voter data (hypothetical function - must be implemented)
     auto votersData = retrieve_poll_voters(pollId); // Returns a structured list of voters per option
 
     if (!votersData.size()) {

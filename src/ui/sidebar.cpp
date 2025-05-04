@@ -105,7 +105,7 @@ void SidebarWidget::setupLogoutButton()
             QMessageBox::Yes | QMessageBox::No,
             QMessageBox::No
             );
-        if (reply)
+        if (reply == QMessageBox::Yes)
         {
             // Clear the active user
             activeUser = {};

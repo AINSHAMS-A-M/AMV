@@ -150,7 +150,7 @@ VotePage::VotePage(QWidget *parent)
     scrollArea->setWidget(optionsContainer);
     pollOptionsLayout->addWidget(scrollArea, 3);
 
-    // Create button group for radio buttons
+    // Create button group for  buttons
     optionsGroup = new QButtonGroup(pollOptionsPage);
     optionsGroup->setExclusive(true);
 
@@ -292,15 +292,16 @@ void VotePage::loadPollOptions()
         }
     }
 
-    // Add options as radio buttons
+    // Add options as  buttons
     for (const auto &option : pollData.options) {
         QRadioButton *radioBtn = new QRadioButton(QString::fromStdString(option.name), optionsContainer);
         radioBtn->setStyleSheet(
-            "QRadioButton { font-size: 16px; padding: 12px 15px; background-color: white; border: 1px solid #DDD; "
+            "QRadioButton { font-size: 16px; padding: 12px 15px; background-color: white; border: 1px solid #DDD; spacing : 0px; padding-left: 0px; "
             "border-radius: 8px; margin: 5px 0px; }"
             "QRadioButton:hover { background-color: #F0F0F0; border-color: #CCC; }"
             "QRadioButton::indicator { width: 0px; height: 0px; }"
             "QRadioButton:checked { background-color: #E1F5FE; border: 2px solid #007BFF; font-weight: bold; }"
+            "QRadioButton:indicator {width : 0px; height : 0px;}"
             );
         radioBtn->setCursor(Qt::PointingHandCursor);
         optionsGroup->addButton(radioBtn, option.id);
