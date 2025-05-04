@@ -42,3 +42,5 @@ MeshVector<size_t> show_created_polls(size_t user_id);
 bool endPoll(size_t id);
 
 void change_poll_options(size_t pollId,MeshVector<std::string> &newOptions);
+
+PollVoters retrieve_poll_voters(size_t pollId);

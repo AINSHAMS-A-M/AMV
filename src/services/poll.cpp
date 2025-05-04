@@ -1,6 +1,7 @@
 #include "data_structures.hpp"
 #include "db.hpp"
 #include "services.hpp"
+#include <vector>
 
 /// @brief Creates a new poll.
 /// This function initializes and stores a new poll with its associated options and metadata.
@@ -388,4 +389,45 @@ bool endPoll(size_t id)
         }
     }
     return false;
+}
+
+PollOption getOptionById(size_t id)
+{
+    for (auto &option : pollOptions)
+    {
+        if (option.id == id)
+        {
+            return option;
+        }
+    }
+}
+
+
+PollVoters retrieve_poll_voters(size_t pollId)
+{
+    PollVoters pollvoters;
+    MeshVector <size_t> options;
+    for (auto &vote : userVotes)
+    {
+        if (vote.poll_id == pollId)
+        {
+            options.push_back(vote.poll_option_id);
+        }
+    }
+
+    for (auto &option : options)
+    {
+        MeshVector <User> option_voters;
+        for (auto &vote : userVotes)
+        {
+            if (vote.poll_option_id == option)
+            {
+                option_voters.push_back(get_user_by_id(vote.user_id));
+            }
+        }
+        pollvoters.push_back({getOptionById(option).name , option_voters});
+    }
+
+    return pollvoters;
+
 }

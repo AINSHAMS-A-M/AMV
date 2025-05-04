@@ -88,3 +88,5 @@ struct voteData
     std::string votedOption;
     std::string pollCreator;
 };
+
+typedef MeshVector <std::pair<std::string,MeshVector<User>>> PollVoters;

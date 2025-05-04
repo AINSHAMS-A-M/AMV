@@ -12,6 +12,7 @@
 #include <QStyledItemDelegate>
 #include <QDatetime>
 #include <QLineEdit>
+#include <QTreeWidgetItem>
 #include <QMessageBox>
 #include <QInputDialog>
 #include <iostream>
@@ -387,6 +388,19 @@ void MyPollsPage::populatePollList() {
             customizeOptionsButton->setCursor(Qt::PointingHandCursor);
             buttonsLayout->addWidget(customizeOptionsButton);
             connect(customizeOptionsButton, &QPushButton::clicked, this, [this, id]() { onCustomizeOptionsClicked(id); });
+
+
+            // Add "See Voters" button
+            QPushButton *seeVotersButton = new QPushButton("See Voters", cardWidget);
+            seeVotersButton->setStyleSheet(QString(
+                "QPushButton { background-color: #3498DB; color: white; padding: 9px 13px; border: none; border-radius: 8px; font-weight: bold; font-size: 13px; }"
+                "QPushButton:hover { background-color: #2980B9; }"
+                "QPushButton:pressed { background-color: #0056b3; }"
+                ));
+            seeVotersButton->setCursor(Qt::PointingHandCursor);
+            buttonsLayout->addWidget(seeVotersButton);
+            connect(seeVotersButton, &QPushButton::clicked, this, [this, id]() { onSeeVotersClicked(id); });
+
 
             // View button
             QPushButton *viewButton = new QPushButton("View", cardWidget);
@@ -931,4 +945,56 @@ void MyPollsPage::onCancelEditDescriptionClicked() {
 
 void MyPollsPage::onCancelCustomizeOptionsClicked() {
     onBackToListClicked(); // Simply go back to the list without saving
+}
+
+
+
+
+void MyPollsPage::onSeeVotersClicked(size_t pollId) {
+    // Fetch voter data (hypothetical function - must be implemented)
+    auto votersData = retrieve_poll_voters(pollId); // Returns a structured list of voters per option
+
+    if (!votersData.size()) {
+        QMessageBox::information(this, "No Voters", "No votes have been cast for this poll yet.");
+        return;
+    }
+
+    // Create a dialog to display voters
+    QDialog *dialog = new QDialog(this);
+    dialog->setWindowTitle("Voter Details");
+    dialog->resize(800, 600);
+
+    QVBoxLayout *dialogLayout = new QVBoxLayout(dialog);
+    QTreeWidget *tree = new QTreeWidget(dialog);
+    tree->setHeaderLabels({"Option", "Name", "Address", "Phone"});
+    tree->header()->setSectionResizeMode(QHeaderView::Stretch);
+
+    // Populate the tree with options and voters
+    for (auto& [optionName, voters] : votersData)
+    {
+        QTreeWidgetItem *optionItem = new QTreeWidgetItem(tree);
+        optionItem->setText(0, QString::fromStdString(optionName));
+        optionItem->setExpanded(true);
+
+        for (auto& voter : voters) {
+            QTreeWidgetItem *voterItem = new QTreeWidgetItem(optionItem);
+            voterItem->setText(1, QString::fromStdString(voter.name));
+            voterItem->setText(2, QString::fromStdString(voter.address));
+            voterItem->setText(3, QString::fromStdString(voter.phone_number));
+        }
+    }
+
+    dialogLayout->addWidget(tree);
+
+    // Close button
+    QPushButton *closeButton = new QPushButton("Close", dialog);
+    closeButton->setStyleSheet(QString(
+        "QPushButton { background-color: #3498DB; color: white; padding: 10px 20px; border-radius: 6px; font-weight: bold; }"
+        "QPushButton:hover { background-color: #2980B9; }"
+        ));
+    connect(closeButton, &QPushButton::clicked, dialog, &QDialog::accept);
+    dialogLayout->addWidget(closeButton);
+
+    dialog->setLayout(dialogLayout);
+    dialog->exec();
 }

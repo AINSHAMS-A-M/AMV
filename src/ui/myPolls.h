@@ -39,6 +39,7 @@ private slots:
     void onSaveOptionsClicked();
     void onCancelEditDescriptionClicked();
     void onCancelCustomizeOptionsClicked();
+    void onSeeVotersClicked(size_t pollId);
 
 private:
     QWidget         *content;
