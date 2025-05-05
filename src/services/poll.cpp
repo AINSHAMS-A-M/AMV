@@ -406,26 +406,12 @@ PollOption getOptionById(size_t id)
 PollVoters retrieve_poll_voters(size_t pollId)
 {
     PollVoters pollvoters;
-    MeshVector <size_t> options;
     for (auto &vote : userVotes)
     {
         if (vote.poll_id == pollId)
         {
-            options.push_back(vote.poll_option_id);
+            pollvoters[getOptionById(vote.poll_option_id).name].push_back(get_user_by_id(vote.user_id));
         }
-    }
-
-    for (auto &option : options)
-    {
-        MeshVector <User> option_voters;
-        for (auto &vote : userVotes)
-        {
-            if (vote.poll_option_id == option)
-            {
-                option_voters.push_back(get_user_by_id(vote.user_id));
-            }
-        }
-        pollvoters.push_back({getOptionById(option).name , option_voters});
     }
 
     return pollvoters;

@@ -483,6 +483,14 @@ ProfileEditPage::ProfileEditPage(QWidget *parent)
 
     connect(saveProfileBtn, &QPushButton::clicked, this, &ProfileEditPage::onSaveProfileClicked);
     connect(changePasswordBtn, &QPushButton::clicked, this, &ProfileEditPage::onUpdatePasswordClicked);
+    connect(oldPasswordField, &QLineEdit::returnPressed, [this]() {
+        newPasswordField->setFocus();
+    });
+
+    connect(newPasswordField, &QLineEdit::returnPressed, [this]() {
+        confirmPasswordField->setFocus();
+    });
+    connect(confirmPasswordField, &QLineEdit::returnPressed, this, &ProfileEditPage::onUpdatePasswordClicked);
 
     contentLayout->addStretch();
 

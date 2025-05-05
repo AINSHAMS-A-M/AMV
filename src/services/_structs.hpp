@@ -89,4 +89,4 @@ struct voteData
     std::string pollCreator;
 };
 
-typedef MeshVector <std::pair<std::string,MeshVector<User>>> PollVoters;
+typedef std::unordered_map <std::string,MeshVector<User>> PollVoters;

@@ -6,7 +6,8 @@
 #include <QLabel>
 #include <QTableWidget>
 #include "_structs.hpp"
-#include "qtextedit.h"
+#include <QTextEdit>
+#include <QTreeWidget>
 #include "sidebar.h"
 
 class MyPollsPage : public QWidget
@@ -61,14 +62,17 @@ private:
     QVBoxLayout *customizeOptionsLayout;
     QLabel *customizeOptionsTitleLabel;
     QTableWidget *editableOptionsTable;
+    QWidget *votersPage;
     QPushButton *addOptionButton;
     QPushButton *saveOptionsButton;
     QPushButton *cancelCustomizeOptionsButton;
+    QTreeWidget* votersTree;
     const QString bgColor       = "#F5F6F8";
     const QString dangerColor   = "#DC3545";
     const QString dangerHoverBg = "#F8D7DA";
     const QString dangerHoverFg = "#721C24";
     void setupPollListView();
+    void setupVotersView();
     void displayPollDetails(const RetrievePollResultAdmin& poll);
     void setupEditDescriptionView();
     void setupCustomizeOptionsView();
