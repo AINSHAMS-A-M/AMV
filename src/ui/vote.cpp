@@ -69,11 +69,10 @@ VotePage::VotePage(QWidget *parent)
     // Create a form for voter ID
     QWidget *formWidget = new QWidget(voterIdPage);
     formWidget->setStyleSheet(QString(
-                                  "QLabel { font-size: 16px; color: #333; margin-bottom: 5px; }" // Added margin-bottom to label
-                                  "QLineEdit { font-size: 16px; padding: 12px; border: 1px solid %1; border-radius: 8px; min-width: 400px; }" // Increased padding and min-width
+                                  "QLabel { font-size: 16px; color: #333; margin-bottom: 5px; }"
+                                  "QLineEdit { font-size: 16px; color: #4A5568; padding: 12px; border: 1px solid %1; border-radius: 8px; min-width: 400px; }" // Increased padding and min-width
                                   "QLineEdit:focus { border: 2px solid #007BFF; }"
                                   ).arg(borderColor));
-
     auto *formLayout = new QVBoxLayout(formWidget);
     formLayout->setSpacing(10);
     formLayout->setAlignment(Qt::AlignCenter);
@@ -296,7 +295,7 @@ void VotePage::loadPollOptions()
     for (const auto &option : pollData.options) {
         QRadioButton *radioBtn = new QRadioButton(QString::fromStdString(option.name), optionsContainer);
         radioBtn->setStyleSheet(
-            "QRadioButton { font-size: 16px; padding: 12px 15px; background-color: white; border: 1px solid #DDD; spacing : 0px; padding-left: 0px;  "
+            "QRadioButton { font-size: 16px; padding: 12px 15px; background-color: white; border: 1px solid #DDD; spacing : 0px;"
             "border-radius: 8px; margin: 5px; }"
             "QRadioButton:hover { background-color: #F0F0F0; border-color: #CCC; }"
             "QRadioButton::indicator { width: 0px; height: 0px; visibility: hidden; display: none; border: none;}"

@@ -77,13 +77,17 @@ RegisterPage::RegisterPage(QWidget *parent)
         "padding: 10px;"
         "font-size: 16px;"
         "border: 1px solid #DADCE0;"
+        "color: #4A5568;"
         "border-radius: 6px; }"
         "QLineEdit:focus {"
         "    border: 2px solid #3498DB;"
+        "}"
+        "QLineEdit::placeholder, QTextEdit::placeholder {"
+        "  color: #A0AEC0;"
+        "  font-style: italic;"
         "}");
     rightLayout->addWidget(realNameEdit);
 
-    // Real name field
     phoneNumberEdit = new QLineEdit(rightPanel);
     phoneNumberEdit->setPlaceholderText("Phone Number");
     phoneNumberEdit->setStyleSheet(
@@ -91,9 +95,14 @@ RegisterPage::RegisterPage(QWidget *parent)
         "padding: 10px;"
         "font-size: 16px;"
         "border: 1px solid #DADCE0;"
+        "color: #4A5568;"
         "border-radius: 6px; }"
         "QLineEdit:focus {"
         "    border: 2px solid #3498DB;"
+        "}"
+        "QLineEdit::placeholder, QTextEdit::placeholder {"
+        "  color: #A0AEC0;"
+        "  font-style: italic;"
         "}");
     rightLayout->addWidget(phoneNumberEdit);
 
@@ -105,9 +114,14 @@ RegisterPage::RegisterPage(QWidget *parent)
         "padding: 10px;"
         "font-size: 16px;"
         "border: 1px solid #DADCE0;"
+        "color: #4A5568;"
         "border-radius: 6px; }"
         "QLineEdit:focus {"
         "    border: 2px solid #3498DB;"
+        "}"
+        "QLineEdit::placeholder, QTextEdit::placeholder {"
+        "  color: #A0AEC0;"
+        "  font-style: italic;"
         "}");
     rightLayout->addWidget(emailEdit);
 
@@ -119,9 +133,14 @@ RegisterPage::RegisterPage(QWidget *parent)
         "padding: 10px;"
         "font-size: 16px;"
         "border: 1px solid #DADCE0;"
+        "color: #4A5568;"
         "border-radius: 6px; }"
         "QLineEdit:focus {"
         "    border: 2px solid #3498DB;"
+        "}"
+        "QLineEdit::placeholder, QTextEdit::placeholder {"
+        "  color: #A0AEC0;"
+        "  font-style: italic;"
         "}");
     rightLayout->addWidget(addressEdit);
 
@@ -133,9 +152,14 @@ RegisterPage::RegisterPage(QWidget *parent)
         "padding: 10px;"
         "font-size: 16px;"
         "border: 1px solid #DADCE0;"
+        "color: #4A5568;"
         "border-radius: 6px; }"
         "QLineEdit:focus {"
         "    border: 2px solid #3498DB;"
+        "}"
+        "QLineEdit::placeholder, QTextEdit::placeholder {"
+        "  color: #A0AEC0;"
+        "  font-style: italic;"
         "}");
     rightLayout->addWidget(usernameEdit);
 
@@ -148,9 +172,14 @@ RegisterPage::RegisterPage(QWidget *parent)
         "padding: 10px;"
         "font-size: 16px;"
         "border: 1px solid #DADCE0;"
+        "color: #4A5568;"
         "border-radius: 6px; }"
         "QLineEdit:focus {"
         "    border: 2px solid #3498DB;"
+        "}"
+        "QLineEdit::placeholder, QTextEdit::placeholder {"
+        "  color: #A0AEC0;"
+        "  font-style: italic;"
         "}");
     rightLayout->addWidget(passwordEdit);
 
@@ -163,9 +192,14 @@ RegisterPage::RegisterPage(QWidget *parent)
         "padding: 10px;"
         "font-size: 16px;"
         "border: 1px solid #DADCE0;"
+        "color: #4A5568;"
         "border-radius: 6px; }"
         "QLineEdit:focus {"
         "    border: 2px solid #3498DB;"
+        "}"
+        "QLineEdit::placeholder, QTextEdit::placeholder {"
+        "  color: #A0AEC0;"
+        "  font-style: italic;"
         "}");
     rightLayout->addWidget(confirmEdit);
 
@@ -266,7 +300,7 @@ void RegisterPage::onRegisterClicked()
     {
         std::regex email_pattern(R"(^\w+(?:[-+._%]\w+)*@\w+(?:\.[a-zA-Z]+)+$)");
         std::regex phone_pattern(R"(^0(10|11|12|15)[0-9]{8}$)");
-        std::regex password_pattern(R"(^(?=.*[!@#$%^&])(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[a-zA-Z0-9!@#$%^&]{8,}$)");
+        std::regex password_pattern(R"(^(?=.*[!@#$%^&/])(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[a-zA-Z0-9!@#$%^&/]{8,}$)");
         // old password validation logic
         // bool capital = 0,small = 0, number = 0, special = 0;
         // for (auto ch : password)

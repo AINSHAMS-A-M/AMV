@@ -73,9 +73,14 @@ LoginPage::LoginPage(QWidget *parent)
         "padding: 10px;"
         "font-size: 16px;"
         "border: 1px solid #DADCE0;"
+        "color: #4A5568;"
         "border-radius: 6px; }"
         "QLineEdit:focus {"
         "    border: 2px solid #3498DB;"
+        "}"
+        "QLineEdit::placeholder, QTextEdit::placeholder {"
+        "  color: #A0AEC0;"
+        "  font-style: italic;"
         "}");
     rightLayout->addWidget(userEdit);
 
@@ -88,9 +93,14 @@ LoginPage::LoginPage(QWidget *parent)
         "padding: 10px;"
         "font-size: 16px;"
         "border: 1px solid #DADCE0;"
+        "color: #4A5568;"
         "border-radius: 6px; }"
         "QLineEdit:focus {"
         "    border: 2px solid #3498DB;"
+        "}"
+        "QLineEdit::placeholder, QTextEdit::placeholder {"
+        "  color: #A0AEC0;"
+        "  font-style: italic;"
         "}");
     rightLayout->addWidget(passEdit);
 
