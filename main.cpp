@@ -5,7 +5,7 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication ab(argc, argv);
+    QApplication app(argc, argv);
     load_data();
     MainWindow w;
     QApplication::setStyle(QStyleFactory::create("Fusion"));
@@ -15,7 +15,9 @@ int main(int argc, char *argv[])
     QPalette palette;
     palette.setColor(QPalette::Window, Qt::white);
     palette.setColor(QPalette::WindowText, Qt::black);
+    palette.setColor(QPalette::Button, Qt::white);
+    palette.setColor(QPalette::ButtonText, Qt::black);
     qApp->setPalette(palette);
     w.show();
-    return ab.exec();
+    return app.exec();
 }

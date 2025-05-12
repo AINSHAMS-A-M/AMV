@@ -3,6 +3,6 @@
 
 #include <QPixmap>
 
-auto createRoundedLogo(const QPixmap &pixmap, int size) -> QPixmap;
+auto createRoundedLogo(const QPixmap& pixmap, int size) -> QPixmap;
 
 #endif

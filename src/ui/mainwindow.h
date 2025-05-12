@@ -1,9 +1,9 @@
 #pragma once
 
+#include "nav.h"
+#include <QCloseEvent>
 #include <QMainWindow>
 #include <QStackedWidget>
-#include <QCloseEvent>
-#include "nav.h"
 
 
 class LoginPage;
@@ -17,40 +17,40 @@ class HelpPage;
 
 class MainWindow : public QMainWindow
 {
-    Q_OBJECT
+	Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = nullptr);
-    ~MainWindow() override = default;
-    void init_app();
-    void handleNavigation(NavigationManager::Page page);
-    void changeLabelText();
+	explicit MainWindow(QWidget* parent = nullptr);
+	~MainWindow() override = default;
+	void init_app();
+	void handleNavigation(NavigationManager::Page page);
+	void changeLabelText();
 
 protected:
-    void closeEvent(QCloseEvent *event) override;
+	void closeEvent(QCloseEvent* event) override;
 
 private slots:
-    void setupUI();
-    void onLoginClicked();
-    void onLogoutClicked();
-    void onRegisterLink();
-    void onLoginLink();
-    void onHelpClicked();
-    void onVoteClicked();
-    void onMyVotesClicked();
-    void onCreatePollClicked();
-    void onMyPollsClicked();
-    void onProfileClicked();
+	void setupUI();
+	void onLoginClicked();
+	void onLogoutClicked();
+	void onRegisterLink();
+	void onLoginLink();
+	void onHelpClicked();
+	void onVoteClicked();
+	void onMyVotesClicked();
+	void onCreatePollClicked();
+	void onMyPollsClicked();
+	void onProfileClicked();
 
 private:
-    QStackedWidget *stackedWidget;
-    LoginPage       *loginPage = nullptr;
-    RegisterPage    *registerPage= nullptr;
-    VotePage        *votePage= nullptr;
-    MyVotesPage     *myVotesPage= nullptr;
-    MyPollsPage     *myPollsPage= nullptr;
-    ProfileEditPage *profileEditPage= nullptr;
-    CreatePollPage  *createPollPage= nullptr;
-    HelpPage        *helpPage= nullptr;
+	QStackedWidget* stackedWidget;
+	LoginPage* loginPage = nullptr;
+	RegisterPage* registerPage = nullptr;
+	VotePage* votePage = nullptr;
+	MyVotesPage* myVotesPage = nullptr;
+	MyPollsPage* myPollsPage = nullptr;
+	ProfileEditPage* profileEditPage = nullptr;
+	CreatePollPage* createPollPage = nullptr;
+	HelpPage* helpPage = nullptr;
 };
 

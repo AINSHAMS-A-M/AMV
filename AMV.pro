@@ -4,9 +4,6 @@ TARGET = "AMV Vote"
 QT       += widgets
 CONFIG   += c++23
 
-# Warn on all
-QMAKE_CXXFLAGS += -Wall -Wextra
-
 # Include paths
 INCLUDEPATH += src \
                src/db \
@@ -26,14 +23,13 @@ HEADERS += $$files(src/db/*.hpp) \
            $$files(src/ui/*.h) \
            $$files(src/*.hpp) \
 
-# Deployment (optional)
+# Deployment (if linux)
 unix:!android {
     target.path = /opt/$${TARGET}/bin
     INSTALLS += target
 }
 
 RESOURCES += \
-    imgs/app_icon.qrc \
     imgs/resources.qrc
 
 RC_FILE = app_icon.rc

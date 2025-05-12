@@ -3,7 +3,7 @@
 #include "_hash.hpp"
 #include "_structs.hpp"
 
-User get_id_by_user(const std::string &username);
+User get_id_by_user(const std::string& username);
 
 std::string create_user(CreateUser createUser);
 
@@ -23,24 +23,20 @@ void delete_user_vote(size_t user_id, size_t poll_id);
 
 MeshVector<PollRead> retrieve_polls(size_t user_id);
 
-RetrievePollResultAdmin retrieve_poll_results(size_t user_id, size_t poll_id);
-
-MeshVector<UserVote> retrieve_poll_for_user(size_t user_id);
+RetrievePollResultAdmin retrieve_poll_results(size_t poll_id);
 
 RetrievePollDTO retrieve_public_poll(size_t poll_id);
 
-size_t get_new_id(MeshVector<UserVote>);
-
 std::string log_in(std::string username, std::string password);
 
-std::string getPollId(std::string &voterId);
+std::string getPollId(std::string& voterId);
 
-User get_user_by_id(const size_t &id);
+User get_user_by_id(const size_t& id);
 
 MeshVector<size_t> show_created_polls(size_t user_id);
 
 bool endPoll(size_t id);
 
-void change_poll_options(size_t pollId,MeshVector<std::string> &newOptions);
+void change_poll_options(size_t pollId, MeshVector<std::string>& newOptions);
 
 PollVoters retrieve_poll_voters(size_t pollId);

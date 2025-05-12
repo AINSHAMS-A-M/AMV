@@ -1,94 +1,99 @@
-#include "mypolls.h"
-#include <QHBoxLayout>
-#include <QVBoxLayout>
-#include <QLabel>
-#include <QTextEdit>
-#include <QPixmap>
-#include <QPainter>
-#include <QPainterPath>
-#include <QPushButton>
-#include <QSpacerItem>
-#include <QHeaderView>
-#include <QStyledItemDelegate>
-#include <QDatetime>
-#include <QLineEdit>
-#include <QTreeWidgetItem>
-#include <QMessageBox>
-#include <QInputDialog>
 #include "db.hpp"
 #include "mainwindow.h"
+#include "mypolls.h"
 #include "services.hpp"
 #include "sidebar.h"
+#include <QDatetime>
+#include <QHBoxLayout>
+#include <QHeaderView>
+#include <QInputDialog>
+#include <QLabel>
+#include <QLineEdit>
+#include <QMessageBox>
+#include <QPainter>
+#include <QPainterPath>
+#include <QPixmap>
+#include <QPushButton>
+#include <QSpacerItem>
+#include <QStyledItemDelegate>
+#include <QTextEdit>
+#include <QTreeWidgetItem>
+#include <QVBoxLayout>
 
-MyPollsPage::MyPollsPage(QWidget *parent)
-    : QWidget(parent),
-    pollListView(nullptr),
-    contentStack(nullptr),
-    sidebar(nullptr),
-    content(nullptr),
-    pollDetailsView(nullptr),
-    pollListScrollArea(nullptr),
-    pollListContainerWidget(nullptr),
-    pollListLayout(nullptr),
-    pollDetailsLayout(nullptr),
-    backButton(nullptr),
-    pollDetailsTitleLabel(nullptr),
-    optionsTable(nullptr),
-    editDescriptionView(nullptr),
-    customizeOptionsView(nullptr),
-    editDescriptionLayout(nullptr),
-    editDescriptionTitleLabel(nullptr),
-    descriptionTextEdit(nullptr),
-    saveDescriptionButton(nullptr),
-    cancelEditDescriptionButton(nullptr),
-    customizeOptionsLayout(nullptr),
-    customizeOptionsTitleLabel(nullptr),
-    editableOptionsTable(nullptr),
-    votersPage(nullptr),
-    addOptionButton(nullptr),
-    saveOptionsButton(nullptr),
-    cancelCustomizeOptionsButton(nullptr),
-    votersTree(nullptr)
+MyPollsPage::MyPollsPage(QWidget* parent)
+    : QWidget(parent)
+    , pollListView(nullptr)
+    , contentStack(nullptr)
+    , sidebar(nullptr)
+    , content(nullptr)
+    , pollDetailsView(nullptr)
+    , pollListScrollArea(nullptr)
+    , pollListContainerWidget(nullptr)
+    , pollListLayout(nullptr)
+    , pollDetailsLayout(nullptr)
+    , backButton(nullptr)
+    , pollDetailsTitleLabel(nullptr)
+    , optionsTable(nullptr)
+    , editDescriptionView(nullptr)
+    , customizeOptionsView(nullptr)
+    , editDescriptionLayout(nullptr)
+    , editDescriptionTitleLabel(nullptr)
+    , descriptionTextEdit(nullptr)
+    , saveDescriptionButton(nullptr)
+    , cancelEditDescriptionButton(nullptr)
+    , customizeOptionsLayout(nullptr)
+    , customizeOptionsTitleLabel(nullptr)
+    , editableOptionsTable(nullptr)
+    , votersPage(nullptr)
+    , addOptionButton(nullptr)
+    , saveOptionsButton(nullptr)
+    , cancelCustomizeOptionsButton(nullptr)
+    , votersTree(nullptr)
 {
-    auto *rootLayout = new QHBoxLayout(this);
+    auto* rootLayout = new QHBoxLayout(this);
     rootLayout->setContentsMargins(0, 0, 0, 0);
     rootLayout->setSpacing(0);
 
-    sidebar = new SidebarWidget(this,"My Polls");
-
+    sidebar = new SidebarWidget(this, "My Polls");
 
     content = new QWidget(this);
     content->setStyleSheet(QString("background-color: %1;").arg(bgColor));
-    auto *contentLayout = new QVBoxLayout(content);
+    auto* contentLayout = new QVBoxLayout(content);
     contentLayout->setContentsMargins(20, 20, 20, 20);
     contentLayout->setSpacing(20);
+
     contentStack = new QStackedWidget(content);
     contentLayout->addWidget(contentStack);
+
     setupPollListView();
     setupPollDetailsView();
     setupEditDescriptionView();
     setupCustomizeOptionsView();
     setupVotersView();
 
-    // Add the content widget to the root layout
+    // Add content widget to layout
     rootLayout->addWidget(sidebar);
     rootLayout->addWidget(content);
     rootLayout->setStretch(0, 0);
     rootLayout->setStretch(1, 1);
 
-    // Populate the poll list when the page is created
+    // Populate poll list on startup
     populatePollList();
 }
 
-void MyPollsPage::setupPollListView() {
+void MyPollsPage::setupPollListView()
+{
     pollListView = new QWidget(contentStack);
     pollListView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    auto *pageLayout = new QVBoxLayout(pollListView);
+
+    auto* pageLayout = new QVBoxLayout(pollListView);
     pageLayout->setContentsMargins(0, 0, 0, 0);
     pageLayout->setSpacing(15);
-    QLabel *titleLabel = new QLabel("My Created Polls", pollListView);
+
+    QLabel* titleLabel = new QLabel("My Created Polls", pollListView);
     titleLabel->setStyleSheet("font-size: 24px; font-weight: bold; color: #333333; margin-bottom: 10px;");
     pageLayout->addWidget(titleLabel);
+
     pollListScrollArea = new QScrollArea(pollListView);
     pollListScrollArea->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     pollListScrollArea->setWidgetResizable(true);
@@ -121,24 +126,28 @@ void MyPollsPage::setupPollListView() {
             background: transparent;
         }
     )");
+
     pollListContainerWidget = new QWidget();
     pollListLayout = new QVBoxLayout(pollListContainerWidget);
     pollListLayout->setContentsMargins(0, 0, 0, 0);
     pollListLayout->setSpacing(10);
     pollListLayout->setAlignment(Qt::AlignTop);
+
     pollListScrollArea->setWidget(pollListContainerWidget);
     pageLayout->addWidget(pollListScrollArea);
+
     contentStack->addWidget(pollListView);
 }
 
-void MyPollsPage::setupPollDetailsView() {
+void MyPollsPage::setupPollDetailsView()
+{
     pollDetailsView = new QWidget(contentStack);
     pollDetailsLayout = new QVBoxLayout(pollDetailsView);
     pollDetailsLayout->setContentsMargins(0, 0, 0, 0);
     pollDetailsLayout->setSpacing(15);
 
     // Header layout for back button and title
-    auto *headerLayout = new QHBoxLayout();
+    auto* headerLayout = new QHBoxLayout();
     headerLayout->setContentsMargins(0, 0, 0, 0);
     headerLayout->setSpacing(15);
 
@@ -147,7 +156,7 @@ void MyPollsPage::setupPollDetailsView() {
     backButton->setStyleSheet(
         "QPushButton { background: none; border: none; color: #007BFF; font-size: 16px; font-weight: bold; padding: 5px 0; text-align: left; }"
         "QPushButton:hover { color: #0056b3; }"
-        );
+    );
     connect(backButton, &QPushButton::clicked, this, &MyPollsPage::onBackToListClicked);
     headerLayout->addWidget(backButton, 0, Qt::AlignLeft | Qt::AlignTop);
 
@@ -161,7 +170,7 @@ void MyPollsPage::setupPollDetailsView() {
     // Table for options and votes
     optionsTable = new QTableWidget(pollDetailsView);
     optionsTable->setColumnCount(2);
-    optionsTable->setHorizontalHeaderLabels({"Option", "Votes"});
+    optionsTable->setHorizontalHeaderLabels({ "Option", "Votes" });
     optionsTable->horizontalHeader()->setStyleSheet(QString(
         "QHeaderView::section {"
         "background-color: #F0F0F0;"
@@ -171,7 +180,7 @@ void MyPollsPage::setupPollDetailsView() {
         "font-size: 16px;"
         "font-weight: bold;"
         "}"
-        ));
+    ));
     optionsTable->verticalHeader()->setVisible(false);
     optionsTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
     optionsTable->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -218,121 +227,120 @@ void MyPollsPage::setupPollDetailsView() {
     contentStack->addWidget(pollDetailsView);
 }
 
-void MyPollsPage::populatePollList() {
-    // Clear existing cards from the layout
-    QLayoutItem *item;
-    while ((item = pollListLayout->takeAt(0)) != nullptr) {
-        if (item->widget()) {
+void MyPollsPage::populatePollList()
+{
+    // Clear existing cards from layout
+    QLayoutItem* item;
+    while ((item = pollListLayout->takeAt(0)) != nullptr)
+    {
+        if (item->widget())
+        {
             item->widget()->deleteLater();
         }
         delete item;
     }
+
     pollListLayout->addStretch();
+
     auto myPolls = show_created_polls(activeUser.id);
-    if (!myPolls.size()) {
-        QLabel *noPollsLabel = new QLabel("You haven't created any polls yet.", pollListContainerWidget);
+
+    if (!myPolls.size())
+    {
+        QLabel* noPollsLabel = new QLabel("You haven't created any polls yet.", pollListContainerWidget);
         noPollsLabel->setStyleSheet("font-size: 18px; color: #666666; margin-top: 50px;");
         noPollsLabel->setAlignment(Qt::AlignCenter);
         pollListLayout->addWidget(noPollsLabel);
-    } else {
-        for (const auto& id : myPolls) {
-            auto poll = retrieve_poll_results(activeUser.id, id);
+    }
+    else
+    {
+        for (const auto& id : myPolls)
+        {
+            auto poll = retrieve_poll_results(id);
+            bool isDone = poll.pollInfo.is_finished;
 
             // Create a widget for the poll card
-            QWidget *cardWidget = new QWidget(pollListContainerWidget);
+            QWidget* cardWidget = new QWidget(pollListContainerWidget);
             cardWidget->setObjectName("pollCard");
-            // Border is green for ongoing, light gray for finished
-            bool isDone = poll.pollInfo.is_finished;
             cardWidget->setStyleSheet(QString(
-                                          "QWidget {"
-                                          "  background-color: #FFFFFF;"
-                                          "  border-radius: 8px;}"
-                                          "#pollCard {"
-                                          "  background-color: #FFFFFF;"
-                                          "  border-radius: 8px;"
-                                          "  border: %1;"
-                                          "}"
-                                          ).arg(isDone
-                                                   ? "1px solid #DDDDDD"
-                                                   : "2px solid #27AE60"
-                                               ));
+                "QWidget {"
+                "  background-color: #FFFFFF;"
+                "  border-radius: 8px;}"
+                "#pollCard {"
+                "  background-color: #FFFFFF;"
+                "  border-radius: 8px;"
+                "  border: %1;"
+                "}"
+            ).arg(isDone ? "1px solid #DDDDDD" : "2px solid #27AE60"));
 
-            // Set up vertical layout for the entire card
-            QVBoxLayout *cardOuterLayout = new QVBoxLayout(cardWidget);
+            // Card outer layout
+            QVBoxLayout* cardOuterLayout = new QVBoxLayout(cardWidget);
             cardOuterLayout->setContentsMargins(15, 15, 15, 15);
             cardOuterLayout->setSpacing(10);
 
-            // Title and description layout
-            QVBoxLayout *contentLayout = new QVBoxLayout();
+            // Content layout
+            QVBoxLayout* contentLayout = new QVBoxLayout();
             contentLayout->setSpacing(5);
 
             // Poll title
-            QLabel *pollTitleLabel = new QLabel(QString::fromStdString(poll.pollInfo.name), cardWidget);
+            QLabel* pollTitleLabel = new QLabel(QString::fromStdString(poll.pollInfo.name), cardWidget);
             pollTitleLabel->setStyleSheet("font-size: 18px; font-weight: bold; color: #333333;");
             pollTitleLabel->setWordWrap(true);
             contentLayout->addWidget(pollTitleLabel);
 
-            // Small text-only badge
-            QLabel *stateBadge = new QLabel(
-                isDone ? "Finished" : "Ongoing",
-                cardWidget
-                );
+            // State badge
+            QLabel* stateBadge = new QLabel(isDone ? "Finished" : "Ongoing", cardWidget);
             stateBadge->setStyleSheet(QString(
-                                          "font-size: 12px;"
-                                          "font-weight: bold;"
-                                          "color: %1;"
-                                          ).arg(isDone
-                                                   ? "#7F8C8D"
-                                                   : "#27AE60"
-                                               ));
+                "font-size: 12px;"
+                "font-weight: bold;"
+                "color: %1;"
+            ).arg(isDone ? "#7F8C8D" : "#27AE60"));
             contentLayout->addWidget(stateBadge);
 
-            // Poll description
-            QLabel *pollDescriptionLabel = new QLabel(QString::fromStdString(poll.pollInfo.desc), cardWidget);
+            // Description label
+            QLabel* pollDescriptionLabel = new QLabel(QString::fromStdString(poll.pollInfo.desc), cardWidget);
             pollDescriptionLabel->setStyleSheet("font-size: 14px; color: #666666;");
             pollDescriptionLabel->setWordWrap(true);
 
-            // Only add height if there's content to display
-            if (!poll.pollInfo.desc.empty()) {
+            if (!poll.pollInfo.desc.empty())
+            {
                 pollDescriptionLabel->setMinimumHeight(20);
-                // For very short descriptions, keep the card compact
-                if (poll.pollInfo.desc.length() < 30) {
+                if (poll.pollInfo.desc.length() < 30)
+                {
                     pollDescriptionLabel->setMaximumHeight(40);
                 }
-            } else {
+            }
+            else
+            {
                 pollDescriptionLabel->setMaximumHeight(0);
             }
 
             contentLayout->addWidget(pollDescriptionLabel);
 
             // Buttons layout
-            QHBoxLayout *buttonsLayout = new QHBoxLayout();
+            QHBoxLayout* buttonsLayout = new QHBoxLayout();
             buttonsLayout->setSpacing(10);
-
-            // Spacer to push buttons to the right
             buttonsLayout->addStretch(1);
 
-            QPushButton *endElectionButton = new QPushButton("End Election", cardWidget);
+            // End Election Button
+            QPushButton* endElectionButton = new QPushButton("End Election", cardWidget);
             endElectionButton->setStyleSheet(QString(
-                                                 "QPushButton { background-color: transparent; color: %1; padding: 8px 12px; border: 1px solid %1; border-radius: 8px; font-size: 13px; }"
-                                                 "QPushButton:hover { background-color: %2; color: %3; border-color: %1; }"
-                                                 "QPushButton:pressed { background-color: %1; color: white; }"
-                                                 ).arg(dangerColor, dangerHoverBg, dangerHoverFg));
+                "QPushButton { background-color: transparent; color: %1; padding: 8px 12px; border: 1px solid %1; border-radius: 8px; font-size: 13px; }"
+                "QPushButton:hover { background-color: %2; color: %3; border-color: %1; }"
+                "QPushButton:pressed { background-color: %1; color: white; }"
+            ).arg(dangerColor, dangerHoverBg, dangerHoverFg));
             endElectionButton->setCursor(Qt::PointingHandCursor);
             endElectionButton->setFixedWidth(120);
 
-            // add it to the same buttonsLayout
-            buttonsLayout->addWidget(endElectionButton);
-
-            // connect its click to a new slot
-            connect(endElectionButton, &QPushButton::clicked, this, [ this, id]() {
+            connect(endElectionButton, &QPushButton::clicked, this, [this, id]()
+            {
                 auto reply = QMessageBox::question(
                     this,
                     "Confirm End Election",
                     QString("Are you sure you want to end this poll?"),
                     QMessageBox::Yes | QMessageBox::No,
                     QMessageBox::No
-                    );
+                );
+
                 if (reply == QMessageBox::Yes)
                 {
                     if (endPoll(id))
@@ -342,7 +350,7 @@ void MyPollsPage::populatePollList() {
                             this,
                             "Election Ended",
                             QString("Poll has been successfully ended!")
-                            );
+                        );
                     }
                     else
                     {
@@ -350,76 +358,84 @@ void MyPollsPage::populatePollList() {
                             this,
                             "Warning",
                             QString("Poll is already ended!")
-                            );
+                        );
                     }
-
                 }
-
-
             });
 
-            // Delete button
-            QPushButton *deleteButton = new QPushButton("Delete", cardWidget);
+            buttonsLayout->addWidget(endElectionButton);
+
+            // Delete Button
+            QPushButton* deleteButton = new QPushButton("Delete", cardWidget);
             deleteButton->setStyleSheet(QString(
-                                            "QPushButton { background-color: transparent; color: %1; padding: 8px 12px; border: 1px solid %1; border-radius: 8px; font-size: 13px; }"
-                                            "QPushButton:hover { background-color: %2; color: %3; border-color: %1; }"
-                                            "QPushButton:pressed { background-color: %1; color: white; }"
-                                            ).arg(dangerColor, dangerHoverBg, dangerHoverFg));
+                "QPushButton { background-color: transparent; color: %1; padding: 8px 12px; border: 1px solid %1; border-radius: 8px; font-size: 13px; }"
+                "QPushButton:hover { background-color: %2; color: %3; border-color: %1; }"
+                "QPushButton:pressed { background-color: %1; color: white; }"
+            ).arg(dangerColor, dangerHoverBg, dangerHoverFg));
             deleteButton->setCursor(Qt::PointingHandCursor);
             deleteButton->setFixedWidth(100);
+
             buttonsLayout->addWidget(deleteButton);
 
             // Edit Description Button
-            QPushButton *editDescriptionButton = new QPushButton("Edit Description", cardWidget);
+            QPushButton* editDescriptionButton = new QPushButton("Edit Description", cardWidget);
             editDescriptionButton->setStyleSheet(QString(
                 "QPushButton { background-color: #3498DB; color: white; padding: 9px 13px; border: none; border-radius: 8px; font-weight: bold; font-size: 13px; }"
                 "QPushButton:hover { background-color: #2980B9; }"
                 "QPushButton:pressed { background-color: #0056b3; }"
-                ));
+            ));
             editDescriptionButton->setCursor(Qt::PointingHandCursor);
             buttonsLayout->addWidget(editDescriptionButton);
-            connect(editDescriptionButton, &QPushButton::clicked, this, [this, id]() { onEditDescriptionClicked(id); });
 
-            // Customize options
-            QPushButton *customizeOptionsButton = new QPushButton("Customize Options", cardWidget);
+            connect(editDescriptionButton, &QPushButton::clicked, this, [this, id]() {
+                onEditDescriptionClicked(id);
+            });
+
+            // Customize Options Button
+            QPushButton* customizeOptionsButton = new QPushButton("Customize Options", cardWidget);
             customizeOptionsButton->setStyleSheet(QString(
                 "QPushButton { background-color: #3498DB; color: white; padding: 9px 13px; border: none; border-radius: 8px; font-weight: bold; font-size: 13px; }"
                 "QPushButton:hover { background-color: #2980B9; }"
                 "QPushButton:pressed { background-color: #0056b3; }"
-                ));
+            ));
             customizeOptionsButton->setCursor(Qt::PointingHandCursor);
             buttonsLayout->addWidget(customizeOptionsButton);
-            connect(customizeOptionsButton, &QPushButton::clicked, this, [this, id]() { onCustomizeOptionsClicked(id); });
 
+            connect(customizeOptionsButton, &QPushButton::clicked, this, [this, id]() {
+                onCustomizeOptionsClicked(id);
+            });
 
-            // Add "See Voters" button
-            QPushButton *seeVotersButton = new QPushButton("See Voters", cardWidget);
+            // See Voters Button
+            QPushButton* seeVotersButton = new QPushButton("See Voters", cardWidget);
             seeVotersButton->setStyleSheet(QString(
                 "QPushButton { background-color: #3498DB; color: white; padding: 9px 13px; border: none; border-radius: 8px; font-weight: bold; font-size: 13px; }"
                 "QPushButton:hover { background-color: #2980B9; }"
                 "QPushButton:pressed { background-color: #0056b3; }"
-                ));
+            ));
             seeVotersButton->setCursor(Qt::PointingHandCursor);
             buttonsLayout->addWidget(seeVotersButton);
-            connect(seeVotersButton, &QPushButton::clicked, this, [this, id]() { onSeeVotersClicked(id); });
 
+            connect(seeVotersButton, &QPushButton::clicked, this, [this, id]() {
+                onSeeVotersClicked(id);
+            });
 
-            // View button
-            QPushButton *viewButton = new QPushButton("View", cardWidget);
+            // View Button
+            QPushButton* viewButton = new QPushButton("View", cardWidget);
             viewButton->setStyleSheet(QString(
                 "QPushButton { background-color: #3498DB; color: white; padding: 9px 13px; border: none; border-radius: 8px; font-weight: bold; font-size: 13px; }"
                 "QPushButton:hover { background-color: #2980B9; }"
                 "QPushButton:pressed { background-color: #0056b3; }"
-                ));
+            ));
             viewButton->setCursor(Qt::PointingHandCursor);
             viewButton->setFixedWidth(100);
+
             buttonsLayout->addWidget(viewButton);
 
-            // Add the layouts to the main card layout
+            // Add layouts to main card layout
             cardOuterLayout->addLayout(contentLayout, 1);
             cardOuterLayout->addLayout(buttonsLayout);
 
-            // Add the card to the list
+            // Add card to layout
             pollListLayout->addWidget(cardWidget);
 
             // Connect button signals
@@ -430,35 +446,47 @@ void MyPollsPage::populatePollList() {
             connect(deleteButton, &QPushButton::clicked, this, [this, id]() {
                 onDeletePollClicked(id);
             });
-
-
         }
     }
+
     pollListLayout->addStretch();
 }
 
-void MyPollsPage::onBackToListClicked() {
+void MyPollsPage::onBackToListClicked()
+{
+    // Switch back to poll list view
     contentStack->setCurrentWidget(pollListView);
+
+    // Clear table contents
     optionsTable->clearContents();
     optionsTable->setRowCount(0);
+
+    // Reset title label
     pollDetailsTitleLabel->setText("Poll Title");
 }
 
-void MyPollsPage::displayPollDetails(const RetrievePollResultAdmin& poll) {
+void MyPollsPage::displayPollDetails(const RetrievePollResultAdmin& poll)
+{
+    // Set poll title in detail view
     pollDetailsTitleLabel->setText(QString::fromStdString(poll.pollInfo.name));
 
-    // Populate the options table
+    // Populate results into the table
     optionsTable->clearContents();
     optionsTable->setRowCount(poll.results.size());
-    for (size_t i = 0; i < poll.results.size(); ++i) {
+
+    for (size_t i = 0; i < poll.results.size(); ++i)
+    {
         const auto& option = poll.results[i];
-        QTableWidgetItem *textItem = new QTableWidgetItem(QString::fromStdString(option.option_name));
-        QTableWidgetItem *votesItem = new QTableWidgetItem(QString::number(option.option_votes_count));
+
+        QTableWidgetItem* textItem = new QTableWidgetItem(QString::fromStdString(option.option_name));
+        QTableWidgetItem* votesItem = new QTableWidgetItem(QString::number(option.option_votes_count));
         votesItem->setTextAlignment(Qt::AlignCenter);
+
         optionsTable->setItem(i, 0, textItem);
         optionsTable->setItem(i, 1, votesItem);
     }
 
+    // Adjust layout and styling
     optionsTable->resizeColumnsToContents();
     optionsTable->resizeRowsToContents();
     optionsTable->setStyleSheet("color: #4A5568;");
@@ -466,13 +494,15 @@ void MyPollsPage::displayPollDetails(const RetrievePollResultAdmin& poll) {
     optionsTable->setColumnWidth(1, 120);
 }
 
-void MyPollsPage::onViewPollClicked(size_t pollId) {
-    // Fetch the details for this specific poll
-    auto pollDetails = retrieve_poll_results(activeUser.id, pollId);
-    if (pollDetails.pollInfo.id == pollId) // Basic check
+void MyPollsPage::onViewPollClicked(size_t pollId)
+{
+    // Fetch poll details
+    auto pollDetails = retrieve_poll_results(pollId);
+
+    if (pollDetails.pollInfo.id == pollId) // Basic validation
     {
-        displayPollDetails(pollDetails); // Populate the detailed view
-        contentStack->setCurrentWidget(pollDetailsView); // Switch to the detailed view page
+        displayPollDetails(pollDetails); // Show detailed results
+        contentStack->setCurrentWidget(pollDetailsView); // Switch to details view
     }
 }
 
@@ -487,29 +517,29 @@ void MyPollsPage::onDeletePollClicked(size_t pollId)
     confirmBox.setIcon(QMessageBox::Question);
 
     int result = confirmBox.exec();
+
     if (result == QMessageBox::Yes)
     {
-        // Call the delete poll service
-        delete_poll(pollId);
-        // Refresh the poll list
-        populatePollList();
+        delete_poll(pollId); // Perform deletion
+        populatePollList();   // Refresh list
     }
 }
 
-
-void MyPollsPage::setupEditDescriptionView() {
+void MyPollsPage::setupEditDescriptionView()
+{
     editDescriptionView = new QWidget(contentStack);
     editDescriptionLayout = new QVBoxLayout(editDescriptionView);
     editDescriptionLayout->setContentsMargins(0, 250, 0, 0);
     editDescriptionLayout->setSpacing(50);
     editDescriptionLayout->setAlignment(Qt::AlignCenter);
-    // editDescriptionLayout->addStretch(1);
 
+    // Title label
     editDescriptionTitleLabel = new QLabel("Edit Poll Description", editDescriptionView);
     editDescriptionTitleLabel->setAlignment(Qt::AlignCenter);
     editDescriptionTitleLabel->setStyleSheet("font-size: 24px; font-weight: bold; color: #333333;");
     editDescriptionLayout->addWidget(editDescriptionTitleLabel);
 
+    // Description input field
     descriptionTextEdit = new QLineEdit(editDescriptionView);
     descriptionTextEdit->setPlaceholderText("Enter poll description...");
     descriptionTextEdit->setStyleSheet(
@@ -522,13 +552,12 @@ void MyPollsPage::setupEditDescriptionView() {
         "QLineEdit:focus {"
         "    border: 2px solid #3498DB;"
         "}"
-    );
-
+        );
     descriptionTextEdit->setMinimumHeight(50);
-
     editDescriptionLayout->addWidget(descriptionTextEdit);
 
-    auto *buttonLayout = new QHBoxLayout();
+    // Action buttons
+    auto* buttonLayout = new QHBoxLayout();
 
     cancelEditDescriptionButton = new QPushButton("Cancel", editDescriptionView);
     cancelEditDescriptionButton->setStyleSheet(QString(
@@ -571,40 +600,39 @@ void MyPollsPage::setupEditDescriptionView() {
     descriptionTextEdit->setFocus();
 }
 
-
-
-
-void MyPollsPage::setupCustomizeOptionsView() {
+void MyPollsPage::setupCustomizeOptionsView()
+{
     customizeOptionsView = new QWidget(contentStack);
     customizeOptionsLayout = new QVBoxLayout(customizeOptionsView);
     customizeOptionsLayout->setContentsMargins(0, 100, 0, 50);
     customizeOptionsLayout->setSpacing(15);
 
+    // Title
     customizeOptionsTitleLabel = new QLabel("Customize Poll Options", customizeOptionsView);
     customizeOptionsTitleLabel->setStyleSheet("font-size: 24px; font-weight: bold; color: #333333;");
     customizeOptionsLayout->addWidget(customizeOptionsTitleLabel);
 
-    // Description text
-    QLabel *descriptionLabel = new QLabel("Add, edit, or remove options for your poll below.", customizeOptionsView);
+    // Description label
+    QLabel* descriptionLabel = new QLabel("Add, edit, or remove options for your poll below.", customizeOptionsView);
     descriptionLabel->setStyleSheet("font-size: 16px; color: #666666; margin-bottom: 10px;");
     customizeOptionsLayout->addWidget(descriptionLabel);
 
-    // Create inline option input area with modern styling
-    QWidget *addOptionWidget = new QWidget(customizeOptionsView);
+    // Add new option section
+    QWidget* addOptionWidget = new QWidget(customizeOptionsView);
     addOptionWidget->setObjectName("addOptionWidget");
     addOptionWidget->setStyleSheet(
         "#addOptionWidget {"
-        "  padding: 0px;"  // Removed all background and border
+        "  padding: 0px;"
         "  margin-bottom: 15px;"
         "}"
         );
 
-    QHBoxLayout *addOptionLayout = new QHBoxLayout(addOptionWidget);
-    addOptionLayout->setContentsMargins(0, 0, 0, 0);  // Tighter margins
+    QHBoxLayout* addOptionLayout = new QHBoxLayout(addOptionWidget);
+    addOptionLayout->setContentsMargins(0, 0, 0, 0);
     addOptionLayout->setSpacing(12);
 
-    // Input field for new option
-    QLineEdit *newOptionInput = new QLineEdit(addOptionWidget);
+    // Input field
+    QLineEdit* newOptionInput = new QLineEdit(addOptionWidget);
     newOptionInput->setPlaceholderText("Enter new option...");
     newOptionInput->setStyleSheet(
         "QLineEdit {"
@@ -621,7 +649,8 @@ void MyPollsPage::setupCustomizeOptionsView() {
         "}"
         );
 
-    QPushButton *addOptionButton = new QPushButton("Add Option", addOptionWidget);
+    // Add button
+    QPushButton* addOptionButton = new QPushButton("Add Option", addOptionWidget);
     addOptionButton->setStyleSheet(
         "QPushButton {"
         "  background-color: #2ECC71;"
@@ -640,17 +669,17 @@ void MyPollsPage::setupCustomizeOptionsView() {
         "}"
         );
     addOptionButton->setCursor(Qt::PointingHandCursor);
+
     addOptionLayout->addWidget(newOptionInput);
     addOptionLayout->addWidget(addOptionButton);
 
-
-    // Add the option input widget to main layout
     customizeOptionsLayout->addWidget(addOptionWidget);
 
     // Table for existing options
     editableOptionsTable = new QTableWidget(customizeOptionsView);
-    editableOptionsTable->setColumnCount(2); // Option Text, Actions (Delete)
-    editableOptionsTable->setHorizontalHeaderLabels({"Option", "Actions"});
+    editableOptionsTable->setColumnCount(2);
+    editableOptionsTable->setHorizontalHeaderLabels({ "Option", "Actions" });
+
     editableOptionsTable->horizontalHeader()->setStyleSheet(QString(
         "QHeaderView::section {"
         "  background-color: #F0F0F0;"
@@ -661,11 +690,13 @@ void MyPollsPage::setupCustomizeOptionsView() {
         "  font-weight: bold;"
         "}"
         ));
+
     editableOptionsTable->verticalHeader()->setVisible(false);
     editableOptionsTable->setSelectionMode(QAbstractItemView::NoSelection);
     editableOptionsTable->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
     editableOptionsTable->horizontalHeader()->setSectionResizeMode(1, QHeaderView::ResizeToContents);
     editableOptionsTable->setSelectionBehavior(QAbstractItemView::SelectRows);
+
     editableOptionsTable->setStyleSheet(QString(R"(
         QTableWidget {
             background-color: #FFFFFF;
@@ -703,18 +734,18 @@ void MyPollsPage::setupCustomizeOptionsView() {
             background: transparent;
         }
     )"));
+
     editableOptionsTable->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
     editableOptionsTable->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Fixed);
-    editableOptionsTable->setColumnWidth(1, 100); // Width for delete button column
+    editableOptionsTable->setColumnWidth(1, 100);
 
     customizeOptionsLayout->addWidget(editableOptionsTable);
 
-    // Action buttons layout
-    auto *buttonLayout = new QHBoxLayout();
+    // Action buttons
+    auto* buttonLayout = new QHBoxLayout();
     buttonLayout->setSpacing(12);
-    buttonLayout->addStretch(1); // Push buttons to the right
+    buttonLayout->addStretch(1);
 
-    // Cancel button
     cancelCustomizeOptionsButton = new QPushButton("Cancel", customizeOptionsView);
     cancelCustomizeOptionsButton->setStyleSheet(QString(
         "QPushButton {"
@@ -739,7 +770,6 @@ void MyPollsPage::setupCustomizeOptionsView() {
     connect(cancelCustomizeOptionsButton, &QPushButton::clicked, this, &MyPollsPage::onCancelCustomizeOptionsClicked);
     buttonLayout->addWidget(cancelCustomizeOptionsButton);
 
-    // Save button
     saveOptionsButton = new QPushButton("Save Changes", customizeOptionsView);
     saveOptionsButton->setStyleSheet(QString(
         "QPushButton {"
@@ -763,107 +793,103 @@ void MyPollsPage::setupCustomizeOptionsView() {
     buttonLayout->addWidget(saveOptionsButton);
 
     customizeOptionsLayout->addLayout(buttonLayout);
-    customizeOptionsLayout->addStretch(); // Push content to the top
+    customizeOptionsLayout->addStretch();
 
     contentStack->addWidget(customizeOptionsView);
 
-    // Connect add option button to add new row
-    connect(addOptionButton, &QPushButton::clicked, this, [this, newOptionInput]() {
-        QString text = newOptionInput->text().trimmed();
-        if (!text.isEmpty()) {
-            int row = editableOptionsTable->rowCount();
-            editableOptionsTable->insertRow(row);
+    // Connect add option button
+    connect(addOptionButton, &QPushButton::clicked, this, [this, newOptionInput]()
+            {
+                QString text = newOptionInput->text().trimmed();
+                if (!text.isEmpty())
+                {
+                    int row = editableOptionsTable->rowCount();
+                    editableOptionsTable->insertRow(row);
 
-            // Create styled item for the option text
-            QTableWidgetItem *textItem = new QTableWidgetItem(text);
-            textItem->setFlags(textItem->flags() | Qt::ItemIsEditable);
-            editableOptionsTable->setItem(row, 0, textItem);
+                    QTableWidgetItem* textItem = new QTableWidgetItem(text);
+                    textItem->setFlags(textItem->flags() | Qt::ItemIsEditable);
+                    editableOptionsTable->setItem(row, 0, textItem);
 
-            // Create styled delete button for the row
-            QPushButton *deleteBtn = new QPushButton(editableOptionsTable);
-            deleteBtn->setText("Delete");
-            deleteBtn->setStyleSheet(QString(
-                "QPushButton { background-color: transparent; color: #E74C3C; padding: 3px 6px; border: 1px solid #E74C3C; border-radius: 4px; font-size: 12px; }"
-                "QPushButton:hover { background-color: #FADBD8; color: #C0392B; border-color: #C0392B; }"
-                "QPushButton:pressed { background-color: #E74C3C; color: white; }"
-                ));
-            deleteBtn->setCursor(Qt::PointingHandCursor);
-            editableOptionsTable->setCellWidget(row, 1, deleteBtn);
+                    QPushButton* deleteBtn = new QPushButton(editableOptionsTable);
+                    deleteBtn->setText("Delete");
+                    deleteBtn->setStyleSheet(QString(
+                        "QPushButton { background-color: transparent; color: #E74C3C; padding: 3px 6px; border: 1px solid #E74C3C; border-radius: 4px; font-size: 12px; }"
+                        "QPushButton:hover { background-color: #FADBD8; color: #C0392B; border-color: #C0392B; }"
+                        "QPushButton:pressed { background-color: #E74C3C; color: white; }"
+                        ));
+                    deleteBtn->setCursor(Qt::PointingHandCursor);
+                    editableOptionsTable->setCellWidget(row, 1, deleteBtn);
 
-            // Connect delete button to remove the row
-            connect(deleteBtn, &QPushButton::clicked, this, [this, row]() {
-                editableOptionsTable->removeRow(row);
+                    connect(deleteBtn, &QPushButton::clicked, this, [this, row]()
+                            {
+                                editableOptionsTable->removeRow(row);
+                            });
+
+                    editableOptionsTable->resizeRowsToContents();
+                    editableOptionsTable->scrollToItem(textItem);
+                    textItem->setBackground(QColor(232, 245, 233)); // Light green
+
+                    newOptionInput->clear();
+                    newOptionInput->setFocus();
+                }
             });
-            editableOptionsTable->resizeRowsToContents(); // Adjust row height
 
-            // Clear input field after adding
-            newOptionInput->clear();
-            newOptionInput->setFocus();
-
-            // Adjust row height and ensure the new row is visible
-            editableOptionsTable->resizeRowsToContents();
-            editableOptionsTable->scrollToItem(textItem);
-
-            textItem->setBackground(QColor(232, 245, 233)); // Light green
-        }
-    });
-
-    // Also allow adding option with Enter key
+    // Allow Enter key to add new option
     connect(newOptionInput, &QLineEdit::returnPressed, addOptionButton, &QPushButton::click);
 }
 
-
-void MyPollsPage::setupVotersView() {
+void MyPollsPage::setupVotersView()
+{
     votersPage = new QWidget(contentStack);
-    QVBoxLayout *votersLayout = new QVBoxLayout(votersPage);
-
-
+    QVBoxLayout* votersLayout = new QVBoxLayout(votersPage);
 
     votersTree = new QTreeWidget(votersPage);
-    votersTree->setHeaderLabels({"Option", "Name", "Address", "Phone"});
+    votersTree->setHeaderLabels({ "Option", "Name", "Address", "Phone" });
     votersTree->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
     votersTree->setStyleSheet(R"(
-    QTreeWidget {
-        font-size: 16px;
-        color: black;
-        background-color: #FFFFFF;
-        border: 1px solid #DDDDDD;
-        border-radius: 6px;
-        outline: 0px;
-    }
-    QTreeWidget::item {
-        padding-top: 6px;
-        padding-bottom: 6px;
-        height: 40px;
-    }
-    QHeaderView::section {
-        background-color: #F0F0F0;
-        color: black;
-        font-size: 16px;
-        padding: 8px;
-        border: 1px solid #DDDDDD;
-        font-weight: bold;
-    }
-    QScrollBar:vertical {
-        background: #F5F6F8;
-        width: 10px;
-        margin: 0px;
-    }
-    QScrollBar::handle:vertical {
-        background: #C0C0C0;
-        min-height: 20px;
-        border-radius: 5px;
-    }
-    QScrollBar::handle:vertical:hover {
-        background: #A0A0A0;
-    }
-    QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
-        height: 0px;
-    }
-)");
+        QTreeWidget {
+            font-size: 16px;
+            color: black;
+            background-color: #FFFFFF;
+            border: 1px solid #DDDDDD;
+            border-radius: 6px;
+            outline: 0px;
+        }
+        QTreeWidget::item {
+            padding-top: 6px;
+            padding-bottom: 6px;
+            height: 40px;
+        }
+        QHeaderView::section {
+            background-color: #F0F0F0;
+            color: black;
+            font-size: 16px;
+            padding: 8px;
+            border: 1px solid #DDDDDD;
+            font-weight: bold;
+        }
+        QScrollBar:vertical {
+            background: #F5F6F8;
+            width: 10px;
+            margin: 0px;
+        }
+        QScrollBar::handle:vertical {
+            background: #C0C0C0;
+            min-height: 20px;
+            border-radius: 5px;
+        }
+        QScrollBar::handle:vertical:hover {
+            background: #A0A0A0;
+        }
+        QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+            height: 0px;
+        }
+    )");
+
     votersTree->setSelectionMode(QAbstractItemView::NoSelection);
     votersTree->header()->setSectionResizeMode(QHeaderView::Stretch);
-    QScrollArea *scrollArea = new QScrollArea(votersPage);
+
+    QScrollArea* scrollArea = new QScrollArea(votersPage);
     scrollArea->setWidget(votersTree);
     scrollArea->setWidgetResizable(true);
     scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
@@ -871,54 +897,60 @@ void MyPollsPage::setupVotersView() {
 
     votersLayout->addWidget(scrollArea);
 
-    QPushButton *backButton = new QPushButton("Back", votersPage);
+    QPushButton* backButton = new QPushButton("Back", votersPage);
     backButton->setStyleSheet(QString(
         "QPushButton { background-color: #3498DB; color: white; padding: 9px 13px; border: none; border-radius: 8px; font-weight: bold; font-size: 13px; }"
         "QPushButton:hover { background-color: #2980B9; }"
         "QPushButton:pressed { background-color: #0056b3; }"
         ));
-
     backButton->setCursor(Qt::PointingHandCursor);
-
     votersLayout->addWidget(backButton);
+
     votersPage->setLayout(votersLayout);
 
-    connect(backButton, &QPushButton::clicked, this, [this]() {
-        contentStack->setCurrentWidget(pollListView);
-        votersTree->clear();
-    });
+    connect(backButton, &QPushButton::clicked, this, [this]()
+            {
+                contentStack->setCurrentWidget(pollListView);
+                votersTree->clear();
+            });
 
-    connect(votersTree, &QTreeWidget::itemClicked, this, [](QTreeWidgetItem *item) {
-        if (item && !item->parent()) {
-            item->setExpanded(!item->isExpanded());
-        }
-    });
+    connect(votersTree, &QTreeWidget::itemClicked, this, [](QTreeWidgetItem* item)
+            {
+                if (item && !item->parent())
+                {
+                    item->setExpanded(!item->isExpanded());
+                }
+            });
 
     contentStack->addWidget(votersPage);
 }
 
-void MyPollsPage::displayEditDescription() {
+void MyPollsPage::displayEditDescription()
+{
     auto curPoll = retrieve_public_poll(currentPollId_);
     editDescriptionTitleLabel->setText(QString("Edit Description for %1").arg(curPoll.name));
     descriptionTextEdit->setText(QString::fromStdString(curPoll.desc));
     descriptionTextEdit->setFocus();
 }
 
-void MyPollsPage::displayCustomizeOptions() {
+void MyPollsPage::displayCustomizeOptions()
+{
     auto curPoll = retrieve_public_poll(currentPollId_);
     customizeOptionsTitleLabel->setText(QString("Customize Options for \"%1\"").arg(QString::fromStdString(curPoll.name)));
+
     auto poll = retrieve_public_poll(currentPollId_);
-    // Populate the editable options table
+
     editableOptionsTable->clearContents();
     editableOptionsTable->setRowCount(poll.options.size());
-    for (size_t i = 0; i < poll.options.size(); i++) {
+
+    for (size_t i = 0; i < poll.options.size(); i++)
+    {
         const auto& option = poll.options[i];
-        QTableWidgetItem *textItem = new QTableWidgetItem(QString::fromStdString(option.name));
+        QTableWidgetItem* textItem = new QTableWidgetItem(QString::fromStdString(option.name));
         textItem->setFlags(textItem->flags() | Qt::ItemIsEditable);
         editableOptionsTable->setItem(i, 0, textItem);
 
-        // Add a delete button for each existing row
-        QPushButton *deleteBtn = new QPushButton("Delete");
+        QPushButton* deleteBtn = new QPushButton("Delete");
         deleteBtn->setStyleSheet(QString(
             "QPushButton { background-color: transparent; color: #E74C3C; padding: 3px 6px; border: 1px solid #E74C3C; border-radius: 4px; font-size: 12px; }"
             "QPushButton:hover { background-color: #FADBD8; color: #C0392B; border-color: #C0392B; }"
@@ -927,11 +959,11 @@ void MyPollsPage::displayCustomizeOptions() {
         deleteBtn->setCursor(Qt::PointingHandCursor);
         editableOptionsTable->setCellWidget(i, 1, deleteBtn);
 
-        // Connect delete button signal
-        connect(deleteBtn, &QPushButton::clicked, this, [this, i]() {
-            editableOptionsTable->removeRow(i);
-            editableOptionsTable->resizeRowsToContents();
-        });
+        connect(deleteBtn, &QPushButton::clicked, this, [this, i]()
+                {
+                    editableOptionsTable->removeRow(i);
+                    editableOptionsTable->resizeRowsToContents();
+                });
     }
 
     editableOptionsTable->resizeColumnsToContents();
@@ -940,68 +972,84 @@ void MyPollsPage::displayCustomizeOptions() {
     editableOptionsTable->setColumnWidth(1, 80);
 }
 
-
-
-void MyPollsPage::onEditDescriptionClicked(size_t pollId) {
-
-    auto pollDetails = retrieve_poll_results(activeUser.id, pollId);
-    if (pollDetails.pollInfo.id == pollId) {
+void MyPollsPage::onEditDescriptionClicked(size_t pollId)
+{
+    auto pollDetails = retrieve_poll_results(pollId);
+    if (pollDetails.pollInfo.id == pollId)
+    {
         currentPollId_ = pollId;
         displayEditDescription();
         contentStack->setCurrentWidget(editDescriptionView);
-    } else {
+    }
+    else
+    {
         QMessageBox::warning(this, "Error", "Could not retrieve poll details for editing description.");
     }
 }
 
-void MyPollsPage::onCustomizeOptionsClicked(size_t pollId) {
-    auto pollDetails = retrieve_poll_results(activeUser.id, pollId);
-    if (pollDetails.pollInfo.id == pollId) {
+void MyPollsPage::onCustomizeOptionsClicked(size_t pollId)
+{
+    auto pollDetails = retrieve_poll_results(pollId);
+    if (pollDetails.pollInfo.id == pollId)
+    {
         bool hasVotes = false;
-        for(const auto& option : pollDetails.results) {
-            if (option.option_votes_count > 0) {
+        for (const auto& option : pollDetails.results)
+        {
+            if (option.option_votes_count > 0)
+            {
                 hasVotes = true;
                 break;
             }
         }
 
-        if (pollDetails.pollInfo.is_finished) {
+        if (pollDetails.pollInfo.is_finished)
+        {
             QMessageBox::warning(this, "Cannot Customize", "This poll is already finished and cannot be customized.");
-        } else if (hasVotes) {
+        }
+        else if (hasVotes)
+        {
             QMessageBox::warning(this, "Cannot Customize", "This poll has already received votes and its options cannot be customized.");
         }
-        else {
-            currentPollId_ = pollId; // Store the ID
-            displayCustomizeOptions(); // Populate the editor
-            contentStack->setCurrentWidget(customizeOptionsView); // Switch to the edit view
+        else
+        {
+            currentPollId_ = pollId;
+            displayCustomizeOptions();
+            contentStack->setCurrentWidget(customizeOptionsView);
         }
-    } else {
+    }
+    else
+    {
         QMessageBox::warning(this, "Error", "Could not retrieve poll details for customizing options.");
     }
 }
 
-void MyPollsPage::onSaveDescriptionClicked() {
-
+void MyPollsPage::onSaveDescriptionClicked()
+{
     auto newDescription = descriptionTextEdit->text().toStdString();
+
     if (newDescription.find('`') != std::string::npos)
     {
-        QMessageBox::warning(nullptr,"Warning","Invalid character detected!");
+        QMessageBox::warning(nullptr, "Warning", "Invalid character detected!");
         return;
     }
-    for (auto &poll : polls)
+
+    for (auto& poll : polls)
     {
         if (poll.id == currentPollId_)
         {
             poll.desc = newDescription;
         }
     }
+
     QMessageBox::information(this, "Success", "Poll description updated.");
     populatePollList();
     onBackToListClicked();
 }
 
-void MyPollsPage::onSaveOptionsClicked() {
+void MyPollsPage::onSaveOptionsClicked()
+{
     MeshVector<std::string> updatedOptions;
+
     for (int row = 0; row < editableOptionsTable->rowCount(); row++)
     {
         QTableWidgetItem* item = editableOptionsTable->item(row, 0);
@@ -1017,41 +1065,44 @@ void MyPollsPage::onSaveOptionsClicked() {
         return;
     }
 
-    change_poll_options(currentPollId_ , updatedOptions);
+    change_poll_options(currentPollId_, updatedOptions);
+
     QMessageBox::information(this, "Success", "Poll options updated.");
     populatePollList();
     onBackToListClicked();
-
 }
 
-void MyPollsPage::onCancelEditDescriptionClicked() {
-    onBackToListClicked(); // Simply go back to the list without saving
+void MyPollsPage::onCancelEditDescriptionClicked()
+{
+    onBackToListClicked(); // Go back without saving
 }
 
-void MyPollsPage::onCancelCustomizeOptionsClicked() {
-    onBackToListClicked(); // Simply go back to the list without saving
+void MyPollsPage::onCancelCustomizeOptionsClicked()
+{
+    onBackToListClicked(); // Go back without saving
 }
 
-
-
-
-void MyPollsPage::onSeeVotersClicked(size_t pollId) {
+void MyPollsPage::onSeeVotersClicked(size_t pollId)
+{
     auto votersData = retrieve_poll_voters(pollId);
 
-    if (!votersData.size()) {
+    if (!votersData.size())
+    {
         QMessageBox::information(this, "No Voters", "No votes have been cast for this poll yet.");
         return;
     }
 
     votersTree->clear();
 
-    for (auto& [optionName, voters] : votersData) {
-        QTreeWidgetItem *optionItem = new QTreeWidgetItem(votersTree);
+    for (auto& [optionName, voters] : votersData)
+    {
+        QTreeWidgetItem* optionItem = new QTreeWidgetItem(votersTree);
         optionItem->setText(0, QString::fromStdString(optionName));
         optionItem->setExpanded(true);
 
-        for (auto& voter : voters) {
-            QTreeWidgetItem *voterItem = new QTreeWidgetItem(optionItem);
+        for (auto& voter : voters)
+        {
+            QTreeWidgetItem* voterItem = new QTreeWidgetItem(optionItem);
             voterItem->setText(1, QString::fromStdString(voter.name));
             voterItem->setText(2, QString::fromStdString(voter.address));
             voterItem->setText(3, QString::fromStdString(voter.phone_number));

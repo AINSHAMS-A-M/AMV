@@ -2,50 +2,50 @@
 #define VOTE_H
 
 #include "sidebar.h"
-#include <QWidget>
-#include <QLineEdit>
-#include <QLabel>
-#include <QVBoxLayout>
 #include <QButtonGroup>
+#include <QLabel>
+#include <QLineEdit>
+#include <QVBoxLayout>
+#include <QWidget>
 
 class QStackedWidget;
 
 class VotePage : public QWidget
 {
-    Q_OBJECT
+	Q_OBJECT
 
 public:
-    explicit VotePage(QWidget *parent = nullptr);
-    QLineEdit *voterIdInput;
-    void showVoterIdPage();
-    QStackedWidget *stackedWidget;
-    SidebarWidget *sidebar;
+	explicit VotePage(QWidget* parent = nullptr);
+	QLineEdit* voterIdInput;
+	void showVoterIdPage();
+	QStackedWidget* stackedWidget;
+	SidebarWidget* sidebar;
 
 signals:
-    void onHelpClicked();
-    void onVoteClicked();
-    void onMyVotesClicked();
-    void onCreatePollClicked();
-    void onMyPollsClicked();
-    void onProfileClicked();
+	void onHelpClicked();
+	void onVoteClicked();
+	void onMyVotesClicked();
+	void onCreatePollClicked();
+	void onMyPollsClicked();
+	void onProfileClicked();
 
 private slots:
-    void validateVoterCredentials();
-    void submitVote();
+	void validateVoterCredentials();
+	void submitVote();
 
 
 
 private:
-    QWidget *content;
-    QWidget *voterIdPage;
-    QWidget *pollOptionsPage;
-    QLabel *pollTitleLabel;
-    QLabel *pollDescLabel;
-    QWidget *optionsContainer;
-    QVBoxLayout *optionsLayout;
-    QButtonGroup *optionsGroup;
-    size_t pollId;
-    void loadPollOptions();
+	QWidget* content;
+	QWidget* voterIdPage;
+	QWidget* pollOptionsPage;
+	QLabel* pollTitleLabel;
+	QLabel* pollDescLabel;
+	QWidget* optionsContainer;
+	QVBoxLayout* optionsLayout;
+	QButtonGroup* optionsGroup;
+	size_t pollId;
+	void loadPollOptions();
 };
 
 #endif

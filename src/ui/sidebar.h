@@ -3,23 +3,24 @@
 
 #include "QBoxLayout"
 #include "qlabel.h"
-#include <QWidget>
-#include <QStringList>
 #include <QPushButton>
+#include <QStringList>
+#include <QWidget>
 
-class SidebarWidget : public QWidget {
-    Q_OBJECT
+class SidebarWidget : public QWidget
+{
+	Q_OBJECT
 
 public:
-    explicit SidebarWidget(QWidget *parent, std::string page);
-    void setupWelcomeLabel();
-    QLabel *welcomeLabel;
+	explicit SidebarWidget(QWidget* parent, std::string page);
+	void setupWelcomeLabel();
+	QLabel* welcomeLabel;
 
 private:
-    void setupMenuItems(std::string page);
+	void setupMenuItems(std::string page);
 
-    void setupLogoutButton();
-    QVBoxLayout* sbLayout;
+	void setupLogoutButton();
+	QVBoxLayout* sbLayout;
 };
 
 

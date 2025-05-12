@@ -1,123 +1,137 @@
-#include "mainwindow.h"
-#include "nav.h"
-#include "QLineEdit"
-#include "login.h"
-#include "QMenuBar"
-#include "QStatusBar"
-#include "qapplication.h"
-#include "register.h"
-#include "help.h"
-#include "sidebar.h"
 #include "createPoll.h"
+#include "db.hpp"
+#include "help.h"
+#include "login.h"
+#include "mainwindow.h"
 #include "myPolls.h"
 #include "myVotes.h"
+#include "nav.h"
 #include "profile.h"
+#include <QApplication>
+#include <QLineEdit>
+#include <QMenuBar>
+#include <QStatusBar>
+#include <register.h>
+#include <sidebar.h>
+#include <vote.h>
 #include <QMessageBox>
-#include "vote.h"
-#include "db.hpp"
 
-
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent),
-    stackedWidget (new QStackedWidget(this))
+MainWindow::MainWindow(QWidget* parent)
+    : QMainWindow(parent)
+    , stackedWidget(new QStackedWidget(this))
 {
     setupUI();
 }
 
 void MainWindow::setupUI()
 {
-    // Hide the grey bars in the top and bottom of the window
+    // Hide default menu bar and status bar
     menuBar()->hide();
     statusBar()->hide();
 
     setCentralWidget(stackedWidget);
 
+    // Initialize login page if not already created
     if (!loginPage)
     {
-        loginPage     = new LoginPage(this);
-        stackedWidget->addWidget(loginPage);     // index 0
+        loginPage = new LoginPage(this);
+        stackedWidget->addWidget(loginPage); // index 0
     }
 
+    // Initialize register page if not already created
     if (!registerPage)
     {
-        registerPage  = new RegisterPage(this);
-        stackedWidget->addWidget(registerPage);  // index 1
+        registerPage = new RegisterPage(this);
+        stackedWidget->addWidget(registerPage); // index 1
     }
 
+    // Start with login page visible
     stackedWidget->setCurrentWidget(loginPage);
 
+    // Connect signals to handlers
     connect(loginPage, &LoginPage::loginSuccessful,
-            this,      &MainWindow::onLoginClicked);
+            this, &MainWindow::onLoginClicked);
 
     connect(loginPage, &LoginPage::registerLinkActivated,
-            this,      &MainWindow::onRegisterLink);
+            this, &MainWindow::onRegisterLink);
 
     connect(registerPage, &RegisterPage::registrationSuccessful,
-            this,          &MainWindow::onLoginLink);
+            this, &MainWindow::onLoginLink);
 
     connect(registerPage, &RegisterPage::loginLinkActivated,
-            this,          &MainWindow::onLoginLink);
+            this, &MainWindow::onLoginLink);
 }
 
 void MainWindow::onLoginClicked()
 {
-
+    // Initialize application pages after successful login
     init_app();
 
+    // Connect navigation manager
     connect(&NavigationManager::instance(),
             &NavigationManager::navigateTo,
             this, &MainWindow::handleNavigation);
 
-    connect(profileEditPage, &ProfileEditPage::changeWelcomeLabel, this, &MainWindow::changeLabelText);
+    connect(profileEditPage, &ProfileEditPage::changeWelcomeLabel,
+            this, &MainWindow::changeLabelText);
 
+    // Show help page by default
     stackedWidget->setCurrentWidget(helpPage);
 }
 
 void MainWindow::onLogoutClicked()
 {
-
-    // Delete all the page instances to force recreation
-    if (helpPage) {
+    // Delete all dynamically created pages to reset state
+    if (helpPage)
+    {
         delete helpPage;
         helpPage = nullptr;
     }
-    if (votePage) {
+    if (votePage)
+    {
         delete votePage;
         votePage = nullptr;
     }
-    if (createPollPage) {
+    if (createPollPage)
+    {
         delete createPollPage;
         createPollPage = nullptr;
     }
-    if (myPollsPage) {
+    if (myPollsPage)
+    {
         delete myPollsPage;
         myPollsPage = nullptr;
     }
-    if (myVotesPage) {
+    if (myVotesPage)
+    {
         delete myVotesPage;
         myVotesPage = nullptr;
     }
-    if (profileEditPage) {
+    if (profileEditPage)
+    {
         delete profileEditPage;
         profileEditPage = nullptr;
     }
 
-    // Clear the stacked widget and re-add the login and register pages
-    while (stackedWidget->count() > 0) {
+    // Remove all widgets from stacked widget
+    while (stackedWidget->count() > 0)
+    {
         stackedWidget->removeWidget(stackedWidget->widget(0));
     }
 
-    // Re-setup the UI with fresh login/register pages
-    if (loginPage) {
+    // Delete login and register pages to force recreation
+    if (loginPage)
+    {
         delete loginPage;
         loginPage = nullptr;
     }
-    if (registerPage) {
+    if (registerPage)
+    {
         delete registerPage;
         registerPage = nullptr;
     }
 
-    // Set up the UI from scratch
+    // Re-setup UI with fresh login/register pages
     setupUI();
     loginPage->userEdit->setFocus();
 }
@@ -177,8 +191,9 @@ void MainWindow::onVoteClicked()
     votePage->voterIdInput->setFocus();
 }
 
-void MainWindow::closeEvent(QCloseEvent *event) {
-    // Ask the user if they want to quit
+void MainWindow::closeEvent(QCloseEvent* event)
+{
+    // Ask user for confirmation before closing
     QMessageBox::StandardButton reply;
     reply = QMessageBox::question(
         this,
@@ -187,18 +202,20 @@ void MainWindow::closeEvent(QCloseEvent *event) {
         QMessageBox::Yes | QMessageBox::No
         );
 
-    if (reply == QMessageBox::Yes) {
-        // Allow the window to close
-        save_data();
-        event->accept();
-    } else {
-        // Prevent the window from closing
-        event->ignore();
+    if (reply == QMessageBox::Yes)
+    {
+        save_data();  // Save data before exiting
+        event->accept();  // Allow window to close
+    }
+    else
+    {
+        event->ignore();  // Cancel close action
     }
 }
 
 void MainWindow::init_app()
 {
+    // Lazily initialize app pages only once
     if (!helpPage)
     {
         helpPage = new HelpPage(this);
@@ -214,7 +231,6 @@ void MainWindow::init_app()
         createPollPage = new CreatePollPage(this);
         stackedWidget->addWidget(createPollPage); // index 4
     }
-
     if (!myPollsPage)
     {
         myPollsPage = new MyPollsPage(this);
@@ -234,25 +250,30 @@ void MainWindow::init_app()
 
 void MainWindow::changeLabelText()
 {
-    helpPage->sidebar->welcomeLabel->setText("Welcome\n" + QString::fromStdString(activeUser.name) + "!");
-    createPollPage->sidebar->welcomeLabel->setText("Welcome\n" + QString::fromStdString(activeUser.name) + "!");
-    myPollsPage->sidebar->welcomeLabel->setText("Welcome\n" + QString::fromStdString(activeUser.name) + "!");
-    myVotesPage->sidebar->welcomeLabel->setText("Welcome\n" + QString::fromStdString(activeUser.name) + "!");
-    profileEditPage->sidebar->welcomeLabel->setText("Welcome\n" + QString::fromStdString(activeUser.name) + "!");
-    votePage->sidebar->welcomeLabel->setText("Welcome\n" + QString::fromStdString(activeUser.name) + "!");
+    // Update welcome label across all sidebars
+    QString name = QString::fromStdString(activeUser.name);
+
+    helpPage->sidebar->welcomeLabel->setText("Welcome\n" + name + "!");
+    createPollPage->sidebar->welcomeLabel->setText("Welcome\n" + name + "!");
+    myPollsPage->sidebar->welcomeLabel->setText("Welcome\n" + name + "!");
+    myVotesPage->sidebar->welcomeLabel->setText("Welcome\n" + name + "!");
+    profileEditPage->sidebar->welcomeLabel->setText("Welcome\n" + name + "!");
+    votePage->sidebar->welcomeLabel->setText("Welcome\n" + name + "!");
 }
 
-void MainWindow::handleNavigation(NavigationManager::Page page) {
-    switch (page) {
-    case NavigationManager::Login:    onLoginLink(); break;
-    case NavigationManager::Register: onRegisterLink(); break;
-    case NavigationManager::Help:     onHelpClicked(); break;
-    case NavigationManager::Vote:     onVoteClicked(); break;
-    case NavigationManager::CreatePoll: onCreatePollClicked(); break;
-    case NavigationManager::MyPolls:  onMyPollsClicked(); break;
-    case NavigationManager::MyVotes:  onMyVotesClicked(); break;
-    case NavigationManager::Profile:  onProfileClicked(); break;
-    case NavigationManager::Logout:  onLogoutClicked(); break;
+void MainWindow::handleNavigation(NavigationManager::Page page)
+{
+    // Handle navigation requests from NavigationManager
+    switch (page)
+    {
+    case NavigationManager::Login:       onLoginLink(); break;
+    case NavigationManager::Register:    onRegisterLink(); break;
+    case NavigationManager::Help:        onHelpClicked(); break;
+    case NavigationManager::Vote:        onVoteClicked(); break;
+    case NavigationManager::CreatePoll:  onCreatePollClicked(); break;
+    case NavigationManager::MyPolls:     onMyPollsClicked(); break;
+    case NavigationManager::MyVotes:     onMyVotesClicked(); break;
+    case NavigationManager::Profile:     onProfileClicked(); break;
+    case NavigationManager::Logout:      onLogoutClicked(); break;
     }
 }
-

@@ -1,7 +1,7 @@
 #pragma once
 
-#include <QWidget>
 #include <QString>
+#include <QWidget>
 
 QT_BEGIN_NAMESPACE
 class QLineEdit;
@@ -11,23 +11,23 @@ QT_END_NAMESPACE
 
 class LoginPage : public QWidget
 {
-    Q_OBJECT
+	Q_OBJECT
 
 public:
-    explicit LoginPage(QWidget *parent = nullptr);
-    ~LoginPage() override = default;
-    void onLoginClicked();
-    QLineEdit  *userEdit;
-    QLineEdit  *passEdit;
+	explicit LoginPage(QWidget* parent = nullptr);
+	~LoginPage() override = default;
+	void onLoginClicked();
+	QLineEdit* userEdit;
+	QLineEdit* passEdit;
 
 signals:
-    void loginSuccessful();
-    void registerLinkActivated();
+	void loginSuccessful();
+	void registerLinkActivated();
 
 private:
-    QWidget    *leftPanel;
-    QWidget    *rightPanel;
-    QPushButton *loginBtn;
-    QLabel     *registerLabel;
+	QWidget* leftPanel;
+	QWidget* rightPanel;
+	QPushButton* loginBtn;
+	QLabel* registerLabel;
 };
 

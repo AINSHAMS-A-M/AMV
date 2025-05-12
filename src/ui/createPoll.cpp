@@ -1,18 +1,18 @@
 #include "createPoll.h"
-#include <QHBoxLayout>
-#include <QVBoxLayout>
+#include "mainwindow.h"
+#include "services.hpp"
+#include <QMessageBox>
 #include <QFormLayout>
+#include <QHBoxLayout>
 #include <QLabel>
 #include <QLineEdit>
-#include <QTextEdit>
-#include <QPushButton>
 #include <QPixmap>
+#include <QPushButton>
 #include <QScrollArea>
-#include "mainwindow.h"
-#include "qmessagebox"
-#include "services.hpp"
+#include <QTextEdit>
+#include <QVBoxLayout>
 
-CreatePollPage::CreatePollPage(QWidget *parent)
+CreatePollPage::CreatePollPage(QWidget* parent)
     : QWidget(parent)
     , pollNameEdit(nullptr)
     , pollDescEdit(nullptr)
@@ -25,35 +25,36 @@ CreatePollPage::CreatePollPage(QWidget *parent)
 {
     const QString bgColor = "#F5F6F8";
 
-    auto *rootLayout = new QHBoxLayout(this);
+    // Root layout for the entire page
+    auto* rootLayout = new QHBoxLayout(this);
     rootLayout->setContentsMargins(0, 0, 0, 0);
     rootLayout->setSpacing(0);
 
-    sidebar = new SidebarWidget(this,"Create Poll");
+    // Sidebar widget for navigation
+    sidebar = new SidebarWidget(this, "Create Poll");
 
-
-    // ================= Content Area =================
+    // Content area where form and options are placed
     content = new QWidget(this);
     content->setStyleSheet(QString("background-color: %1;").arg(bgColor));
-    auto *contentLayout = new QVBoxLayout(content);
+    auto* contentLayout = new QVBoxLayout(content);
     contentLayout->setContentsMargins(40, 30, 40, 30);
     contentLayout->setSpacing(20);
 
-    // Title
-    QLabel *titleLabel = new QLabel("Create New Poll");
+    // Title label at the top of the form
+    QLabel* titleLabel = new QLabel("Create New Poll");
     titleLabel->setStyleSheet(
         "QLabel {"
         "  font-size: 26px;"
-        "  font-weight: 600;"
+        "  font-weight: bold;"
         "  color: #2D3748;"
         "  margin-bottom: 25px;"
         "}"
         );
     contentLayout->addWidget(titleLabel);
 
-    // Form Fields
-    QWidget *formWidget = new QWidget();
-    QFormLayout *formLayout = new QFormLayout(formWidget);
+    // Form fields container
+    QWidget* formWidget = new QWidget();
+    QFormLayout* formLayout = new QFormLayout(formWidget);
     formLayout->setContentsMargins(0, 0, 0, 0);
     formLayout->setSpacing(20);
 
@@ -75,16 +76,19 @@ CreatePollPage::CreatePollPage(QWidget *parent)
         "  font-style: italic;"
         "}";
 
+    // Input field for poll name
     pollNameEdit = new QLineEdit();
     pollNameEdit->setPlaceholderText("Enter poll title...");
     pollNameEdit->setStyleSheet(inputStyle);
     formLayout->addRow("Poll Name:", pollNameEdit);
 
+    // Input field for poll description
     pollDescEdit = new QLineEdit();
     pollDescEdit->setPlaceholderText("Enter poll description...");
     pollDescEdit->setStyleSheet(inputStyle);
     formLayout->addRow("Description:", pollDescEdit);
 
+    // Input field for voter ID
     voterIdEdit = new QLineEdit();
     voterIdEdit->setPlaceholderText("Enter voter ID...");
     voterIdEdit->setStyleSheet(inputStyle);
@@ -92,7 +96,7 @@ CreatePollPage::CreatePollPage(QWidget *parent)
 
     contentLayout->addWidget(formWidget);
 
-    // Scrollable Options Area
+    // Scrollable area for adding multiple poll options
     optionsScrollArea = new QScrollArea(content);
     optionsScrollArea->setWidgetResizable(true);
     optionsScrollArea->setStyleSheet(
@@ -115,22 +119,23 @@ CreatePollPage::CreatePollPage(QWidget *parent)
         "}"
         );
 
+    // Container for all option widgets
     optionsContainer = new QWidget();
     optionsLayout = new QVBoxLayout(optionsContainer);
     optionsLayout->setContentsMargins(2, 2, 12, 2);
     optionsLayout->setSpacing(18);
 
     optionsScrollArea->setWidget(optionsContainer);
-    contentLayout->addWidget(optionsScrollArea, 1);
+    contentLayout->addWidget(optionsScrollArea, 1); // Add scroll area with stretch factor
 
-    // Button Container
-    QWidget *buttonContainer = new QWidget();
-    QHBoxLayout *buttonLayout = new QHBoxLayout(buttonContainer);
+    // Button container for Add Option and Create Poll buttons
+    QWidget* buttonContainer = new QWidget();
+    QHBoxLayout* buttonLayout = new QHBoxLayout(buttonContainer);
     buttonLayout->setContentsMargins(0, 20, 0, 0);
     buttonLayout->setSpacing(15);
 
-    // Add Option Button
-    QPushButton *addOptionBtn = new QPushButton("Add Option");
+    // Add Option button
+    QPushButton* addOptionBtn = new QPushButton("Add Option");
     addOptionBtn->setStyleSheet(
         "QPushButton {"
         "  background-color: #3498DB;"
@@ -151,8 +156,8 @@ CreatePollPage::CreatePollPage(QWidget *parent)
     connect(addOptionBtn, &QPushButton::clicked, this, &CreatePollPage::onAddOptionClicked);
     addOptionBtn->setCursor(Qt::PointingHandCursor);
 
-    // Create Poll Button
-    QPushButton *createBtn = new QPushButton("Create Poll");
+    // Create Poll button
+    QPushButton* createBtn = new QPushButton("Create Poll");
     createBtn->setStyleSheet(
         "QPushButton {"
         "  background-color: #489978;"
@@ -174,13 +179,17 @@ CreatePollPage::CreatePollPage(QWidget *parent)
     createBtn->setDefault(true);
     createBtn->setCursor(Qt::PointingHandCursor);
 
+    // Layout for buttons
     buttonLayout->addWidget(addOptionBtn);
     buttonLayout->addStretch();
     buttonLayout->addWidget(createBtn);
     contentLayout->addWidget(buttonContainer);
 
+    // Add sidebar and content to root layout
     rootLayout->addWidget(sidebar);
     rootLayout->addWidget(content);
+
+    // Tab through fields on Enter key
     connect(pollNameEdit, &QLineEdit::returnPressed, [this]()
             {
                 pollDescEdit->setFocus();
@@ -194,13 +203,15 @@ CreatePollPage::CreatePollPage(QWidget *parent)
 
 void CreatePollPage::addOptionWidget()
 {
-    QWidget *optWidget = new QWidget(optionsContainer);
+    // Create a new widget for an option
+    QWidget* optWidget = new QWidget(optionsContainer);
     optWidget->setStyleSheet("background: transparent;");
-    QHBoxLayout *optLayout = new QHBoxLayout(optWidget);
+    QHBoxLayout* optLayout = new QHBoxLayout(optWidget);
     optLayout->setContentsMargins(0, 0, 0, 0);
     optLayout->setSpacing(15);
 
-    QLineEdit *nameEdit = new QLineEdit(optWidget);
+    // Line edit for option name
+    QLineEdit* nameEdit = new QLineEdit(optWidget);
     nameEdit->setPlaceholderText("Option name");
     nameEdit->setStyleSheet(
         "QLineEdit {"
@@ -217,28 +228,32 @@ void CreatePollPage::addOptionWidget()
         "}"
         );
 
-    QPushButton *removeBtn = new QPushButton("Remove");
+    // Remove button for this option
+    QPushButton* removeBtn = new QPushButton("Remove");
     removeBtn->setStyleSheet(QString(
-        "QPushButton { background-color: transparent; color: %1; padding: 8px 12px; border: 1px solid %1; border-radius: 8px; font-size: 13px; }"
-        "QPushButton:hover { background-color: %2; color: %3; border-color: %1; }"
-        "QPushButton:pressed { background-color: %1; color: white; }"
-        ).arg(dangerColor).arg(dangerHoverBg).arg(dangerHoverFg));
+                                 "QPushButton { background-color: transparent; color: %1; padding: 8px 12px; border: 1px solid %1; border-radius: 8px; font-size: 13px; }"
+                                 "QPushButton:hover { background-color: %2; color: %3; border-color: %1; }"
+                                 "QPushButton:pressed { background-color: %1; color: white; }"
+                                 ).arg(dangerColor).arg(dangerHoverBg).arg(dangerHoverFg));
 
+    // Layout setup
     optLayout->addWidget(nameEdit, 1);
     optLayout->addWidget(removeBtn);
 
+    // Add to layout and tracking list
     optionsLayout->addWidget(optWidget);
     optionWidgets.append(optWidget);
 
+    // Connect signal for removal
     connect(removeBtn, &QPushButton::clicked, this, &CreatePollPage::onRemoveOptionClicked);
     removeBtn->setCursor(Qt::PointingHandCursor);
 }
 
 void CreatePollPage::onRemoveOptionClicked()
 {
-    if (QPushButton *btn = qobject_cast<QPushButton*>(sender()))
+    if (QPushButton* btn = qobject_cast<QPushButton*>(sender()))
     {
-        if (QWidget *optWidget = btn->parentWidget())
+        if (QWidget* optWidget = btn->parentWidget())
         {
             optionsLayout->removeWidget(optWidget);
             optionWidgets.removeOne(optWidget);
@@ -254,12 +269,15 @@ void CreatePollPage::onAddOptionClicked()
 
 void CreatePollPage::onCreatePollBtnClicked()
 {
+    // Get user inputs from UI
     auto pollName = pollNameEdit->text().toStdString();
     auto pollDesc = pollDescEdit->text().toStdString();
-    auto voterId  = voterIdEdit->text().toStdString();
+    auto voterId = voterIdEdit->text().toStdString();
+
     MeshVector<std::string> options;
 
-    for (auto &poll : polls)
+    // Check for duplicate voter IDs
+    for (auto& poll : polls)
     {
         if (poll.voter_id == voterId)
         {
@@ -267,18 +285,24 @@ void CreatePollPage::onCreatePollBtnClicked()
             return;
         }
     }
-    if (pollName.find('`') != std::string::npos || pollDesc.find('`') != std::string::npos || voterId.find('`') != std::string::npos || pollDesc.find('\n') != std::string::npos)
+
+    // Validate against invalid characters
+    if (pollName.find('`') != std::string::npos ||
+        pollDesc.find('`') != std::string::npos ||
+        voterId.find('`') != std::string::npos ||
+        pollDesc.find('\n') != std::string::npos)
     {
         QMessageBox::warning(nullptr, "Warning", "Invalid character detected!");
         return;
     }
 
-    for (QWidget *optWidget : optionWidgets)
+    // Collect all poll options
+    for (QWidget* optWidget : optionWidgets)
     {
         auto nameEdit = optWidget->findChild<QLineEdit*>()->text().toStdString();
         if (nameEdit.find('`') != std::string::npos)
         {
-            QMessageBox::warning(nullptr, "Warning", "Invalid character detected! don't type '`'");
+            QMessageBox::warning(nullptr, "Warning", "Invalid character detected! Don't type '`'");
             return;
         }
         else if (!nameEdit.empty())
@@ -292,13 +316,14 @@ void CreatePollPage::onCreatePollBtnClicked()
         }
     }
 
+    // Ensure required fields are filled and at least two options exist
     if (pollName.empty() || voterId.empty() || options.size() < 2)
     {
         QMessageBox::warning(nullptr, "Warning", "Please provide a title, description, voter ID, and add at least 2 options!");
         return;
     }
 
-
+    // Construct new poll object and submit it
     CreatePoll newPoll
         {
             voterId,
@@ -309,21 +334,26 @@ void CreatePollPage::onCreatePollBtnClicked()
         };
 
     create_poll(newPoll);
+
+    // Clear UI fields after successful creation
     pollNameEdit->clear();
     pollDescEdit->clear();
     voterIdEdit->clear();
     resetOptions();
     pollNameEdit->setFocus();
+
+    // Show success message
     QMessageBox::information(nullptr, "Success", "Poll created successfully!");
 }
 
 void CreatePollPage::resetOptions()
 {
-    // Clear all option widgets
-    for (QWidget *optWidget : optionWidgets)
+    // Remove and delete all dynamically added option widgets
+    for (QWidget* optWidget : optionWidgets)
     {
         optionsLayout->removeWidget(optWidget);
         optWidget->deleteLater();
     }
+
     optionWidgets.clear();
 }

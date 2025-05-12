@@ -1,8 +1,8 @@
 #pragma once
 
 #include "sidebar.h"
-#include <QWidget>
 #include <QStringList>
+#include <QWidget>
 
 QT_BEGIN_NAMESPACE
 class QLabel;
@@ -13,26 +13,26 @@ QT_END_NAMESPACE
 
 class HelpPage : public QWidget
 {
-    Q_OBJECT
+	Q_OBJECT
 
 public:
-    explicit HelpPage(QWidget *parent = nullptr);
-    ~HelpPage() override = default;
-    SidebarWidget *sidebar;
+	explicit HelpPage(QWidget* parent = nullptr);
+	~HelpPage() override = default;
+	SidebarWidget* sidebar;
 
 signals:
-    void onHelpClicked();
-    void onVoteClicked();
-    void onMyVotesClicked();
-    void onCreatePollClicked();
-    void onMyPollsClicked();
-    void onProfileClicked();
+	void onHelpClicked();
+	void onVoteClicked();
+	void onMyVotesClicked();
+	void onCreatePollClicked();
+	void onMyPollsClicked();
+	void onProfileClicked();
 
 private:
 
-    QWidget    *content;
-    QLabel     *titleLabel;
-    QTextEdit  *helpTextEdit;
-    QList<QPushButton*> sidebarButtons;
+	QWidget* content;
+	QLabel* titleLabel;
+	QTextEdit* helpTextEdit;
+	QList<QPushButton*> sidebarButtons;
 
 };
