@@ -822,14 +822,29 @@ void MyPollsPage::setupCustomizeOptionsView()
                     deleteBtn->setCursor(Qt::PointingHandCursor);
                     editableOptionsTable->setCellWidget(row, 1, deleteBtn);
 
-                    connect(deleteBtn, &QPushButton::clicked, this, [this, row]()
+                    connect(deleteBtn, &QPushButton::clicked, this, [this, deleteBtn]()
                             {
-                                editableOptionsTable->removeRow(row);
+                                int clickedRow = -1;
+
+                                for (int row = 0; row < editableOptionsTable->rowCount(); ++row)
+                                {
+                                    if (editableOptionsTable->cellWidget(row, 1) == deleteBtn)
+                                    {
+                                        clickedRow = row;
+                                        break;
+                                    }
+                                }
+
+                                if (clickedRow != -1)
+                                {
+                                    editableOptionsTable->removeRow(clickedRow);
+                                    editableOptionsTable->resizeRowsToContents();
+                                }
                             });
 
                     editableOptionsTable->resizeRowsToContents();
                     editableOptionsTable->scrollToItem(textItem);
-                    textItem->setBackground(QColor(232, 245, 233)); // Light green
+                    textItem->setBackground(QColor(232, 245, 233));
 
                     newOptionInput->clear();
                     newOptionInput->setFocus();
