@@ -640,6 +640,7 @@ void MyPollsPage::setupCustomizeOptionsView()
         "  border-radius: 6px;"
         "  padding: 10px 12px;"
         "  font-size: 15px;"
+        "  color: #333333;"
         "  background-color: white;"
         "  margin: 0px;"
         "}"
@@ -700,6 +701,7 @@ void MyPollsPage::setupCustomizeOptionsView()
     editableOptionsTable->setStyleSheet(QString(R"(
         QTableWidget {
             background-color: #FFFFFF;
+            color: #333333;
             border: 1px solid #DDDDDD;
             border-radius: 8px;
             font-size: 15px;
@@ -942,6 +944,7 @@ void MyPollsPage::displayCustomizeOptions()
 
     editableOptionsTable->clearContents();
     editableOptionsTable->setRowCount(poll.options.size());
+    editableOptionsTable->setStyleSheet("color: #333333;");
 
     for (size_t i = 0; i < poll.options.size(); i++)
     {
