@@ -131,6 +131,7 @@ void change_poll_options(size_t pollId, MeshVector<std::string>& newOptions)
 		if (pollOptions[i].poll_id == pollId)
 		{
 			pollOptions.erase(i);
+            i--;
 		}
 	}
 
