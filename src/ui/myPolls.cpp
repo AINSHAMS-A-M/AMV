@@ -944,7 +944,6 @@ void MyPollsPage::displayCustomizeOptions()
 
     editableOptionsTable->clearContents();
     editableOptionsTable->setRowCount(poll.options.size());
-    editableOptionsTable->setStyleSheet("color: #333333;");
 
     for (size_t i = 0; i < poll.options.size(); i++)
     {
@@ -962,11 +961,19 @@ void MyPollsPage::displayCustomizeOptions()
         deleteBtn->setCursor(Qt::PointingHandCursor);
         editableOptionsTable->setCellWidget(i, 1, deleteBtn);
 
-        connect(deleteBtn, &QPushButton::clicked, this, [this, i]()
-                {
-                    editableOptionsTable->removeRow(i);
-                    editableOptionsTable->resizeRowsToContents();
-                });
+        connect(deleteBtn, &QPushButton::clicked, this, [this, deleteBtn]() {
+            int clickedRow = -1;
+            for (int row = 0; row < editableOptionsTable->rowCount(); ++row) {
+                if (editableOptionsTable->cellWidget(row, 1) == deleteBtn) {
+                    clickedRow = row;
+                    break;
+                }
+            }
+            if (clickedRow != -1) {
+                editableOptionsTable->removeRow(clickedRow);
+                editableOptionsTable->resizeRowsToContents();
+            }
+        });
     }
 
     editableOptionsTable->resizeColumnsToContents();
