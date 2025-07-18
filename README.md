@@ -75,6 +75,7 @@ void delete_poll(size_t poll_id);
 // Voting
 std::string create_user_vote(size_t user_id, size_t poll_id, size_t option_id);
 RetrievePollResultAdmin retrieve_poll_results(size_t poll_id);
+```
 
 ## Security
 - Password hashing with user-specific salts  
